@@ -1,0 +1,19 @@
+﻿@model IEnumerable<DoAnWebBanDoChoi.ViewModels.DanhMucVM>
+
+<div class="sidebar__item">
+    <h4>Department</h4>
+    <ul>
+         @foreach (var item in Model)
+        {
+            <li>
+                <a href="@Url.Action("Index", "Home", new { loai = item.MaDanhMuc })" onclick="scrollToSanPham()">
+                    @item.TenDanhMuc
+                </a>
+             
+            </li>
+        }
+
+    </ul>
+</div>
+
+
