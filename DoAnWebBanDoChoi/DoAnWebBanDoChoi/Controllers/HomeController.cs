@@ -14,6 +14,13 @@ namespace DoAnWebBanDoChoi.Controllers
         {
             _context = context;
         }
+        [Route("/404")]
+        public IActionResult Loi()
+        {
+            return View();
+        }
+
+
         public IActionResult Index(int? loai, int page = 1, int pageSize = 1)
         {
             var query = _context.SanPhams
@@ -32,5 +39,21 @@ namespace DoAnWebBanDoChoi.Controllers
 
             return View(vm);
         }
+
+        public IActionResult Detail(int id)
+        {
+            var sanPham = _context.SanPhams
+                .Include(sp => sp.MaDmNavigation)    
+                .Include(sp => sp.MaThNavigation)    
+                .SingleOrDefault(sp => sp.MaSp == id && sp.TrangThai == 1);
+
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            return View(sanPham);
+        }
+
     }
 }
