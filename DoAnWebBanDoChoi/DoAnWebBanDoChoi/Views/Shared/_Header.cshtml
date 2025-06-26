@@ -1,54 +1,7 @@
-﻿<!-- Humberger Begin -->
-<div class="humberger__menu__overlay"></div>
-<div class="humberger__menu__wrapper">
-    <div class="humberger__menu__logo">
-        <a href="#"><img src="img/logox.png" alt=""></a>
-    </div>
-    <div class="humberger__menu__cart">
-        <ul>
-            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
-        </ul>
-        <div class="header__cart__price">item: <span>$150.00</span></div>
-    </div>
-    <div class="humberger__menu__widget">
+﻿@{
+    var daDangNhap = Context.Session.GetString("DangNhap") == "true";
+}
 
-        <div class="header__top__right__auth">
-            <a asp-controller="DangNhap" asp-action="DangNhap"><i class="fa fa-user"></i> Login</a>
-        </div>
-    </div>
-    <nav class="humberger__menu__nav mobile-menu">
-        <ul>
-            <li class="active"><a href="./index.html">Home</a></li>
-            <li><a href="./shop-grid.html">Shop</a></li>
-            <li>
-                <a href="#">Pages</a>
-                <ul class="header__menu__dropdown">
-                    <li><a href="./shop-details.html">Shop Details</a></li>
-                    <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                    <li><a href="./checkout.html">Check Out</a></li>
-                    <li><a href="./blog-details.html">Blog Details</a></li>
-                </ul>
-            </li>
-            <li><a href="./blog.html">Blog</a></li>
-            <li><a href="./contact.html">Contact</a></li>
-        </ul>
-    </nav>
-    <div id="mobile-menu-wrap"></div>
-    <div class="header__top__right__social">
-        <a href="#"><i class="fa fa-facebook"></i></a>
-        <a href="#"><i class="fa fa-twitter"></i></a>
-        <a href="#"><i class="fa fa-linkedin"></i></a>
-        <a href="#"><i class="fa fa-pinterest-p"></i></a>
-    </div>
-    <div class="humberger__menu__contact">
-        <ul>
-            <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-            <li>Free Shipping for all Order of $99</li>
-        </ul>
-    </div>
-</div>
-<!-- Humberger End -->
 <!-- Header Section Begin -->
 <header class="header">
     <div class="header__top">
@@ -70,10 +23,28 @@
                             <a href="#"><i class="fa fa-linkedin"></i></a>
                             <a href="#"><i class="fa fa-pinterest-p"></i></a>
                         </div>
+                        @if (daDangNhap)
+                        {
+                            <div class="header__top__right__auth">
+                                <a asp-controller="Account" asp-action="Logout"><i class="fa fa-user"></i> Logout</a>
 
-                        <div class="header__top__right__auth">
-                            <a asp-controller="DangNhap" asp-action="Index"><i class="fa fa-user"></i> Login</a>
-                        </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="header__top__right__auth">
+                                <a asp-controller="Account" asp-action="Login"><i class="fa fa-user"></i> Login</a>
+
+                            </div>
+                            <div class="header__top__right__auth">
+                                <span>/</span>
+                            </div>
+                            <div class="header__top__right__auth">
+
+                                <a asp-controller="Account" asp-action="Register"><i class=""></i> Register</a>
+                            </div>
+                        }
+
                     </div>
                 </div>
             </div>
@@ -83,7 +54,7 @@
         <div class="row">
             <div class="col-lg-3">
                 <div class="header__logo">
-                    <a href="./index.html"><img src="img/logox.png" alt=""></a>
+                    <a href="./index.html"><img src="~/img/logox.png" alt=""></a>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -108,8 +79,16 @@
             <div class="col-lg-3">
                 <div class="header__cart">
                     <ul>
-                        <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                        <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                        <li>
+                            <a href="javascript:void(0);" onclick="kiemTraDangNhapYeuThich();">
+                                <i class="fa fa-heart"></i>
+                                <span id="soLuongYeuThich" class="badge badge-danger">0</span>
+                            </a>
+                        </li>
+                        <li><a href="javascript:void(0);" onclick="kiemTraDangNhap();">
+                            <i class="fa fa-shopping-bag"></i>  <span id="gioHangSoLuong" class="badge badge-danger">0</span>
+                            </a>
+                            </li>
                     </ul>
                     <div class="header__cart__price">item: <span>$150.00</span></div>
                 </div>
@@ -146,3 +125,31 @@
     </div>
 </section>
 <!-- Hero Section End -->
+<script>
+    function kiemTraDangNhap() {
+        fetch('/Cart/KiemTraDangNhap')
+            .then(res => res.json())
+            .then(data => {
+                if (data.daDangNhap) {
+                    // Nếu đã đăng nhập thì chuyển tới giỏ hàng
+                    window.location.href = '/Cart/ChiTietGioHang';
+                } else {
+                    // Nếu chưa → thông báo xác nhận
+                    if (confirm("Bạn cần đăng nhập để xem giỏ hàng. Bạn có muốn đăng nhập ngay không?")) {
+                        window.location.href = '/Account/Login';
+                    }
+                }
+            });
+    }
+        function kiemTraDangNhapYeuThich() {
+        $.get('/Cart/KiemTraDangNhap', function (res) {
+            if (res.daDangNhap) {
+                window.location.href = '/Favorite/DanhSachYeuThich';
+            } else {
+                if (confirm("Bạn cần đăng nhập để xem sản phẩm yêu thích. Bạn có muốn đăng nhập ngay không?")) {
+                    window.location.href = '/Account/Login';
+                }
+            }
+        });
+    }
+</script>

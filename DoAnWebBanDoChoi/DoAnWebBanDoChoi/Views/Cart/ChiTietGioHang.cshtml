@@ -1,0 +1,203 @@
+﻿@model List<DoAnWebBanDoChoi.ViewModels.GioHangItemVM>
+
+
+<!-- Shoping Cart Section Begin -->
+<section class="shoping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping__cart__table">
+                    @if (!Model.Any())
+                    {
+                        <div class="alert alert-warning text-center">
+                            🛒 Bạn chưa có sản phẩm nào trong giỏ hàng!
+                        </div>
+                    }
+                    else
+                    {
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Products</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="shoping__cart__item">
+                                            <img src="~/img/product/dochoi/@item.HinhAnh" alt=""
+                                                 style="width: 100px !important; height: 100px !important; object-fit: cover !important; border-radius: 8px !important;">
+                                            <h5>@item.TenSp</h5>
+                                        </td>
+                                        <td class="shoping__cart__price">
+                                            @item.DonGia.ToString("N2") ₫
+                                        </td>
+                                        <td class="shoping__cart__quantity">
+                                            <div class="quantity-wrapper" data-id="@item.MaSp">
+                                                <button class="btn-minus">–</button>
+                                                <input type="number" class="quantity-input" value="@item.SoLuong" min="1" style="width: 50px;">
+                                                <button class="btn-plus">+</button>
+                                            </div>
+                                        </td>
+                                        <td class="shoping__cart__total">
+                                            <span class="tong-tien-item" data-id="@item.MaSp">
+                                                @item.TongTien.ToString("N2") ₫
+                                            </span>
+                                        </td>
+                                        <td class="shoping__cart__item__close">
+                                            <button onclick="xoaSanPham(@item.MaSp)" class="btn btn-danger btn-sm">🗑</button>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shoping__cart__btns d-flex justify-content-between align-items-center mb-3">
+                    <a href="#" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+
+                    <button onclick="xoaHetGioHang()" class="btn btn-danger">🗑 Xóa toàn bộ giỏ hàng</button>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="shoping__continue">
+                    <div class="shoping__discount">
+                        <h5>Discount Codes</h5>
+                        <form action="#">
+                            <input type="text" placeholder="Enter your coupon code">
+                            <button type="submit" class="site-btn">APPLY COUPON</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="shoping__checkout">
+                    <h5>Cart Total</h5>
+                    <ul>
+                        <li>Subtotal <span>$454.98</span></li>
+                        <li>Tổng cộng: <span id="tongCong">@Model.Sum(x => x.TongTien).ToString("N2") ₫</span></li>
+                       
+                    </ul>
+                    <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shoping Cart Section End -->
+
+
+@section Scripts {
+    <script>
+        function capNhatSoLuong(productId, newQuantity) {
+            console.log("🟢 Cập nhật số lượng:", productId, newQuantity);
+
+            fetch('/Cart/CapNhatSoLuong', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    idSanPham: productId,
+                    soLuongMoi: newQuantity
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelector(`.tong-tien-item[data-id="${productId}"]`).innerText = data.tongTienItem;
+                    document.getElementById('tongCong').innerText = data.tongCong;
+                } else {
+                    alert("Cập nhật thất bại!");
+                }
+            });
+        }
+
+        // Gắn sự kiện sau khi DOM đã load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.quantity-wrapper').forEach(wrapper => {
+                const input = wrapper.querySelector('.quantity-input');
+                const productId = wrapper.getAttribute('data-id');
+
+                // Nút cộng
+                wrapper.querySelector('.btn-plus').addEventListener('click', () => {
+                    input.value = parseInt(input.value) + 1;
+                    capNhatSoLuong(productId, input.value);
+                });
+
+                // Nút trừ
+                wrapper.querySelector('.btn-minus').addEventListener('click', () => {
+                    if (parseInt(input.value) > 1) {
+                        input.value = parseInt(input.value) - 1;
+                        capNhatSoLuong(productId, input.value);
+                    }
+                });
+
+                // Khi gõ tay vào input
+                input.addEventListener('change', () => {
+                    if (parseInt(input.value) < 1) {
+                        input.value = 1;
+                    }
+                    capNhatSoLuong(productId, input.value);
+                });
+            });
+        });
+
+                function xoaSanPham(maSp) {
+            if (!confirm("Bạn có chắc muốn xóa sản phẩm này không?")) return;
+
+            fetch('/Cart/XoaSanPham', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `maSp=${maSp}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // alert("Đã xóa sản phẩm!");
+                    location.reload();
+                } else {
+                    alert(data.message || "Xóa thất bại!");
+                }
+            });
+        }
+
+                function xoaHetGioHang() {
+            if (!confirm("Bạn chắc chắn muốn xóa toàn bộ giỏ hàng?")) return;
+
+            fetch('/Cart/XoaHetGioHang', {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // alert("Đã xóa toàn bộ giỏ hàng!");
+                    location.reload();
+                }
+            });
+        }
+
+
+
+
+
+
+
+
+    </script>
+}
+
+
+

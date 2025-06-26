@@ -41,6 +41,9 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<ThuongHieu> ThuongHieus { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=Tran_Kien_Xuan\\SQLEXPRESS;Initial Catalog=CuaHangDoChoi;Integrated Security=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -175,11 +178,12 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.HieuLuc).HasDefaultValue(true);
             entity.Property(e => e.HinhAnh).HasMaxLength(50);
-            entity.Property(e => e.HoTen).HasMaxLength(100);
+            entity.Property(e => e.HoTenHienThi).HasMaxLength(100);
             entity.Property(e => e.MatKhau).HasMaxLength(100);
             entity.Property(e => e.RandomKey)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.TenDangNhap).HasMaxLength(100);
             entity.Property(e => e.VaiTro).HasMaxLength(50);
         });
 

@@ -152,3 +152,80 @@
     </div>
 </section>
 <!-- Product Section End -->
+@* <form id="form-them-gio" asp-controller="Cart" asp-action="ThemVaoGio" method="post" style="display:none;">
+    <input type="hidden" name="maSp" id="inputMaSp" />
+    <input type="hidden" name="soLuong" value="1" />
+</form>
+
+@section Scripts {
+    <script>
+        function xacNhanDangNhap() {
+            if (confirm("Bạn cần đăng nhập để mua hàng. Bạn có muốn đăng nhập ngay không?")) {
+                window.location.href = '/Account/Login';
+            }
+        }
+
+        function submitThemGio(maSp) {
+            document.getElementById('inputMaSp').value = maSp;
+            document.getElementById('form-them-gio').submit();
+        }
+    </script>
+} *@
+<form id="form-them-gio" style="display:none;">
+    <input type="hidden" name="maSp" id="inputMaSp" />
+    <input type="hidden" name="soLuong" id="inputSoLuong" value="1" />
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        // GỌI API lấy số sản phẩm khi load trang
+   
+
+        // THÊM vào giỏ hàng bằng AJAX
+      
+        //sản phẩm yêu thích
+            function xacNhanDangNhapYeuThich() {
+            if (confirm("Bạn cần đăng nhập để yêu thích sản phẩm. Bạn có muốn đăng nhập ngay không?")) {
+                window.location.href = '/Account/Login';
+            }
+        }
+
+        // Khi DOM đã sẵn sàng
+        $(document).ready(function () {
+            $(".btn-yeu-thich").click(function (e) {
+                e.preventDefault();
+
+                const maSp = $(this).data("id"); // lấy mã sản phẩm
+                const icon = $(this).find("i");
+
+            console.log("📦 Mã sản phẩm gửi đi:", maSp); // ✅ log gửi mã
+                $.ajax({
+                    url: '/Favorite/Toggle',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ maSp: maSp }),
+                    success: function (data) {
+                        if (data.success) {
+                             console.log("🔁 Phản hồi server:", data); // ✅ log phản hồi
+                            if (data.status === "added") {
+                                icon.addClass("text-danger"); // ❤️ đã yêu thích
+                            } else {
+                                icon.removeClass("text-danger"); // 🤍 xoá yêu thích
+                            }
+                              capNhatSoLuongYeuThich();
+                        } else {
+                            alert(data.message); // thông báo lỗi (chưa đăng nhập, lỗi DB...)
+                        }
+                    },
+                    error: function () {
+                        alert("Có lỗi xảy ra khi thêm sản phẩm yêu thích.");
+                    }
+                });
+            });
+        });
+       
+
+    </script>
+}

@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="~/account/fonts/material-icon/css/material-design-iconic-font.min.css">
+    <!-- Main css -->
+    <link rel="stylesheet" href="~/account/css/style.css">
+</head>
+<body>
+    <div class="main">
+        @RenderBody()
+    </div>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

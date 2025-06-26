@@ -3534,3 +3534,13 @@ ol {
   color: #007bff; /* Màu xanh dương khi hover */
   transform: translateX(5px); /* Di chuyển nhẹ sang phải */
 }
+
+
+.fa-heart {
+    transition: color 0.3s !important;
+    color: #999 !important; /* Màu mặc định */
+}
+
+.text-danger {
+    color: red !important; /* Màu trái tim khi được yêu thích */
+}

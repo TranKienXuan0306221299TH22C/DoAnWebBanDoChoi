@@ -1,15 +1,46 @@
 ﻿@model DoAnWebBanDoChoi.ViewModels.HomeVM
-<div class="row" id="danh-sach-san-pham">
+@using DoAnWebBanDoChoi.Helpers
+@{
+    var daDangNhap = Context.Session.GetString("DangNhap") == "true";
+}
+<div class="row">
     @foreach (var sp in Model.SanPhams)
     {
         <div class="col-lg-4 col-md-6 col-sm-6">
-
             <div class="product__item">
-                <div class="featured__item__pic set-bg" data-setbg="@(Url.Content("~/img/product/dochoi/" + sp.HinhAnh + ".jpg"))">
+                <div class="product__item__pic set-bg" data-setbg="@(Url.Content("~/img/product/dochoi/" + sp.HinhAnh ))">
                     <ul class="product__item__pic__hover">
-                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                        <li>
+                          
+                            @if (daDangNhap)
+                            {
+                                <a href="javascript:;" class="btn-yeu-thich" data-id="@sp.MaSp">
+                                    <i class="fa fa-heart "></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="javascript:;" onclick="xacNhanDangNhapYeuThich()">
+                                    <i class="fa fa-heart"></i>
+                                </a>
+                            }
+                        
+                        </li>
 
-                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                        <li>
+                            @if (daDangNhap)
+                            {
+                                <a href="javascript:;" onclick="submitThemGio(@sp.MaSp)">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a href="javascript:;" onclick="xacNhanDangNhap()">
+                                    <i class="fa fa-shopping-cart"></i>
+                                </a>
+                            }
+                        </li>
                     </ul>
                 </div>
                 <div class="product__item__text">
@@ -17,7 +48,9 @@
                     <h5>@sp.DonGia.ToString("N2") đ</h5>
                 </div>
             </div>
-
         </div>
     }
+ 
+
 </div>
+

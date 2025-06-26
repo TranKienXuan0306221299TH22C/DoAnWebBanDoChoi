@@ -1,0 +1,11 @@
+﻿@{
+    Layout = null; // Không dùng layout nếu không muốn hiển thị header/footer
+}
+
+<script>
+    if (confirm("Bạn cần đăng nhập để xem giỏ hàng. Bạn có muốn đăng nhập ngay không?")) {
+        window.location.href = '/Account/Login';
+    } else {
+        window.location.href = '/';
+    }
+</script>

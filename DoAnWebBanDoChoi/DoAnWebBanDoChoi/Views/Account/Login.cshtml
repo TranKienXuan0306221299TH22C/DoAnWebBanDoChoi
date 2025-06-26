@@ -1,0 +1,58 @@
+﻿@model DoAnWebBanDoChoi.ViewModels.LoginVM
+@{
+    Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+}
+@* <form asp-action="Login" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label>Tên đăng nhập</label>
+        <input asp-for="TenDangNhap" class="form-control" />
+        <span asp-validation-for="TenDangNhap" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Mật khẩu</label>
+        <input asp-for="MatKhau" class="form-control" />
+        <span asp-validation-for="MatKhau" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-2">Đăng nhập</button>
+</form> *@
+<div class="container">
+    <div class="signin-content">
+        <div class="signin-image">
+            <figure><img src="~/Account/images/signin-image.jpg" alt="sign in image"></figure>
+            <a asp-controller="Account" asp-action="Register" class="signup-image-link">Tạo tài khoản mới</a>
+        </div>
+
+        <div class="signin-form">
+            <h2 class="form-title">Đăng nhập</h2>
+            <form asp-action="Login" method="post" class="register-form" id="login-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+                <div class="form-group">
+                    <label for="TenDangNhap"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                    <input asp-for="TenDangNhap" class="form-control" placeholder="Tên đăng nhập" />
+                    <span asp-validation-for="TenDangNhap" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="MatKhau"><i class="zmdi zmdi-lock"></i></label>
+                    <input asp-for="MatKhau" class="form-control" placeholder="Mật khẩu" />
+                    <span asp-validation-for="MatKhau" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-button">
+                    <button type="submit" class="form-submit">Đăng nhập</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

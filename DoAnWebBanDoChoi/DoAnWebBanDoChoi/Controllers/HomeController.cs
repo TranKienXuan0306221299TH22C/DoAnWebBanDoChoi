@@ -21,7 +21,7 @@ namespace DoAnWebBanDoChoi.Controllers
         }
 
 
-        public IActionResult Index(int? loai, int page = 1, int pageSize = 1)
+        public IActionResult Index(int? loai, int page = 1, int pageSize = 4)
         {
             var query = _context.SanPhams
                     .Include(sp => sp.MaDmNavigation)

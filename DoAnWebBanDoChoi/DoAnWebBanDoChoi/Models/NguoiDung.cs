@@ -7,7 +7,7 @@ public partial class NguoiDung
 {
     public int MaNd { get; set; }
 
-    public string HoTen { get; set; } = null!;
+    public string TenDangNhap { get; set; } = null!;
 
     public string? DienThoai { get; set; }
 
@@ -24,6 +24,8 @@ public partial class NguoiDung
     public bool HieuLuc { get; set; }
 
     public string? RandomKey { get; set; }
+
+    public string? HoTenHienThi { get; set; }
 
     public virtual ICollection<BinhLuan> BinhLuans { get; set; } = new List<BinhLuan>();
 

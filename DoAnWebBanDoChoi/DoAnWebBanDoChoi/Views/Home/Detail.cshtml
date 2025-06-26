@@ -1,5 +1,7 @@
 ﻿ @model DoAnWebBanDoChoi.Models.SanPham
-
+@{
+    var daDangNhap = Context.Session.GetString("DangNhap") == "true";
+}
 <!-- Product Details Section Begin -->
 <section class="product-details spad">
     <div class="container">
@@ -8,7 +10,7 @@
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
                         <img class="product__details__pic__item--large"
-                             src="~/img/product/dochoi/@(Model.HinhAnh + ".jpg")" alt="">
+                             src="~/img/product/dochoi/@(Model.HinhAnh)" alt="">
                     </div>
                   
                 </div>
@@ -28,14 +30,30 @@
                     <p>
                       @Model.MoTa
                     </p>
-                    <div class="product__details__quantity">
+        @*             <div class="product__details__quantity">
                         <div class="quantity">
                             <div class="pro-qty">
                                 <input type="text" value="1">
                             </div>
                         </div>
                     </div>
-                    <a href="#" class="primary-btn">ADD TO CARD</a>
+                    <a href="#" class="primary-btn">ADD TO CARD</a> *@
+                    <div class="product__details__quantity">
+                        <div class="quantity">
+                            <div class="pro-qty">
+                                <input type="number" class="soLuongInput" value="1" min="1" />
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (daDangNhap)
+                    {
+                        <button onclick="themChiTietGio(@Model.MaSp)" class="primary-btn">ADD TO CART</button>
+                    }
+                    else
+                    {
+                        <button onclick="xacNhanDangNhap()" class="primary-btn">ADD TO CART</button>
+                    }
                     <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                     <ul>
                         <li><b>Thương hiệu</b> <span>@Model.MaThNavigation.TenThuongHieu</span></li>
@@ -190,3 +208,57 @@
     </div>
 </section>
 <!-- Related Product Section End -->
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+   
+    <script>
+        // ✅ Giới hạn số lượng không cho nhỏ hơn 1
+        $(document).ready(function () {
+            capNhatSoLuongGioHang();
+
+            // Khi người dùng bấm tăng giảm hoặc nhập thủ công
+        $('.soLuongInput').on('change blur input', function () {
+            var val = parseInt($(this).val());
+            if (isNaN(val) || val < 1) {
+                $(this).val(1);
+            }
+        });
+
+        function capNhatSoLuongGioHang() {
+            $.get('/Cart/LayTongSanPham', function (res) {
+                if (res.success) {
+                    $('#gioHangSoLuong').text(res.soLuong);
+                }
+            });
+        }
+        function themChiTietGio(maSp) {
+           var soLuong = parseInt($('.soLuongInput').val()) || 1;
+
+            $.ajax({
+                url: '/Cart/ThemVaoGio',
+                type: 'POST',
+                data: {
+                    maSp: maSp,
+                    soLuong: soLuong
+                },
+                success: function (res) {
+                    if (res.success) {
+                        $('#gioHangSoLuong').text(res.soLuong);
+                        alert('Đã thêm vào giỏ hàng!');
+                    } else {
+                        alert('Lỗi: ' + res.message);
+                    }
+                },
+                error: function () {
+                    alert('Có lỗi xảy ra khi thêm sản phẩm!');
+                }
+            });
+        }
+                function xacNhanDangNhap() {
+            if (confirm("Bạn cần đăng nhập để mua hàng. Bạn có muốn đăng nhập ngay không?")) {
+                window.location.href = '/Account/Login';
+            }
+        }
+    </script>
+}
