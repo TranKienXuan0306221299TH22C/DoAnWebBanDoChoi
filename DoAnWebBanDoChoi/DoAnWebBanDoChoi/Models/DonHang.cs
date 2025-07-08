@@ -15,6 +15,16 @@ public partial class DonHang
 
     public decimal TongTien { get; set; }
 
+    public string? HoTen { get; set; }
+
+    public string? DienThoai { get; set; }
+
+    public string? DiaChi { get; set; }
+
+    public string? PhuongThucThanhToan { get; set; }
+
+    public decimal? PhiVanChuyen { get; set; }
+
     public DateTime NgayTao { get; set; }
 
     public DateTime? NgaySua { get; set; }
@@ -22,6 +32,4 @@ public partial class DonHang
     public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; } = new List<ChiTietDonHang>();
 
     public virtual NguoiDung MaNdNavigation { get; set; } = null!;
-
-    public virtual ICollection<ThanhToan> ThanhToans { get; set; } = new List<ThanhToan>();
 }

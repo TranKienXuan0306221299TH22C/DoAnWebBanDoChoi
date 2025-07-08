@@ -1,6 +1,7 @@
 ﻿ @model DoAnWebBanDoChoi.Models.SanPham
 @{
     var daDangNhap = Context.Session.GetString("DangNhap") == "true";
+    ViewData["Title"] = "Chi tiết";
 }
 <!-- Product Details Section Begin -->
 <section class="product-details spad">
@@ -10,7 +11,7 @@
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
                         <img class="product__details__pic__item--large"
-                             src="~/img/product/dochoi/@(Model.HinhAnh)" alt="">
+                             src="@Url.Content("~/img/product/dochoi/" + Model.HinhAnh)" alt="" >
                     </div>
                   
                 </div>
@@ -26,7 +27,7 @@
                         <i class="fa fa-star-half-o"></i>
                         <span>(18 reviews)</span>
                     </div>
-                    <div class="product__details__price">@Model.DonGia.ToString("N2") đ</div>
+                    <div class="product__details__price">@Model.DonGia.ToString("N0") đ</div>
                     <p>
                       @Model.MoTa
                     </p>
@@ -209,31 +210,21 @@
 </section>
 <!-- Related Product Section End -->
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-   
     <script>
-        // ✅ Giới hạn số lượng không cho nhỏ hơn 1
         $(document).ready(function () {
+            // ✅ Gọi lại là được vì hàm đã có trong site.js
             capNhatSoLuongGioHang();
 
-            // Khi người dùng bấm tăng giảm hoặc nhập thủ công
-        $('.soLuongInput').on('change blur input', function () {
-            var val = parseInt($(this).val());
-            if (isNaN(val) || val < 1) {
-                $(this).val(1);
-            }
-        });
-
-        function capNhatSoLuongGioHang() {
-            $.get('/Cart/LayTongSanPham', function (res) {
-                if (res.success) {
-                    $('#gioHangSoLuong').text(res.soLuong);
+            $('.soLuongInput').on('change blur input', function () {
+                var val = parseInt($(this).val());
+                if (isNaN(val) || val < 1) {
+                    $(this).val(1);
                 }
             });
-        }
+        });
+
         function themChiTietGio(maSp) {
-           var soLuong = parseInt($('.soLuongInput').val()) || 1;
+            var soLuong = parseInt($('.soLuongInput').val()) || 1;
 
             $.ajax({
                 url: '/Cart/ThemVaoGio',
@@ -255,10 +246,6 @@
                 }
             });
         }
-                function xacNhanDangNhap() {
-            if (confirm("Bạn cần đăng nhập để mua hàng. Bạn có muốn đăng nhập ngay không?")) {
-                window.location.href = '/Account/Login';
-            }
-        }
     </script>
 }
+

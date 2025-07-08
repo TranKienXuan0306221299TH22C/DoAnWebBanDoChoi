@@ -1,0 +1,27 @@
+﻿@model DoAnWebBanDoChoi.ViewModels.ProfileVM
+
+<div class="container py-4">
+    <h3 class="mb-4">Chỉnh sửa thông tin cá nhân</h3>
+
+    <form asp-action="Edit" method="post">
+        <div class="mb-3">
+            <label asp-for="HoTenHienThi" class="form-label"></label>
+            <input asp-for="HoTenHienThi" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DienThoai" class="form-label"></label>
+            <input asp-for="DienThoai" class="form-control" />
+            <span asp-validation-for="DienThoai" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="DiaChi" class="form-label"></label>
+            <input asp-for="DiaChi" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Lưu thay đổi</button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </form>
+
+</div>

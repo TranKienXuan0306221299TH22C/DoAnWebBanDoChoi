@@ -41,12 +41,13 @@ namespace DoAnWebBanDoChoi.Controllers
                     Email = model.Email,
                     MatKhau = HashHelper.HashPassword(model.MatKhau),
                     VaiTro = "user",
-                    HieuLuc = true
+                    HieuLuc = true,
+                    HinhAnh = "user.png"
                 };
-
+                TempData["Success"] = "Đăng ký thành công! Bạn có thể đăng nhập ngay.";
                 _context.NguoiDungs.Add(nguoiDung);
                 _context.SaveChanges();
-
+               
                 return RedirectToAction("Login");
             }
 

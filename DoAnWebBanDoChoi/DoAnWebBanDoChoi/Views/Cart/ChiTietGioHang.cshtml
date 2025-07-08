@@ -1,6 +1,21 @@
 ﻿@model List<DoAnWebBanDoChoi.ViewModels.GioHangItemVM>
 
+@{
+    ViewData["Title"] = "Giỏ hàng";
+}
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center">
+        @TempData["Error"]
+    </div>
+}
 <!-- Shoping Cart Section Begin -->
 <section class="shoping-cart spad">
     <div class="container">
@@ -35,7 +50,7 @@
                                             <h5>@item.TenSp</h5>
                                         </td>
                                         <td class="shoping__cart__price">
-                                            @item.DonGia.ToString("N2") ₫
+                                            @item.DonGia.ToString("N0") ₫
                                         </td>
                                         <td class="shoping__cart__quantity">
                                             <div class="quantity-wrapper" data-id="@item.MaSp">
@@ -46,7 +61,7 @@
                                         </td>
                                         <td class="shoping__cart__total">
                                             <span class="tong-tien-item" data-id="@item.MaSp">
-                                                @item.TongTien.ToString("N2") ₫
+                                                @item.TongTien.ToString("N0") ₫
                                             </span>
                                         </td>
                                         <td class="shoping__cart__item__close">
@@ -82,13 +97,17 @@
             </div>
             <div class="col-lg-6">
                 <div class="shoping__checkout">
-                    <h5>Cart Total</h5>
+                    <h5>Tổng tiền giỏ hàng</h5>
                     <ul>
-                        <li>Subtotal <span>$454.98</span></li>
-                        <li>Tổng cộng: <span id="tongCong">@Model.Sum(x => x.TongTien).ToString("N2") ₫</span></li>
                        
+                        <li>Tổng cộng: <span id="tongCong">@Model.Sum(x => x.TongTien).ToString("N0") ₫</span></li>
+
+                     
                     </ul>
-                    <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
+                    <p><span style="color: red;">*Lưu ý:</span>Phí ship 20 ngàn nếu đơn hàng lớn 200 ngàn thì free ship</p>
+                    <form asp-controller="Checkout" asp-action="Index" method="Get">
+                        <button type="submit" class="primary-btn">Thanh Toán</button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -1,6 +1,10 @@
 ﻿@model List<SanPham>
 <h2 class="mb-4">🧡 Sản phẩm bạn yêu thích</h2>
 
+@{
+    ViewData["Title"] = "Yêu thích";
+}
+
 @if (!Model.Any())
 {
     <div class="alert alert-warning">Bạn chưa yêu thích sản phẩm nào!</div>

@@ -37,13 +37,11 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<SanPhamYeuThich> SanPhamYeuThiches { get; set; }
 
-    public virtual DbSet<ThanhToan> ThanhToans { get; set; }
-
     public virtual DbSet<ThuongHieu> ThuongHieus { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=Tran_Kien_Xuan\\SQLEXPRESS;Initial Catalog=CuaHangDoChoi;Integrated Security=True;Trust Server Certificate=True");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseSqlServer("Data Source=Tran_Kien_Xuan\\SQLEXPRESS;Initial Catalog=CuaHangDoChoi;Integrated Security=True;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -121,9 +119,14 @@ public partial class AppDbContext : DbContext
             entity.ToTable("DonHang");
 
             entity.Property(e => e.MaDh).HasColumnName("MaDH");
+            entity.Property(e => e.DiaChi).HasMaxLength(200);
+            entity.Property(e => e.DienThoai).HasMaxLength(20);
             entity.Property(e => e.GhiChu).HasMaxLength(500);
+            entity.Property(e => e.HoTen).HasMaxLength(50);
             entity.Property(e => e.MaNd).HasColumnName("MaND");
             entity.Property(e => e.NgayTao).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.PhiVanChuyen).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.PhuongThucThanhToan).HasMaxLength(50);
             entity.Property(e => e.TongTien).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TrangThai).HasDefaultValue(1);
 
@@ -260,29 +263,6 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.MaSp)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_SanPhamYeuThich_SanPham");
-        });
-
-        modelBuilder.Entity<ThanhToan>(entity =>
-        {
-            entity.HasKey(e => e.MaTt).HasName("PK__ThanhToa__272500790F318232");
-
-            entity.ToTable("ThanhToan");
-
-            entity.Property(e => e.MaTt).HasColumnName("MaTT");
-            entity.Property(e => e.MaDh).HasColumnName("MaDH");
-            entity.Property(e => e.MaNd).HasColumnName("MaND");
-            entity.Property(e => e.PhuongThucThanhToan).HasMaxLength(50);
-            entity.Property(e => e.TrangThaiThanhToan).HasMaxLength(50);
-
-            entity.HasOne(d => d.MaDhNavigation).WithMany(p => p.ThanhToans)
-                .HasForeignKey(d => d.MaDh)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ThanhToan_DonHang");
-
-            entity.HasOne(d => d.MaNdNavigation).WithMany(p => p.ThanhToans)
-                .HasForeignKey(d => d.MaNd)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ThanhToan_NguoiDung");
         });
 
         modelBuilder.Entity<ThuongHieu>(entity =>

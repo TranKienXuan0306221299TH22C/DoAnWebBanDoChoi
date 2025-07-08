@@ -129,7 +129,7 @@ ol {
   right: 0;
   height: 4px;
   width: 80px;
-  background: #ff89df;
+  background: #f976b8;
   content: "";
   margin: 0 auto;
 }
@@ -167,7 +167,7 @@ ol {
   color: #ffffff;
   text-transform: uppercase;
   font-weight: 700;
-  background: #ff89df;
+  background: #f976b8;
   letter-spacing: 2px;
 }
 
@@ -178,7 +178,7 @@ ol {
   text-transform: uppercase;
   display: inline-block;
   padding: 13px 30px 12px;
-  background: #ff89df;
+  background: #f976b8;
   border: none;
 }
 
@@ -291,8 +291,9 @@ ol {
 }
 
 .header__top__right {
-  text-align: right;
+    text-align: right;
   padding: 10px 0 13px;
+
 }
 
 .header__top__right__social {
@@ -449,7 +450,7 @@ ol {
 }
 
 .header__menu ul li .header__menu__dropdown li:hover > a {
-  color: #ff89df;
+  color: #f976b8;
 }
 
 .header__menu ul li .header__menu__dropdown li a {
@@ -460,7 +461,7 @@ ol {
 }
 
 .header__menu ul li.active a {
-  color: #ff89df;
+  color: #f976b8;
 }
 
 .header__menu ul li:hover .header__menu__dropdown {
@@ -470,7 +471,7 @@ ol {
 }
 
 .header__menu ul li:hover > a {
-  color: #ff89df;
+  color: #f976b8;
 }
 
 .header__menu ul li:last-child {
@@ -524,7 +525,7 @@ ol {
 .header__cart ul li a span {
   height: 13px;
   width: 13px;
-  background: #ff89df;
+  background: #f976b8;
   font-size: 10px;
   color: #ffffff;
   line-height: 13px;
@@ -587,7 +588,7 @@ ol {
 }
 
 .hero__categories__all {
-  background: #ff89df;
+  background: #f976b8;
   position: relative;
   padding: 10px 25px 10px 40px;
   cursor: pointer;
@@ -700,7 +701,7 @@ ol {
 
 .hero__search__phone__icon {
   font-size: 18px;
-  color: #ff89df;
+  color: #f976b8;
   height: 50px;
   width: 50px;
   background: #f5f5f5;
@@ -738,7 +739,7 @@ ol {
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 4px;
-  color: #ff89df;
+  color: #f976b8;
 }
 
 .hero__text h2 {
@@ -840,7 +841,7 @@ ol {
   bottom: -2px;
   width: 100%;
   height: 2px;
-  background: #ff89df;
+  background: #f976b8;
   content: "";
   opacity: 0;
 }
@@ -888,8 +889,8 @@ ol {
 }
 
 .featured__item__pic__hover li:hover a {
-  background: #ff89df;
-  border-color: #ff89df;
+  background: #f976b8;
+  border-color: #f976b8;
 }
 
 .featured__item__pic__hover li:hover a i {
@@ -1328,8 +1329,8 @@ ol {
 }
 
 .product__item__pic__hover li:hover a {
-  background: #ff89df;
-  border-color: #ff89df;
+  background: #f976b8;
+  border-color: #f976b8;
 }
 
 .product__item__pic__hover li:hover a i {
@@ -1527,7 +1528,7 @@ ol {
 }
 
 .filter__option span:hover {
-  color: #ff89df;
+  color: #f976b8;
 }
 
 .product__item {
@@ -1568,8 +1569,8 @@ ol {
 }
 
 .product__item__pic__hover li:hover a {
-  background: #ff89df;
-  border-color: #ff89df;
+  background: #f976b8;
+  border-color: #f976b8;
 }
 
 .product__item__pic__hover li:hover a i {
@@ -1649,8 +1650,8 @@ ol {
 
 .product__pagination a:hover,
 .blog__pagination a:hover {
-  background: #ff89df;
-  border-color: #ff89df;
+  background: #f976b8;
+  border-color: #f976b8;
   color: #ffffff;
 }
 
@@ -2170,8 +2171,8 @@ ol {
 }
 
 .checkout__input__checkbox label input:checked ~ .checkmark {
-  background: #ff89df;
-  border-color: #ff89df;
+  background: #f976b8;
+  border-color: #f976b8;
 }
 
 .checkout__input__checkbox label input:checked ~ .checkmark:after {
@@ -2398,7 +2399,7 @@ ol {
 }
 
 .blog__sidebar__item ul li a:hover {
-  color: #ff89df;
+  color: #f976b8;
 }
 
 .blog__sidebar__search {
@@ -2618,7 +2619,7 @@ ol {
 }
 
 .blog__details__widget .blog__details__social a:hover {
-  color: #ff89df;
+  color: #f976b8;
 }
 
 .blog__details__widget .blog__details__social a:last-child {
@@ -2736,7 +2737,7 @@ ol {
 }
 
 .footer__widget .footer__widget__social a:hover {
-  background: #ff89df;
+  background: #f976b8;
   color: #ffffff;
   border-color: #ffffff;
 }
@@ -2774,7 +2775,7 @@ ol {
 
 .contact__widget span {
   font-size: 36px;
-  color: #ff89df;
+  color: #f976b8;
 }
 
 .contact__widget h4 {
@@ -2813,7 +2814,7 @@ ol {
 
 .map .map-inside i {
   font-size: 48px;
-  color: #ff89df;
+  color: #f976b8;
   position: absolute;
   bottom: -75px;
   left: 50%;
@@ -3070,7 +3071,7 @@ ol {
   .humberger__menu__cart ul li a span {
     height: 13px;
     width: 13px;
-    background: #ff89df;
+    background: #f976b8;
     font-size: 10px;
     color: #ffffff;
     line-height: 13px;
@@ -3136,7 +3137,7 @@ ol {
     -webkit-border-radius: 0;
     border-radius: 0;
     background: transparent;
-    color: #ff89df;
+    color: #f976b8;
   }
   .humberger__menu__wrapper .slicknav_nav .slicknav_row,
   .humberger__menu__wrapper .slicknav_nav a {
@@ -3328,7 +3329,7 @@ ol {
   .humberger__menu__cart ul li a span {
     height: 13px;
     width: 13px;
-    background: #ff89df;
+    background: #f976b8;
     font-size: 10px;
     color: #ffffff;
     line-height: 13px;
@@ -3394,7 +3395,7 @@ ol {
     -webkit-border-radius: 0;
     border-radius: 0;
     background: transparent;
-    color: #ff89df;
+    color: #f976b8;
   }
   .humberger__menu__wrapper .slicknav_nav .slicknav_row,
   .humberger__menu__wrapper .slicknav_nav a {
@@ -3506,7 +3507,7 @@ ol {
 }
 
 .hero__search__form .site-btn {
-  background-color: #ff89df;
+  background-color: #f976b8;
   color: #fff;
   transition: background-color 0.3s ease, transform 0.2s ease;
   border: none;
@@ -3543,4 +3544,51 @@ ol {
 
 .text-danger {
     color: red !important; /* Màu trái tim khi được yêu thích */
+}
+
+/*phan trang*/
+.pagination {
+    gap: 4px !important;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff !important;
+    border-color: #007bff !important;
+    color: white !important;
+}
+
+.page-link {
+    color: #007bff !important;
+    border: 1px solid #dee2e6 !important;
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+    border-radius: 6px !important;
+}
+
+    .page-link:hover {
+        background-color: #e9ecef !important;
+        border-color: #dee2e6 !important;
+    }
+
+
+.custom-col {
+    width: 45% !important;
+    flex: 0 0 45% !important;
+    max-width: 45% !important;
+}
+/*sideshow*/
+.owl-nav,
+.owl-dots {
+    display: none !important;
+}
+.product__discount__item__pic img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+}
+.product__discount__item {
+    min-height: 380px; /* hoặc chiều cao phù hợp với nội dung */
+    overflow: hidden;
+    box-sizing: border-box;
 }

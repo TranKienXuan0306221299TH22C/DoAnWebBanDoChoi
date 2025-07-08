@@ -1,0 +1,24 @@
+﻿ @model List<SanPham>
+@foreach (var sp in Model)
+{
+  
+    <div class="col-lg-4">
+        <div class="product__discount__item">
+            <div class="product__discount__item__pic set-bg"
+                 data-setbg="@Url.Content("~/img/product/dochoi/" + sp.HinhAnh)">
+
+                <ul class="product__item__pic__hover">
+                    <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                    <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                </ul>
+            </div>
+            <div class="product__discount__item__text">
+
+                <h5><a href="#">@sp.TenSanPham</a></h5>
+                <div class="product__item__price">@sp.DonGia.ToString("N0") đ </div>
+            </div>
+        </div>
+    </div>
+}
+ 

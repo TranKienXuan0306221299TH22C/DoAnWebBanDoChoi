@@ -1,0 +1,201 @@
+﻿@model DoAnWebBanDoChoi.ViewModels.ThanhToanVM
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+
+<section class="checkout spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h6>
+                    <span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code
+                </h6>
+            </div>
+        </div>
+        <div class="checkout__form">
+            <h4>Billing Details</h4>
+            <!-- form -->
+          @*   <form asp-action="DatHang" asp-controller="Checkout" method="post">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Họ tên<span>*</span></p>
+                                    <input asp-for="HoTen" type="text" class="form-control" required />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Số điện thoại<span>*</span></p>
+                                    <input asp-for="DienThoai" type="text" class="form-control" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>Địa chỉ<span>*</span></p>
+                            <input asp-for="DiaChi" type="text" class="form-control" required />
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>Ghi chú</p>
+                            <input asp-for="GhiChu" type="text" class="form-control" placeholder="Ghi chú về đơn hàng của bạn (nếu có)" />
+                        </div>
+                        <p><span style="color: red;">*Lưu ý:</span>Phí ship 20 ngàn nếu đơn hàng lớn 200 ngàn thì free ship</p>
+
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 ">
+                        <div class="checkout__order">
+                            <h4>Đơn hàng</h4>
+             
+                            <div class="checkout__order__products" style="display: flex; font-weight: bold; padding-bottom: 8px; border-bottom: 1px solid #ddd;">
+                                <span style="flex: 1;">Sản phẩm</span>
+                                <span style="width: 80px; text-align: center;">Số lượng</span>
+                                <span style="width: 100px; text-align: right;">Tổng</span>
+                            </div>
+
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                @foreach (var sp in Model.DanhSachSanPham)
+                                {
+                                    <li style="display: flex; width: 100%; align-items: center; padding: 6px 0; border-bottom: 1px solid #f0f0f0;">
+                                        <span style="flex: 1; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            @sp.TenSp
+                                        </span>
+                                        <span style="width: 80px; text-align: center;">
+                                            @sp.SoLuong
+                                        </span>
+                                        <span style="text-align: right; margin-left: auto;">
+                                            @sp.TongTien.ToString("N0") ₫
+                                        </span>
+                                    </li>
+                                }
+                            </ul>
+                            @if (ViewBag.TongTien < 200000)
+                            {
+                                <p><span style="color: red;">*</span>Phí ship 20 ngàn</p>
+                            }
+                            else
+                            {
+                                <p><span style="color: green;">*</span>Đơn hàng của bạn được <strong>free ship</strong> 🎉</p>
+                            }
+                            <div class="checkout__order__subtotal">Tạm tính <span>@Model.TongTien.ToString("N0") ₫</span></div>
+                            <div class="checkout__order__total">Tổng cộng <span>@Model.TongTienSauPhiShip.ToString("N0") ₫</span></div>
+
+                            <div class="checkout__input__radio">
+                                <label>
+                                    <input type="radio" name="PhuongThucThanhToan" value="cod" checked /> Thanh toán khi nhận hàng (COD)
+                                </label>
+                            </div>
+                            <div class="checkout__input__radio">
+                                <label>
+                                    <input type="radio" name="PhuongThucThanhToan" value="vnpay" /> Thanh toán qua VNPay
+                                </label>
+                            </div>
+
+                            <button type="submit" class="site-btn">Xác nhận đặt hàng</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+ *@
+            <form asp-action="DatHang" asp-controller="Checkout" method="post">
+                @Html.AntiForgeryToken() <!-- Bảo mật bắt buộc -->
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Họ tên<span style="color:red;">*</span></p>
+                                    <input asp-for="HoTen" type="text" class="form-control" />
+                                    <span asp-validation-for="HoTen" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="checkout__input">
+                                    <p>Số điện thoại<span style="color:red;">*</span></p>
+                                    <input asp-for="DienThoai" type="text" class="form-control" />
+                                    <span asp-validation-for="DienThoai" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>Địa chỉ<span style="color:red;">*</span></p>
+                            <input asp-for="DiaChi" type="text" class="form-control" />
+                            <span asp-validation-for="DiaChi" class="text-danger"></span>
+                        </div>
+
+                        <div class="checkout__input">
+                            <p>Ghi chú</p>
+                            <input asp-for="GhiChu" type="text" class="form-control" placeholder="Ghi chú về đơn hàng của bạn (nếu có)" data-val="false" />
+                            
+                        </div>
+
+                        <p><span style="color: red;">*Lưu ý:</span> Phí ship 20 ngàn nếu đơn hàng lớn 200 ngàn thì free ship</p>
+                    </div>
+
+                    <!-- Bên phải: phần đơn hàng giữ nguyên như ck viết -->
+                    <!-- ... -->
+                    <div class="col-lg-6 col-md-6 ">
+                        <div class="checkout__order">
+                            <h4>Đơn hàng</h4>
+
+                            <div class="checkout__order__products" style="display: flex; font-weight: bold; padding-bottom: 8px; border-bottom: 1px solid #ddd;">
+                                <span style="flex: 1;">Sản phẩm</span>
+                                <span style="width: 80px; text-align: center;">Số lượng</span>
+                                <span style="width: 100px; text-align: right;">Tổng</span>
+                            </div>
+
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                @foreach (var sp in Model.DanhSachSanPham)
+                                {
+                                    <li style="display: flex; width: 100%; align-items: center; padding: 6px 0; border-bottom: 1px solid #f0f0f0;">
+                                        <span style="flex: 1; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                            @sp.TenSp
+                                        </span>
+                                        <span style="width: 80px; text-align: center;">
+                                            @sp.SoLuong
+                                        </span>
+                                        <span style="text-align: right; margin-left: auto;">
+                                            @sp.TongTien.ToString("N0") ₫
+                                        </span>
+                                    </li>
+                                }
+                            </ul>
+                            @if (ViewBag.TongTien < 200000)
+                            {
+                                <p><span style="color: red;">*</span>Phí ship 20 ngàn</p>
+                            }
+                            else
+                            {
+                                <p><span style="color: green;">*</span>Đơn hàng của bạn được <strong>free ship</strong> 🎉</p>
+                            }
+                            <div class="checkout__order__subtotal">Tạm tính <span>@Model.TongTien.ToString("N0") ₫</span></div>
+                            <div class="checkout__order__total">Tổng cộng <span>@Model.TongTienSauPhiShip.ToString("N0") ₫</span></div>
+
+                            <div class="checkout__input__radio">
+                                <label>
+                                    <input type="radio" name="PhuongThucThanhToan" value="cod" checked /> Thanh toán khi nhận hàng (COD)
+                                </label>
+                            </div>
+                            <div class="checkout__input__radio">
+                                <label>
+                                    <input type="radio" name="PhuongThucThanhToan" value="vnpay" /> Thanh toán qua VNPay
+                                </label>
+                            </div>
+
+                            <button type="submit" class="site-btn">Xác nhận đặt hàng</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>

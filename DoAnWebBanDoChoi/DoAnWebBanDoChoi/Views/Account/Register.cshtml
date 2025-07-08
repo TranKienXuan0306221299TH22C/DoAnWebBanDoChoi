@@ -1,37 +1,8 @@
 ﻿@model DoAnWebBanDoChoi.ViewModels.RegisterVM
 @{
     Layout = "~/Views/Shared/_LayoutAccount.cshtml";
+    ViewData["Title"] = "Đăng ký";
 }
-@* <form asp-action="Register" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-    <div>
-        <label>Tên đăng nhập</label>
-        <input asp-for="TenDangNhap" class="form-control" />
-        <span asp-validation-for="TenDangNhap" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Mật khẩu</label>
-        <input asp-for="MatKhau" class="form-control" />
-        <span asp-validation-for="MatKhau" class="text-danger"></span>
-    </div>
-
-    <div>
-        <label>Xác nhận mật khẩu</label>
-        <input asp-for="XacNhanMatKhau" class="form-control" />
-        <span asp-validation-for="XacNhanMatKhau" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary mt-2">Đăng ký</button>
-</form>
- *@
 
     <div class="container">
         <div class="signup-content">

@@ -1,10 +1,11 @@
-﻿@model DoAnWebBanDoChoi.ViewModels.HomeVM
+﻿@model X.PagedList.IPagedList<DoAnWebBanDoChoi.Models.SanPham>
+@using X.PagedList.Mvc.Core
 @using DoAnWebBanDoChoi.Helpers
 @{
     var daDangNhap = Context.Session.GetString("DangNhap") == "true";
 }
 <div class="row">
-    @foreach (var sp in Model.SanPhams)
+    @foreach (var sp in Model)
     {
         <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="product__item">
@@ -45,7 +46,7 @@
                 </div>
                 <div class="product__item__text">
                     <h6><a asp-controller="Home" asp-action="Detail" asp-route-id="@sp.MaSp">@sp.TenSanPham</a></h6>
-                    <h5>@sp.DonGia.ToString("N2") đ</h5>
+                    <h5>@sp.DonGia.ToString("N0") đ</h5>
                 </div>
             </div>
         </div>
@@ -54,3 +55,20 @@
 
 </div>
 
+<div class="text-center mt-4">
+</div>
+
+<div class="product__pagination">
+    <div class="text-center mt-4">
+        @Html.PagedListPager(Model,
+                 page => Url.Action("Index", new { page, loai = Context.Request.Query["loai"] }),
+                 new PagedListRenderOptions
+        {
+            UlElementClasses = new[] { "pagination", "justify-content-center" },
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" },
+            ActiveLiElementClass = "active"
+        }
+                 )
+    </div>
+</div>
