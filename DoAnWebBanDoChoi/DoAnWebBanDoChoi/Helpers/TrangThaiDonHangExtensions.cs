@@ -11,7 +11,7 @@ namespace DoAnWebBanDoChoi.Helpers
                 TrangThaiDonHang.ChoXacNhan => "Chờ xác nhận",
                 TrangThaiDonHang.DaXacNhan => "Đã xác nhận",
                 TrangThaiDonHang.DangGiao => "Đang giao",
-                TrangThaiDonHang.DaGiao => "Đã giao",
+                TrangThaiDonHang.DaGiao => "Đã hoàn thành",
                 TrangThaiDonHang.DaHuy => "Đã huỷ",
                 _ => "Không rõ"
             };

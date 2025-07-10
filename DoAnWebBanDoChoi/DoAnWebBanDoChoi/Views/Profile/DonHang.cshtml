@@ -1,0 +1,86 @@
+﻿@model DoAnWebBanDoChoi.ViewModels.ProfileVM
+@using DoAnWebBanDoChoi.Enums
+
+@{
+    ViewData["Title"] = "Đơn hàng";
+    var trangThais = Enum.GetValues(typeof(TrangThaiDonHang)).Cast<TrangThaiDonHang>().ToList();
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <h3 class="mb-4">Đơn hàng của bạn</h3>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs mb-4" role="tablist">
+                @for (int i = 0; i < trangThais.Count; i++)
+                {
+                    var tt = trangThais[i];
+                    var id = "tab-" + (int)tt;
+
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link @(i == 0 ? "active" : "")" data-bs-toggle="tab" href="#@id" role="tab">
+                            @tt.GetDisplayName()
+                        </a>
+                    </li>
+                }
+            </ul>
+
+            <!-- Nội dung từng tab -->
+            <div class="tab-content">
+                @for (int i = 0; i < trangThais.Count; i++)
+                {
+                    var tt = trangThais[i];
+                    var donHangs = Model.DonHangs?.Where(d => d.TrangThai == (int)tt).ToList();
+                    var id = "tab-" + (int)tt;
+
+                    <div class="tab-pane fade @(i == 0 ? "show active" : "")" id="@id" role="tabpanel">
+                        @if (donHangs != null && donHangs.Any())
+                        {
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Mã Đơn</th>
+                                        <th>Ngày đặt</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Phương thức</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var dh in donHangs)
+                                    {
+                                        <tr>
+                                            <td>@dh.MaDh</td>
+                                            <td>@dh.NgayTao.ToString("dd/MM/yyyy")</td>
+                                            <td>@dh.TongTien.ToString("N0") ₫</td>
+                                            <td>@dh.PhuongThucThanhToan</td>
+                                            <td>
+                                                <a href="/DonHang/ChiTiet/@dh.MaDh" class="btn btn-sm btn-primary">Xem</a>
+                                                <form asp-action="HuyDonHang" method="post" style="display:inline;">
+                                                    <input type="hidden" name="id" value="@dh.MaDh" />
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-danger"
+                                                    @(dh.TrangThai >= 3 ? "disabled" : "")
+                                                            onclick="return confirm('Bạn có chắc muốn hủy đơn hàng?')">
+                                                        Hủy
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>Không có đơn hàng nào.</p>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

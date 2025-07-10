@@ -1,44 +1,53 @@
 ﻿@model List<SanPham>
-<h2 class="mb-4">🧡 Sản phẩm bạn yêu thích</h2>
+
 
 @{
     ViewData["Title"] = "Yêu thích";
 }
 
-@if (!Model.Any())
-{
-    <div class="alert alert-warning">Bạn chưa yêu thích sản phẩm nào!</div>
-}
-else
-{
-    <table class="table table-bordered table-hover text-center align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Hình ảnh</th>
-                <th>Tên sản phẩm</th>
-                <th>Đơn giá</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var sp in Model)
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h2 class="mb-4">🧡 Sản phẩm bạn yêu thích</h2>
+            @if (!Model.Any())
             {
-                <tr>
-                    <td style="width: 120px;">
-                        <img src="~/img/product/dochoi/@sp.HinhAnh" alt="@sp.TenSanPham" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;" />
-                    </td>
-                    <td>@sp.TenSanPham</td>
-                    <td>@sp.DonGia.ToString("N2") đ</td>
-                    <td>
-                        <a href="/Home/Detail/@sp.MaSp" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
-                    
-                        <a href="/Favorite/Xoa?maSp=@sp.MaSp" class="btn btn-outline-danger btn-sm">Bỏ yêu thích</a>
-                        <a href="javascript:;" onclick="submitThemGio(@sp.MaSp)" class="btn btn-outline-success btn-sm">
-                            🛒 Thêm vào giỏ
-                        </a>
-                    </td>
-                </tr>
+                <div class="alert alert-warning">Bạn chưa yêu thích sản phẩm nào!</div>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <table class="table table-bordered table-hover text-center align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Hình ảnh</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var sp in Model)
+                        {
+                            <tr>
+                                <td style="width: 120px;">
+                                    <img src="~/img/product/dochoi/@sp.HinhAnh" alt="@sp.TenSanPham" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;" />
+                                </td>
+                                <td>@sp.TenSanPham</td>
+                                <td>@sp.DonGia.ToString("N2") đ</td>
+                                <td>
+                                    <a href="/Home/Detail/@sp.MaSp" class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+
+                                    <a href="/Favorite/Xoa?maSp=@sp.MaSp" class="btn btn-outline-danger btn-sm">Bỏ yêu thích</a>
+                                    <a href="javascript:;" onclick="submitThemGio(@sp.MaSp)" class="btn btn-outline-success btn-sm">
+                                        🛒 Thêm vào giỏ
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+
+            </div>
+    </div>
+</div>

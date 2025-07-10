@@ -39,6 +39,19 @@ namespace DoAnWebBanDoChoi.Controllers
 
             return View(vm);
         }
+        public IActionResult DonHang()
+        {
+            var maNd = HttpContext.Session.Get<int>("MaNd");
+
+            var vm = new ProfileVM
+            {
+                DonHangs = _context.DonHangs
+                    .Where(d => d.MaNd == maNd)
+                    .ToList()
+            };
+
+            return View(vm);
+        }
 
         [HttpPost]
         public IActionResult HuyDonHang(int id)

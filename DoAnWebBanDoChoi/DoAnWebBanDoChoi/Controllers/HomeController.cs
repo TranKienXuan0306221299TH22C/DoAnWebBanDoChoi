@@ -30,7 +30,7 @@ namespace DoAnWebBanDoChoi.Controllers
         //    var danhSach = query.ToPagedList(page, pageSize);
         //    return View(danhSach);
         //}
-        public IActionResult Index(int? loai, int page = 1, int pageSize = 4)
+        public IActionResult Index(int? loai, int page = 1, int pageSize = 8)
         {
             var query = _context.SanPhams
                 .Include(sp => sp.MaDmNavigation)

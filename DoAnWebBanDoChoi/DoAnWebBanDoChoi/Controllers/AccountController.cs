@@ -70,7 +70,10 @@ namespace DoAnWebBanDoChoi.Controllers
                 var hashedPassword = HashHelper.HashPassword(model.MatKhau);
 
                 var user = _context.NguoiDungs
-                            .FirstOrDefault(x => x.TenDangNhap == model.TenDangNhap && x.MatKhau == hashedPassword && x.HieuLuc);
+                    .FirstOrDefault(x =>
+                        (x.TenDangNhap == model.TenDangNhap || x.Email == model.TenDangNhap)
+                        && x.MatKhau == hashedPassword
+                        && x.HieuLuc);
 
                 if (user != null)
                 {
