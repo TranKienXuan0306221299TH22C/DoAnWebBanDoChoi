@@ -4,18 +4,6 @@
     ViewData["Title"] = "Giỏ hàng";
 }
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success text-center">
-        @TempData["Success"]
-    </div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger text-center">
-        @TempData["Error"]
-    </div>
-}
 <!-- Shoping Cart Section Begin -->
 <section class="shoping-cart spad">
     <div class="container">
@@ -87,11 +75,11 @@
             <div class="col-lg-6">
                 <div class="shoping__continue">
                     <div class="shoping__discount">
-                        <h5>Discount Codes</h5>
+                @*         <h5>Discount Codes</h5>
                         <form action="#">
                             <input type="text" placeholder="Enter your coupon code">
                             <button type="submit" class="site-btn">APPLY COUPON</button>
-                        </form>
+                        </form> *@
                     </div>
                 </div>
             </div>
@@ -209,13 +197,10 @@
         }
 
 
-
-
-
-
-
+  
 
     </script>
+   
 }
 
 

@@ -21,7 +21,12 @@ namespace DoAnWebBanDoChoi.ViewModels
 
         public decimal TongTien { get; set; }  // Tổng hàng chưa ship
         public decimal TongTienSauPhiShip { get; set; } // ✅ Tổng đã có ship
-
+        [Required(ErrorMessage = "Vui lòng chọn tỉnh/thành")]
+        public string? TinhThanh { get; set; }
+        [Required(ErrorMessage = "Vui lòng chọn quận/huyện")]
+        public string? QuanHuyen { get; set; }
+        [Required(ErrorMessage = "Vui lòng chọn phường/xã")]
+        public string? PhuongXa { get; set; }
         public List<GioHangItemVM> DanhSachSanPham { get; set; } = new();
     }
 }

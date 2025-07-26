@@ -11,6 +11,8 @@ public partial class ChiTietDonHang
 
     public int MaSp { get; set; }
 
+    public decimal GiaGoc { get; set; }
+
     public decimal DonGia { get; set; }
 
     public int SoLuong { get; set; }

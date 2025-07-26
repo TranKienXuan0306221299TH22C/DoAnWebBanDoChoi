@@ -275,3 +275,16 @@
     background: var(--dark);
     border-color: var(--primary);
 }
+
+.custom-hover {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    .custom-hover:hover {
+        background-color: var(--bs-primary); 
+        color: white !important;
+    }
+
+        .custom-hover:hover i {
+            color: white !important;
+        }

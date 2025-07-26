@@ -1,0 +1,45 @@
+﻿@model List<DoAnWebBanDoChoi.Models.ThuongHieu>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-white rounded shadow p-4 border">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold text-primary">Thương hiệu sản phẩm</h5>
+                    <div>
+                        <a asp-action="Create" class="btn btn-sm btn-success me-2">
+                            <i class="fa fa-plus me-1"></i> Thêm thương hiệu
+                        </a>
+                        <a asp-action="DanhSachXoa" class="btn btn-sm btn-danger">
+                            <i class="fa fa-trash me-1"></i> Xóa thương hiệu
+                        </a>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-striped table-hover align-middle">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Tên thương hiệu</th>
+                            <th scope="col">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var th in Model)
+                        {
+                            <tr>
+                                <td class="text-center">@th.MaTh</td>
+                                <td>@th.TenThuongHieu</td>
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@th.MaTh" class="btn btn-sm btn-warning">
+                                        <i class="fa fa-edit me-1"></i> Sửa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

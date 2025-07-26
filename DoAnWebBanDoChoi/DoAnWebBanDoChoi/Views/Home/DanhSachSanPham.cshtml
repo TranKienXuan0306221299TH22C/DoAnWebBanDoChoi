@@ -9,7 +9,13 @@
     {
         <div class="col-lg-4 col-md-6 col-sm-6">
             <div class="product__item">
-                <div class="product__item__pic set-bg" data-setbg="@(Url.Content("~/img/product/dochoi/" + sp.HinhAnh ))">
+
+                <div class="product__item__pic set-bg" >
+                    <a asp-controller="Home" asp-action="Detail"
+                       asp-route-slug="@sp.Slug" asp-route-id="@sp.MaSp">
+                        <img src="@(Url.Content("~/img/product/dochoi/" + sp.HinhAnh))"
+                             alt="@sp.TenSanPham" class="product__item__pic" />
+                    </a>
                     <ul class="product__item__pic__hover">
                         <li>
                           
@@ -45,7 +51,7 @@
                     </ul>
                 </div>
                 <div class="product__item__text">
-                    <h6><a asp-controller="Home" asp-action="Detail" asp-route-id="@sp.MaSp">@sp.TenSanPham</a></h6>
+                    <h6><a asp-controller="Home" asp-action="Detail" asp-route-slug="@sp.Slug" asp-route-id="@sp.MaSp">@sp.TenSanPham</a></h6>
                     <h5>@sp.DonGia.ToString("N0") đ</h5>
                 </div>
             </div>

@@ -20,18 +20,15 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="header__top__right ">
-                    @*     <div class="header__top__right__social" style="padding-right: 120px;>
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-linkedin"></i></a>
-                            <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                        </div> *@
+       
                         @if (daDangNhap)
                         {
-                            @*     <a asp-controller="Account" asp-action="Logout"><i class="fa fa-user"></i> Logout</a> *@
+                    
+                         
                             <div class="header__top__right__auth"
-                                 style="position: absolute; top: 10px; right: 15px; z-index: 99;">
+                                 style="position: absolute; top: 10px; right: 15px; z-index: 99; display: flex; align-items: center; gap: 15px;">
 
+                                <!-- Tài khoản (avatar + tên) -->
                                 <a asp-controller="Profile" asp-action="Index"
                                    class="d-flex align-items-center text-decoration-none"
                                    style="max-width: 250px;">
@@ -44,7 +41,14 @@
                                         TaiKhoan
                                     </span>
                                 </a>
+                                <!-- Logout -->
+                                <a asp-controller="Account" asp-action="Logout"
+                                   class="text-dark text-decoration-none fw-semibold"
+                                   style="font-size: 12px;">
+                                    <i class="fa fa-sign-out-alt me-1"></i> Đăng xuất
+                                </a>
                             </div>
+
                         }
                         else
                         {
@@ -81,9 +85,9 @@
                         <li>
                             <a href="#">Trang</a>
                             <ul class="header__menu__dropdown">                      
-                                <li><a href="./shoping-cart.html">Giỏ hàng</a></li>
+                                <li><a asp-controller="Demo" asp-action="Index">Giỏ hàng</a></li>
                                 <li><a href="./shoping-cart.html">Yêu thích</a></li>
-                                <li><a href="./checkout.html">Đơn hàng</a></li>
+                                <li><a asp-controller="Checkout" asp-action="test">Đơn hàng</a></li>
                               
                             </ul>
                         </li>

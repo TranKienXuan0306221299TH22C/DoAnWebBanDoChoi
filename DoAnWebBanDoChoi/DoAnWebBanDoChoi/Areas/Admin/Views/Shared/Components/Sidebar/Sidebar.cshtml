@@ -1,0 +1,68 @@
+﻿@model DoAnWebBanDoChoi.ViewModels.SidebarVM
+
+
+<div class="sidebar pe-4 pb-3">
+    <nav class="navbar bg-light navbar-light">
+        <a href="index.html" class="navbar-brand mx-4 mb-3">
+            <h3 class="text-primary"><i></i>Admin</h3>
+        </a>
+        <div class="d-flex align-items-center ms-4 mb-4">
+            <div class="position-relative">
+                <img class="rounded-circle" src="~/admin/img/admin.png" alt="" style="width: 40px; height: 40px;">
+                <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+            </div>
+            <div class="ms-3">
+                <h6 class="mb-0">Tên: @Model.HoTen</h6>
+               
+            </div>
+        </div>
+        <div class="navbar-nav w-100">
+            <a href="index.html" class="nav-item nav-link "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown"><i class="bi bi-file-earmark-text me-2"></i> phiếu nhập</a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a href="button.html" class="dropdown-item">Phiếu nhập</a>
+                    <a href="typography.html" class="dropdown-item">Chi tiết phiếu nhập</a>
+
+                </div>
+            </div>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle w-100 " data-bs-toggle="dropdown">
+                    <i class="fbi bi-building me-2"></i> nhà cung cấp
+                </a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a asp-controller="Supply" asp-action="NhaCungCap" class="dropdown-item custom-hover">
+                        Nhà cung cấp
+                    </a>
+                    <a asp-controller="Brand" asp-action="ThuongHieu" class="dropdown-item custom-hover">
+                        Thương hiệu
+                    </a>
+                </div>
+            </div>
+
+
+            <a asp-controller="Product" asp-action="SanPham" class="nav-item nav-link"><i class="fa fa-box me-2"></i> sản phẩm</a>
+            <a asp-controller="Category" asp-action="DanhMuc" class="nav-item nav-link"><i class="fa fa-list me-2"></i> danh mục</a>
+            <a href="table.html" class="nav-item nav-link"><i class="fa fa-receipt me-2"></i> đơn hàng</a>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle w-100 " data-bs-toggle="dropdown">
+                    <i class="fbi bi-building me-2"></i> Tài khoản
+                </a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a asp-controller="Account" asp-action="KhachHang" class="dropdown-item custom-hover">
+                        Tài khoản khách hàng
+                    </a>
+                    @if (Model.VaiTro == "admin")
+                    {
+                        <a asp-controller="Account" asp-action="NhanVien" class="dropdown-item custom-hover">
+                            Tài khoản nhân viên
+                        </a>
+                    }
+                </div>
+            </div>
+            <a asp-controller="Transport" asp-action="VanChuyen" class="nav-item nav-link"><i class="bi bi-truck me-2"></i>Phí vận chuyển</a>
+            <a href="chart.html" class="nav-item nav-link"><i class="fa fa-info-circle me-2"></i>Thông tin website</a>
+
+        </div>
+    </nav>
+</div>

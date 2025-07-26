@@ -1,0 +1,24 @@
+﻿@model DoAnWebBanDoChoi.Models.ThuongHieu
+
+@{
+    ViewData["Title"] = "Chỉnh sửa thương hiệu";
+}
+
+<div class="container pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+        <h5 class="mb-4 text-primary fw-bold">Chỉnh sửa thương hiệu</h5>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="MaTh" />
+            <div class="mb-3">
+                <label asp-for="TenThuongHieu" class="form-label fw-semibold"></label>
+                <input asp-for="TenThuongHieu" class="form-control" />
+                <span asp-validation-for="TenThuongHieu" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+            <a asp-action="ThuongHieu" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>
+

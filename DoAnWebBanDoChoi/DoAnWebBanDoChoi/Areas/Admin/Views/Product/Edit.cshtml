@@ -1,0 +1,73 @@
+﻿@model DoAnWebBanDoChoi.ViewModels.ProductVM
+@{
+    ViewData["Title"] = "Chỉnh sửa sản phẩm";
+}
+<div class="container pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+        <h5 class="mb-4 text-primary fw-bold">Chỉnh sửa sản phẩm</h5>
+
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label asp-for="TenSanPham" class="form-label"></label>
+                <input asp-for="TenSanPham" class="form-control" />
+                <span asp-validation-for="TenSanPham" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MoTa" class="form-label"></label>
+                <textarea asp-for="MoTa" class="form-control"></textarea>
+                <span asp-validation-for="MoTa" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DonGia" class="form-label"></label>
+                <input asp-for="DonGia" class="form-control" type="number" step="1" />
+                <span asp-validation-for="DonGia" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Ảnh hiện tại</label><br />
+                @if (ViewBag.HinhAnhCu != null)
+                {
+                    <img src="~/img/product/dochoi/@ViewBag.HinhAnhCu" width="80" />
+                }
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="HinhAnhFile" class="form-label"></label>
+                <input asp-for="HinhAnhFile" type="file" class="form-control" />
+                <span asp-validation-for="HinhAnhFile" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MaDm" class="form-label"></label>
+                <select asp-for="MaDm" class="form-select"
+                        asp-items="@(new SelectList(ViewBag.DanhMucs, "MaDm", "TenDanhMuc"))">
+                    <option value="">-- Chọn danh mục --</option>
+                </select>
+                <span asp-validation-for="MaDm" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MaTh" class="form-label"></label>
+                <select asp-for="MaTh" class="form-select"
+                        asp-items="@(new SelectList(ViewBag.ThuongHieus, "MaTh", "TenThuongHieu"))">
+                    <option value="">-- Chọn thương hiệu --</option>
+                </select>
+                <span asp-validation-for="MaTh" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MaNcc" class="form-label"></label>
+                <select asp-for="MaNcc" class="form-select"
+                        asp-items="@(new SelectList(ViewBag.NhaCungCaps, "MaNcc", "TenNhaCungCap"))">
+                    <option value="">-- Chọn nhà cung cấp --</option>
+                </select>
+                <span asp-validation-for="MaNcc" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success">Lưu</button>
+            <a asp-action="SanPham" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>

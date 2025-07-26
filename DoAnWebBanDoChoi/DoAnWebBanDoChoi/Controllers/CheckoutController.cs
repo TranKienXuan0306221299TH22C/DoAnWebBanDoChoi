@@ -39,16 +39,14 @@ namespace DoAnWebBanDoChoi.Controllers
                 }).ToList();
 
             var tongTien = gioHang.Sum(x => x.TongTien);
-            var phiShip = tongTien > 200_000 ? 0 : 20_000;
-            var tongCuoi = tongTien + phiShip;
-            ViewBag.TongTien = tongTien;
             var viewModel = new ThanhToanVM
             {
                 DanhSachSanPham = gioHang,
                 TongTien = tongTien,
-                TongTienSauPhiShip = tongCuoi
+                TongTienSauPhiShip = tongTien
             };
 
+            ViewBag.TongTien = tongTien;
             return View(viewModel);
         }
 
@@ -59,6 +57,26 @@ namespace DoAnWebBanDoChoi.Controllers
             if (maNd == 0)
                 return RedirectToAction("Login", "Account");
 
+            if (!ModelState.IsValid)
+            {
+                var giohang = _context.GioHangs
+                    .Where(g => g.MaNd == maNd)
+                    .Include(g => g.MaSpNavigation)
+                    .ToList();
+
+                model.DanhSachSanPham = giohang.Select(g => new GioHangItemVM
+                {
+                    MaSp = g.MaSp,
+                    TenSp = g.MaSpNavigation.TenSanPham,
+                    DonGia = g.MaSpNavigation.DonGia,
+                    SoLuong = g.SoLuong
+                }).ToList();
+
+                model.TongTien = model.DanhSachSanPham.Sum(sp => sp.TongTien);
+                model.TongTienSauPhiShip = model.TongTien;
+
+                return View("Index", model);
+            }
             var gioHang = _context.GioHangs
                 .Where(g => g.MaNd == maNd)
                 .Include(g => g.MaSpNavigation)
@@ -68,9 +86,13 @@ namespace DoAnWebBanDoChoi.Controllers
                 return RedirectToAction("ChiTietGioHang", "Cart");
 
             decimal tongTien = gioHang.Sum(sp => sp.SoLuong * sp.MaSpNavigation.DonGia);
-            decimal phiShip = tongTien > 200_000 ? 0 : 20_000;
-            decimal tongCuoi = tongTien + phiShip;
+            decimal phiShip = _context.PhiVanChuyens
+                .FirstOrDefault(p => p.TenTinh == model.TinhThanh && p.TenHuyen == model.QuanHuyen)?.PhiShip ?? 20000;
 
+            if (tongTien > 400_000)
+                phiShip = 0;
+
+            decimal tongCuoi = tongTien + phiShip;
             string phuongThuc = model.PhuongThucThanhToan?.ToLower() ?? "";
 
             if (phuongThuc == "vnpay")
@@ -102,37 +124,12 @@ namespace DoAnWebBanDoChoi.Controllers
                 return RedirectToAction("ChiTietGioHang", "Cart");
             }
 
-            // === Đặt hàng COD ===
-            var donHang = new DonHang
+            // ✅ Đặt hàng COD
+            if (!XuLyDonHang(model, maNd, "COD", tongTien, phiShip, out string error))
             {
-                MaNd = maNd,
-                HoTen = model.HoTen,
-                DienThoai = model.DienThoai,
-                DiaChi = model.DiaChi,
-                GhiChu = model.GhiChu,
-                TongTien = tongCuoi,
-                PhiVanChuyen = phiShip,
-                PhuongThucThanhToan = "COD",
-                TrangThai = (int)TrangThaiDonHang.ChoXacNhan,
-                NgayTao = DateTime.Now
-            };
-
-            _context.DonHangs.Add(donHang);
-            _context.SaveChanges();
-
-            foreach (var item in gioHang)
-            {
-                _context.ChiTietDonHangs.Add(new ChiTietDonHang
-                {
-                    MaDh = donHang.MaDh,
-                    MaSp = item.MaSp,
-                    SoLuong = item.SoLuong,
-                    DonGia = item.MaSpNavigation.DonGia
-                });
+                TempData["Error"] = error;
+                return RedirectToAction("ChiTietGioHang", "Cart");
             }
-
-            _context.GioHangs.RemoveRange(gioHang);
-            _context.SaveChanges();
 
             TempData["Success"] = "Đặt hàng thành công!";
             return RedirectToAction("ChiTietGioHang", "Cart");
@@ -160,36 +157,11 @@ namespace DoAnWebBanDoChoi.Controllers
                 decimal tongTien = gioHang.Sum(sp => sp.SoLuong * sp.MaSpNavigation.DonGia);
                 decimal phiShip = tongCuoi - tongTien;
 
-                var donHang = new DonHang
+                if (!XuLyDonHang(model, maNd, "VNPay", tongTien, phiShip, out string error))
                 {
-                    MaNd = maNd,
-                    HoTen = model.HoTen,
-                    DienThoai = model.DienThoai,
-                    DiaChi = model.DiaChi,
-                    GhiChu = model.GhiChu,
-                    TongTien = tongCuoi,
-                    PhiVanChuyen = phiShip,
-                    PhuongThucThanhToan = "VNPay",
-                    TrangThai = (int)TrangThaiDonHang.ChoXacNhan,
-                    NgayTao = DateTime.Now
-                };
-
-                _context.DonHangs.Add(donHang);
-                _context.SaveChanges();
-
-                foreach (var item in gioHang)
-                {
-                    _context.ChiTietDonHangs.Add(new ChiTietDonHang
-                    {
-                        MaDh = donHang.MaDh,
-                        MaSp = item.MaSp,
-                        SoLuong = item.SoLuong,
-                        DonGia = item.MaSpNavigation.DonGia
-                    });
+                    TempData["Error"] = error;
+                    return RedirectToAction("ChiTietGioHang", "Cart");
                 }
-
-                _context.GioHangs.RemoveRange(gioHang);
-                _context.SaveChanges();
 
                 TempData["Success"] = "Thanh toán VNPay thành công!";
             }
@@ -201,5 +173,79 @@ namespace DoAnWebBanDoChoi.Controllers
             return RedirectToAction("ChiTietGioHang", "Cart");
         }
 
+        [HttpPost]
+        public IActionResult LayPhiShip(string tinh, string huyen, decimal tongTien)
+        {
+            decimal phiShip = _context.PhiVanChuyens
+                .FirstOrDefault(p => p.TenTinh == tinh && p.TenHuyen == huyen)?.PhiShip ?? 20000;
+
+            if (tongTien > 400000)
+                phiShip = 0;
+
+            return Json(new { phiShip });
+        }
+
+        // ✅ HÀM CHUNG XỬ LÝ ĐƠN HÀNG
+        private bool XuLyDonHang(ThanhToanVM model, int maNd, string phuongThuc, decimal tongTien, decimal phiShip, out string error)
+        {
+            error = "";
+
+            var gioHang = _context.GioHangs
+                .Where(g => g.MaNd == maNd)
+                .Include(g => g.MaSpNavigation)
+                .ToList();
+
+            // ✅ Kiểm tra còn hàng không
+            foreach (var item in gioHang)
+            {
+                var sp = item.MaSpNavigation;
+                if (item.SoLuong > sp.SoLuong)
+                {
+                    error = $"Sản phẩm '{sp.TenSanPham}' chỉ còn {sp.SoLuong} cái trong kho.";
+                    return false;
+                }
+            }
+
+            var donHang = new DonHang
+            {
+                MaNd = maNd,
+                HoTen = model.HoTen,
+                DienThoai = model.DienThoai,
+                DiaChi = model.DiaChi,
+                GhiChu = model.GhiChu,
+                TongTien = tongTien + phiShip,
+                PhiVanChuyen = phiShip,
+                PhuongThucThanhToan = phuongThuc,
+                TinhThanh = model.TinhThanh,
+                QuanHuyen = model.QuanHuyen,
+                PhuongXa = model.PhuongXa,
+                TrangThai = (int)TrangThaiDonHang.ChoXacNhan,
+                NgayTao = DateTime.Now
+            };
+
+            _context.DonHangs.Add(donHang);
+            _context.SaveChanges();
+
+            foreach (var item in gioHang)
+            {
+                var sp = item.MaSpNavigation;
+
+                _context.ChiTietDonHangs.Add(new ChiTietDonHang
+                {
+                    MaDh = donHang.MaDh,
+                    MaSp = sp.MaSp,
+                    SoLuong = item.SoLuong,
+                    DonGia = sp.DonGia,
+                    GiaGoc = sp.GiaGoc
+                });
+
+                sp.SoLuong -= item.SoLuong;
+            }
+
+            _context.GioHangs.RemoveRange(gioHang);
+            _context.SaveChanges();
+
+            return true;
+        }
     }
 }

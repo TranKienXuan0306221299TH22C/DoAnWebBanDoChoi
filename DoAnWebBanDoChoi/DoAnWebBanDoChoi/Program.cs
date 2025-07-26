@@ -35,10 +35,19 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.MapAreaControllerRoute(
-    name: "MyAreaAdmin",
-    areaName: "Admin",
-    pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+//app.MapAreaControllerRoute(
+//    name: "MyAreaAdmin",
+//    areaName: "Admin",
+//    pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "productDetail",
+    pattern: "san-pham/{slug}-{id}",
+    defaults: new { controller = "Home", action = "Detail" }
+);
 
 app.MapControllerRoute(
     name: "default",

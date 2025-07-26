@@ -60,7 +60,7 @@ namespace DoAnWebBanDoChoi.Controllers
 
             if (maNd == 0)
             {
-                //return RedirectToAction("Login", "Account");
+               
                 return View("XacNhanDangNhap");
             }
 

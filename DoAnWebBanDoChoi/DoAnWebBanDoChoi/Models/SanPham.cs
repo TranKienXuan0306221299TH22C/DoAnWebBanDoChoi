@@ -11,6 +11,8 @@ public partial class SanPham
 
     public string? MoTa { get; set; }
 
+    public decimal GiaGoc { get; set; }
+
     public decimal DonGia { get; set; }
 
     public int SoLuong { get; set; }
@@ -18,8 +20,6 @@ public partial class SanPham
     public string? HinhAnh { get; set; }
 
     public int MaTh { get; set; }
-
-    public int? MaKm { get; set; }
 
     public int MaDm { get; set; }
 
@@ -37,11 +37,11 @@ public partial class SanPham
 
     public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; } = new List<ChiTietDonHang>();
 
+    public virtual ICollection<ChiTietPhieuNhap> ChiTietPhieuNhaps { get; set; } = new List<ChiTietPhieuNhap>();
+
     public virtual ICollection<GioHang> GioHangs { get; set; } = new List<GioHang>();
 
     public virtual DanhMuc MaDmNavigation { get; set; } = null!;
-
-    public virtual KhuyenMai? MaKmNavigation { get; set; }
 
     public virtual NhaCungCap MaNccNavigation { get; set; } = null!;
 

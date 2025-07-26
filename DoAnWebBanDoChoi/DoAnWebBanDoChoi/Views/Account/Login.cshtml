@@ -3,10 +3,7 @@
     Layout = "~/Views/Shared/_LayoutAccount.cshtml";
     ViewData["Title"] = "Đăng nhập";
 }
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success">@TempData["Success"]</div>
-}
+
 <div class="container">
     <div class="signin-content">
         <div class="signin-image">
@@ -16,17 +13,17 @@
 
         <div class="signin-form">
             <h2 class="form-title">Đăng nhập</h2>
-            <form asp-action="Login" method="post" class="register-form" id="login-form">
+            <form asp-action="Login" method="post" id="login-form">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
 
                 <div class="form-group">
-                    <label for="TenDangNhap"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                    <label asp-for="TenDangNhap">Tên đăng nhập hoặc Email</label>
                     <input asp-for="TenDangNhap" class="form-control" placeholder="Tên đăng nhập hoặc Email" />
                     <span asp-validation-for="TenDangNhap" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label for="MatKhau"><i class="zmdi zmdi-lock"></i></label>
+                    <label asp-for="MatKhau">Mật khẩu</label>
                     <input asp-for="MatKhau" class="form-control" placeholder="Mật khẩu" />
                     <span asp-validation-for="MatKhau" class="text-danger"></span>
                 </div>
@@ -40,7 +37,26 @@
 </div>
 
 @section Scripts {
+
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: '@Html.Raw(TempData["Success"])',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: '#333',
+                color: '#fff'
+            });
+        </script>
+    }
+
     @{
+
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }

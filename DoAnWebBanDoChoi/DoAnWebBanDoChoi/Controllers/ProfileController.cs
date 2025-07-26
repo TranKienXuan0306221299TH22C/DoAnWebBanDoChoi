@@ -74,11 +74,11 @@ namespace DoAnWebBanDoChoi.Controllers
                 TempData["Success"] = "Hủy đơn hàng thành công!";
         
 
-            return RedirectToAction("Index");
+            return RedirectToAction("DonHang");
         }
 
 
-        [HttpGet]
+      
         public IActionResult Edit()
         {
             var maNd = HttpContext.Session.Get<int>("MaNd");
@@ -115,14 +115,23 @@ namespace DoAnWebBanDoChoi.Controllers
             TempData["Success"] = "Cập nhật thông tin thành công!";
             return RedirectToAction("Index");
         }
+        public IActionResult ChiTietDonHang(int id)
+        {
+            var maNd = HttpContext.Session.Get<int>("MaNd");
 
+            var donHang = _context.DonHangs
+                .Include(d => d.ChiTietDonHangs)
+                .ThenInclude(ct => ct.MaSpNavigation)
+                .FirstOrDefault(d => d.MaDh == id && d.MaNd == maNd);
 
+            if (donHang == null)
+            {
+                TempData["Error"] = "Không tìm thấy đơn hàng.";
+                return RedirectToAction("DonHang");
+            }
 
-
-
-
-
-
+            return View(donHang);
+        }
 
 
     }

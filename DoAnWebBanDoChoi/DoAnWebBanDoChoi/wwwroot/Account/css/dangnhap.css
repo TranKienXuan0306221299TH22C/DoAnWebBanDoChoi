@@ -1,0 +1,97 @@
+﻿/* Layout đăng nhập */
+.signin-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    background: #fff;
+    padding: 50px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 50px auto;
+    flex-wrap: wrap;
+}
+
+/* Bên trái: ảnh */
+.signin-image {
+    flex: 1;
+    text-align: center;
+}
+
+    .signin-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+.signup-image-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+/* Bên phải: form */
+.signin-form {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* Tiêu đề */
+.form-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Form nhóm */
+.form-group {
+    margin-bottom: 20px;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        background: #f9f9f9;
+    }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            background: #fff;
+        }
+
+    .form-group .text-danger {
+        font-size: 0.9rem;
+        color: red;
+        margin-top: 5px;
+    }
+
+/* Nút */
+.form-button button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .form-button button:hover {
+        background-color: #0056b3;
+    }

@@ -1,0 +1,50 @@
+﻿@model List<DoAnWebBanDoChoi.Models.NguoiDung>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-white rounded shadow p-4 border">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-primary mb-0">Nhà cung cấp</h5>
+                    <div>
+                        <a asp-action="DanhSachXoa" class="btn btn-danger me-2">
+                            <i class="fa fa-trash me-1"></i> Xóa nhà cung cấp
+                        </a>
+                        <a asp-action="Create" class="btn btn-primary">
+                            <i class="fa fa-plus me-1"></i> Thêm nhà cung cấp
+                        </a>
+                    </div>
+                </div>
+
+                <table class="table table-bordered table-striped table-hover align-middle">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>Tên đăng nhập</th>                  
+                            <th>Email</th>
+                            <th>SĐT</th>
+                            <th>Địa chỉ</th>
+                            <th>Tên hiện thị</th>
+                            <th>Hiệu lực</th>
+                         
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var nd in Model)
+                        {
+                            <tr>
+                                <td class="text-center">@nd.MaNd</td>
+                                <td>@nd.TenDangNhap</td>                         
+                                <td>@nd.Email</td>
+                                <td>@nd.DienThoai</td>
+                                <td>@nd.DiaChi</td>
+                                <td>@nd.HoTenHienThi</td>
+                                <td>@nd.HieuLuc</td>                          
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

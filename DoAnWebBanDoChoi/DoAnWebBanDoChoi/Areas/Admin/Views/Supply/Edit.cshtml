@@ -1,0 +1,46 @@
+﻿@model DoAnWebBanDoChoi.Models.NhaCungCap
+
+@{
+    ViewData["Title"] = "Sửa nhà cung cấp";
+}
+
+<div class="container pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+        <h5 class="fw-bold text-warning mb-4">Sửa nhà cung cấp</h5>
+
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="MaNcc" />
+
+            <div class="mb-3">
+                <label asp-for="TenNhaCungCap" class="form-label fw-semibold"></label>
+                <input asp-for="TenNhaCungCap" class="form-control" />
+                <span asp-validation-for="TenNhaCungCap" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DienThoai" class="form-label fw-semibold"></label>
+                <input asp-for="DienThoai" class="form-control" />
+                <span asp-validation-for="DienThoai" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label fw-semibold"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DiaChi" class="form-label fw-semibold"></label>
+                <input asp-for="DiaChi" class="form-control" />
+                <span asp-validation-for="DiaChi" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-warning">
+                <i class="fa fa-save me-1"></i> Cập nhật
+            </button>
+            <a asp-action="NhaCungCap" class="btn btn-secondary ms-2">Quay lại</a>
+        </form>
+    </div>
+</div>
+

@@ -4,106 +4,13 @@
     ViewData["Title"] = "Checkout";
 }
 
-
 <section class="checkout spad">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <h6>
-                    <span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code
-                </h6>
-            </div>
-        </div>
         <div class="checkout__form">
             <h4>Billing Details</h4>
-            <!-- form -->
-          @*   <form asp-action="DatHang" asp-controller="Checkout" method="post">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>Họ tên<span>*</span></p>
-                                    <input asp-for="HoTen" type="text" class="form-control" required />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>Số điện thoại<span>*</span></p>
-                                    <input asp-for="DienThoai" type="text" class="form-control" required />
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="checkout__input">
-                            <p>Địa chỉ<span>*</span></p>
-                            <input asp-for="DiaChi" type="text" class="form-control" required />
-                        </div>
-
-                        <div class="checkout__input">
-                            <p>Ghi chú</p>
-                            <input asp-for="GhiChu" type="text" class="form-control" placeholder="Ghi chú về đơn hàng của bạn (nếu có)" />
-                        </div>
-                        <p><span style="color: red;">*Lưu ý:</span>Phí ship 20 ngàn nếu đơn hàng lớn 200 ngàn thì free ship</p>
-
-                    </div>
-
-                    <div class="col-lg-6 col-md-6 ">
-                        <div class="checkout__order">
-                            <h4>Đơn hàng</h4>
-             
-                            <div class="checkout__order__products" style="display: flex; font-weight: bold; padding-bottom: 8px; border-bottom: 1px solid #ddd;">
-                                <span style="flex: 1;">Sản phẩm</span>
-                                <span style="width: 80px; text-align: center;">Số lượng</span>
-                                <span style="width: 100px; text-align: right;">Tổng</span>
-                            </div>
-
-                            <ul style="list-style: none; padding: 0; margin: 0;">
-                                @foreach (var sp in Model.DanhSachSanPham)
-                                {
-                                    <li style="display: flex; width: 100%; align-items: center; padding: 6px 0; border-bottom: 1px solid #f0f0f0;">
-                                        <span style="flex: 1; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                            @sp.TenSp
-                                        </span>
-                                        <span style="width: 80px; text-align: center;">
-                                            @sp.SoLuong
-                                        </span>
-                                        <span style="text-align: right; margin-left: auto;">
-                                            @sp.TongTien.ToString("N0") ₫
-                                        </span>
-                                    </li>
-                                }
-                            </ul>
-                            @if (ViewBag.TongTien < 200000)
-                            {
-                                <p><span style="color: red;">*</span>Phí ship 20 ngàn</p>
-                            }
-                            else
-                            {
-                                <p><span style="color: green;">*</span>Đơn hàng của bạn được <strong>free ship</strong> 🎉</p>
-                            }
-                            <div class="checkout__order__subtotal">Tạm tính <span>@Model.TongTien.ToString("N0") ₫</span></div>
-                            <div class="checkout__order__total">Tổng cộng <span>@Model.TongTienSauPhiShip.ToString("N0") ₫</span></div>
-
-                            <div class="checkout__input__radio">
-                                <label>
-                                    <input type="radio" name="PhuongThucThanhToan" value="cod" checked /> Thanh toán khi nhận hàng (COD)
-                                </label>
-                            </div>
-                            <div class="checkout__input__radio">
-                                <label>
-                                    <input type="radio" name="PhuongThucThanhToan" value="vnpay" /> Thanh toán qua VNPay
-                                </label>
-                            </div>
-
-                            <button type="submit" class="site-btn">Xác nhận đặt hàng</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
- *@
             <form asp-action="DatHang" asp-controller="Checkout" method="post">
-                @Html.AntiForgeryToken() <!-- Bảo mật bắt buộc -->
+                @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                 <div class="row">
@@ -112,82 +19,90 @@
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Họ tên<span style="color:red;">*</span></p>
-                                    <input asp-for="HoTen" type="text" class="form-control" />
+                                    <input asp-for="HoTen" class="form-control" />
                                     <span asp-validation-for="HoTen" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Số điện thoại<span style="color:red;">*</span></p>
-                                    <input asp-for="DienThoai" type="text" class="form-control" />
+                                    <input asp-for="DienThoai" class="form-control" />
                                     <span asp-validation-for="DienThoai" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Tỉnh/Thành<span style="color:red;">*</span></label>
+                                <select asp-for="TinhThanh" class="form-control" id="tinh">
+                                    <option value="">Tỉnh/Thành</option>
+                                </select>
+                             
+                                <span asp-validation-for="TinhThanh" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label>Quận/Huyện<span style="color:red;">*</span></label>
+                                <select asp-for="QuanHuyen" class="form-control" id="quan">
+                                    <option value="">Quận/Huyện</option>
+                                </select>
+                                <span asp-validation-for="QuanHuyen" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label>Phường/Xã<span style="color:red;">*</span></label>
+                                <select asp-for="PhuongXa" class="form-control" id="phuong">
+                                    <option value="">Phường/Xã</option>
+                                </select>
+                                <span asp-validation-for="PhuongXa" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    
                         <div class="checkout__input">
                             <p>Địa chỉ<span style="color:red;">*</span></p>
-                            <input asp-for="DiaChi" type="text" class="form-control" />
+                            <input asp-for="DiaChi" class="form-control" />
                             <span asp-validation-for="DiaChi" class="text-danger"></span>
                         </div>
-
                         <div class="checkout__input">
                             <p>Ghi chú</p>
-                            <input asp-for="GhiChu" type="text" class="form-control" placeholder="Ghi chú về đơn hàng của bạn (nếu có)" data-val="false" />
-                            
+                            <input asp-for="GhiChu" class="form-control" placeholder="Ghi chú về đơn hàng nếu có" />
                         </div>
-
-                        <p><span style="color: red;">*Lưu ý:</span> Phí ship 20 ngàn nếu đơn hàng lớn 200 ngàn thì free ship</p>
                     </div>
 
-                    <!-- Bên phải: phần đơn hàng giữ nguyên như ck viết -->
-                    <!-- ... -->
-                    <div class="col-lg-6 col-md-6 ">
+                    <!-- Đơn hàng -->
+                    <div class="col-lg-6 col-md-6">
                         <div class="checkout__order">
                             <h4>Đơn hàng</h4>
 
-                            <div class="checkout__order__products" style="display: flex; font-weight: bold; padding-bottom: 8px; border-bottom: 1px solid #ddd;">
+                            <div class="checkout__order__products" style="display: flex; font-weight: bold; border-bottom: 1px solid #ddd;">
                                 <span style="flex: 1;">Sản phẩm</span>
-                                <span style="width: 80px; text-align: center;">Số lượng</span>
+                                <span style="width: 80px; text-align: center;">SL</span>
                                 <span style="width: 100px; text-align: right;">Tổng</span>
                             </div>
 
-                            <ul style="list-style: none; padding: 0; margin: 0;">
+                            <ul style="list-style: none; padding: 0;">
                                 @foreach (var sp in Model.DanhSachSanPham)
                                 {
-                                    <li style="display: flex; width: 100%; align-items: center; padding: 6px 0; border-bottom: 1px solid #f0f0f0;">
-                                        <span style="flex: 1; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                            @sp.TenSp
-                                        </span>
-                                        <span style="width: 80px; text-align: center;">
-                                            @sp.SoLuong
-                                        </span>
-                                        <span style="text-align: right; margin-left: auto;">
-                                            @sp.TongTien.ToString("N0") ₫
-                                        </span>
+                                    <li style="display: flex; padding: 6px 0; border-bottom: 1px solid #f0f0f0;">
+                                        <span style="flex: 1;">@sp.TenSp</span>
+                                        <span style="width: 80px; text-align: center;">@sp.SoLuong</span>
+                                        <span style="width: 100px; text-align: right;">@sp.TongTien.ToString("N0") ₫</span>
                                     </li>
                                 }
                             </ul>
-                            @if (ViewBag.TongTien < 200000)
-                            {
-                                <p><span style="color: red;">*</span>Phí ship 20 ngàn</p>
-                            }
-                            else
-                            {
-                                <p><span style="color: green;">*</span>Đơn hàng của bạn được <strong>free ship</strong> 🎉</p>
-                            }
-                            <div class="checkout__order__subtotal">Tạm tính <span>@Model.TongTien.ToString("N0") ₫</span></div>
-                            <div class="checkout__order__total">Tổng cộng <span>@Model.TongTienSauPhiShip.ToString("N0") ₫</span></div>
 
-                            <div class="checkout__input__radio">
-                                <label>
-                                    <input type="radio" name="PhuongThucThanhToan" value="cod" checked /> Thanh toán khi nhận hàng (COD)
-                                </label>
+                            <div id="phiShipInfo" class="mt-2"></div>
+
+                            <div class="checkout__order__subtotal">Tạm tính: <span>@Model.TongTien.ToString("N0") ₫</span></div>
+                            <div class="checkout__order__total">Tổng cộng: <span id="tongCong">@Model.TongTien.ToString("N0") ₫</span></div>
+
+                            <div class="checkout__input__radio mt-2">
+                                <label><input type="radio" name="PhuongThucThanhToan" value="cod" checked /> Thanh toán khi nhận hàng (COD)</label>
                             </div>
                             <div class="checkout__input__radio">
-                                <label>
-                                    <input type="radio" name="PhuongThucThanhToan" value="vnpay" /> Thanh toán qua VNPay
-                                </label>
+                                <label><input type="radio" name="PhuongThucThanhToan" value="vnpay" /> Thanh toán qua VNPay</label>
                             </div>
 
                             <button type="submit" class="site-btn">Xác nhận đặt hàng</button>
@@ -195,7 +110,81 @@
                     </div>
                 </div>
             </form>
-
         </div>
     </div>
 </section>
+
+@section Scripts {
+   
+    <script>
+        let tongTien = @Model.TongTien;
+
+               $(document).ready(function () {
+            $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data) {
+                if (data.error == 0) {
+                    $.each(data.data, function (i, val) {
+                        $('#tinh').append('<option value="' + val.full_name + '" data-id="' + val.id + '">' + val.full_name + '</option>');
+                    });
+                }
+            });
+
+            $('#tinh').change(function () {
+                let tinhId = $('#tinh option:selected').data('id');
+                $('#quan').html('<option value="">Quận/Huyện</option>');
+                $('#phuong').html('<option value="">Phường/Xã</option>');
+                $('#tinh').valid();
+                if (tinhId) {
+                    $.getJSON('https://esgoo.net/api-tinhthanh/2/' + tinhId + '.htm', function (data) {
+                        if (data.error == 0) {
+                            $.each(data.data, function (i, val) {
+                                $('#quan').append('<option value="' + val.full_name + '" data-id="' + val.id + '">' + val.full_name + '</option>');
+                            });
+                        }
+                    });
+                }
+            });
+
+            $('#quan').change(function () {
+                let huyenId = $('#quan option:selected').data('id');
+                $('#phuong').html('<option value="">Phường/Xã</option>');
+                 $('#quan').valid();
+                if (huyenId) {
+                    $.getJSON('https://esgoo.net/api-tinhthanh/3/' + huyenId + '.htm', function (data) {
+                        if (data.error == 0) {
+                            $.each(data.data, function (i, val) {
+                                $('#phuong').append('<option value="' + val.full_name + '">' + val.full_name + '</option>');
+                            });
+                        }
+                    });
+                }
+
+                // Gửi tỉnh + huyện để tính phí
+                let tenTinh = $("#tinh").val();
+                let tenHuyen = $("#quan").val();
+
+                if (tenTinh && tenHuyen) {
+                    $.post('/Checkout/LayPhiShip', {
+                        tinh: tenTinh,
+                        huyen: tenHuyen,
+                        tongTien: tongTien
+                    }, function (res) {
+                        if (res && res.phiShip != undefined) {
+                            let tongCuoi = tongTien + res.phiShip;
+                            $('#tongCong').text(tongCuoi.toLocaleString() + " ₫");
+
+                            let shipText = res.phiShip == 0
+                                ? '<p style="color:green;"><strong>Miễn phí ship 🎉</strong></p>'
+                                : '<p style="color:red;">Phí vận chuyển: ' + res.phiShip.toLocaleString() + ' ₫</p>';
+
+                            $('#phiShipInfo').html(shipText);
+                        }
+                    });
+                }
+            });
+                 $('#phuong').change(function () {
+            // ✅ validate lại ngay sau khi chọn
+            $('#phuong').valid();
+        });
+        });
+    </script>
+}

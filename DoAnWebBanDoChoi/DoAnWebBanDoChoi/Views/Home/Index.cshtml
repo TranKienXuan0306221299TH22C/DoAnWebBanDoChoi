@@ -11,6 +11,22 @@
         <div class="row">
             <div class="col-lg-3 col-md-5">
                 <div class="sidebar">
+                    <div class="sidebar__item">
+                        <form method="get" asp-controller="Home" asp-action="Index">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <label for="sort" style="font-weight: bold;">Sắp xếp theo:</label>
+                                <select name="sort" id="sort" onchange="this.form.submit()">
+                                    <option value="">-- Chọn --</option>
+                                    <option value="new">Mới nhất</option>
+                                    <option value="price-asc">Giá tăng dần</option>
+                                    <option value="price-desc">Giá giảm dần</option>
+                                    <option value="hot">Bán chạy</option>
+                                    <option value="favorite">Yêu thích nhiều nhất</option>
+                                </select>
+                            </div>
+                        </form>
+
+                    </div>
                     @await Component.InvokeAsync("DanhMuc")
 
 

@@ -57,7 +57,7 @@
                                             <td>@dh.TongTien.ToString("N0") ₫</td>
                                             <td>@dh.PhuongThucThanhToan</td>
                                             <td>
-                                                <a href="/DonHang/ChiTiet/@dh.MaDh" class="btn btn-sm btn-primary">Xem</a>
+                                                <a asp-controller="Profile" asp-action="ChiTietDonHang" asp-route-id="@dh.MaDh" class="btn btn-sm btn-primary">Xem</a>
                                                 <form asp-action="HuyDonHang" method="post" style="display:inline;">
                                                     <input type="hidden" name="id" value="@dh.MaDh" />
                                                     <button type="submit"
@@ -75,7 +75,10 @@
                         }
                         else
                         {
-                            <p>Không có đơn hàng nào.</p>
+                            <div class="text-center text-muted my-4">
+                                <i class="bi bi-bag-x fs-3 d-block mb-2"></i>
+                                Không có đơn hàng nào.
+                            </div>
                         }
                     </div>
                 }
@@ -83,4 +86,7 @@
         </div>
     </div>
 </div>
+
+
+
 

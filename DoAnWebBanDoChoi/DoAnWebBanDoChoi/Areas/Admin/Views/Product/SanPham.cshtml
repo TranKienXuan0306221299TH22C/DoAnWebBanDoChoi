@@ -1,0 +1,115 @@
+﻿@model List<DoAnWebBanDoChoi.Models.SanPham>
+
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+        <div class="d-flex justify-content-between mb-4">
+            <h5 class="text-primary fw-bold">Danh sách sản phẩm</h5>
+            <a asp-action="Create" class="btn btn-success btn-sm">
+                <i class="fa fa-plus me-1"></i> Thêm sản phẩm
+            </a>
+        </div>
+        <div style="max-height: 450px; overflow: auto;">
+            <table class="table table-bordered table-hover align-middle text-nowrap">
+                <thead class="table-primary text-center sticky-top" style="top: 0; z-index: 1;">
+                    <tr>
+                        <th>#</th>
+                        <th>Tên</th>
+                        <th>Ảnh</th>
+                        <th>Danh mục</th>
+                        <th>Thương hiệu</th>
+                        <th>Nhà cung cấp</th>
+                        <th>Giá gốc</th>
+                        <th>Giá bán</th>
+                        <th>Số lượng</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sp in Model)
+                    {
+                        <tr>
+                            <td class="text-center">@sp.MaSp</td>
+                            <td>@sp.TenSanPham</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(sp.HinhAnh))
+                                {
+                                    <img src="~/img/product/dochoi/@sp.HinhAnh" width="60" />
+                                }
+                            </td>
+                            <td>@sp.MaDmNavigation?.TenDanhMuc</td>
+                            <td>@sp.MaThNavigation?.TenThuongHieu</td>
+                            <td>@sp.MaNccNavigation?.TenNhaCungCap</td>
+                            <td class="text-end">@sp.GiaGoc.ToString("N0") đ</td> 
+                            <td class="text-end">@sp.DonGia.ToString("N0") đ</td>
+                            <td class="text-center">@sp.SoLuong</td>
+                            <td class="text-center">
+                                @(sp.TrangThai == 1 ? "Hoạt động" : "Ngừng bán")
+                            </td>
+                            <td class="text-center">@sp.NgayTao.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@sp.MaSp" class="btn btn-sm btn-warning">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm @(sp.TrangThai == 1 ? "btn-danger" : "btn-success") toggle-status-btn"
+                                        data-id="@sp.MaSp">
+                                    <i class="fa fa-power-off"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+   
+    <script>
+        $(document).ready(function () {
+            $(".toggle-status-btn").click(function () {
+                var button = $(this);
+                var id = button.data("id");
+
+                Swal.fire({
+                    title: 'Xác nhận',
+                    text: "Bạn có chắc muốn đổi trạng thái sản phẩm?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Đồng ý',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/Admin/Product/ToggleStatusAjax',
+                            method: 'POST',
+                            data: { id: id },
+                            success: function (res) {
+                             if (res.success) {
+                                if (res.newStatus === 1) {
+                                    button.removeClass("btn-success").addClass("btn-danger");
+                                    button.closest("tr").find("td:eq(9)").text("Hoạt động");
+                                } else {
+                                    button.removeClass("btn-danger").addClass("btn-success");
+                                    button.closest("tr").find("td:eq(9)").text("Ngừng bán");
+                                }
+
+                                showTempAlert('success', 'Đã cập nhật trạng thái sản phẩm!');
+                            } else {
+                                showTempAlert('error', res.message || 'Cập nhật thất bại!');
+                            }
+                            },
+                            error: function () {
+                                $("#temp-error-msg").val("Lỗi kết nối server!");
+                                showTempAlert();
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

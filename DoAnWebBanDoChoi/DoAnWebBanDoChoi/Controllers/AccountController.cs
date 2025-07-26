@@ -79,7 +79,15 @@ namespace DoAnWebBanDoChoi.Controllers
                 {
                     HttpContext.Session.Set("MaNd", user.MaNd);             
                     HttpContext.Session.SetString("DangNhap", "true");
-                    return RedirectToAction("Index", "Home");
+                    HttpContext.Session.SetString("VaiTro", user.VaiTro);
+                    if (user.VaiTro == "admin" || user.VaiTro == "nhanvien")
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
 
                 // Nếu không có user → báo lỗi

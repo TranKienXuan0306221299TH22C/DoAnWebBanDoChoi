@@ -1,0 +1,46 @@
+﻿@model List<DoAnWebBanDoChoi.Models.DanhMuc>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-white rounded shadow p-4 border">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold text-primary">Danh mục sản phẩm</h5>
+                    <div>
+                        <a asp-action="Create" class="btn btn-sm btn-success me-2">
+                            <i class="fa fa-plus me-1"></i> Thêm danh mục
+                        </a>
+                        <a asp-action="DanhSachXoa" class="btn btn-sm btn-danger">
+                            <i class="fa fa-trash me-1"></i> Xóa danh mục
+                        </a>
+                    </div>
+                </div>
+                <div style="max-height: 500px; overflow-y: auto;">
+                <table class="table table-bordered table-striped table-hover align-middle">
+                    <thead class="table-primary text-center">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Tên danh mục</th>
+                            <th scope="col">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var dm in Model)
+                        {
+                            <tr>
+                                <td class="text-center">@dm.MaDm</td>
+                                <td>@dm.TenDanhMuc</td>
+                                <td class="text-center">
+                                    <a asp-action="Edit" asp-route-id="@dm.MaDm" class="btn btn-sm btn-warning">
+                                        <i class="fa fa-edit me-1"></i> Sửa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

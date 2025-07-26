@@ -46,3 +46,34 @@ function xacNhanDangNhap() {
         window.location.href = '/Account/Login';
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const success = document.getElementById("toast-success");
+    const error = document.getElementById("toast-error");
+
+    if (success) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: success.value,
+            showConfirmButton: false,
+            timer: 5000,
+            background: '#333',
+            color: '#fff'
+        });
+    }
+
+    if (error) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'error',
+            title: error.value,
+            showConfirmButton: false,
+            timer: 5000,
+            background: '#333',
+            color: '#fff'
+        });
+    }
+});

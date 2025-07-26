@@ -1,0 +1,13 @@
+.css_select_div {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.css_select {
+    display: inline-table;
+    width: 30%;
+    padding: 5px;
+    margin: 5px 1%;
+    border: solid 1px #686868;
+    border-radius: 5px;
+}

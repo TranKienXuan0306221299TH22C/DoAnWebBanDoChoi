@@ -11,7 +11,7 @@ public partial class NguoiDung
 
     public string? DienThoai { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string? Email { get; set; }
 
     public string MatKhau { get; set; } = null!;
 
@@ -23,8 +23,6 @@ public partial class NguoiDung
 
     public bool HieuLuc { get; set; }
 
-    public string? RandomKey { get; set; }
-
     public string? HoTenHienThi { get; set; }
 
     public virtual ICollection<BinhLuan> BinhLuans { get; set; } = new List<BinhLuan>();
@@ -32,6 +30,10 @@ public partial class NguoiDung
     public virtual ICollection<DonHang> DonHangs { get; set; } = new List<DonHang>();
 
     public virtual ICollection<GioHang> GioHangs { get; set; } = new List<GioHang>();
+
+    public virtual ICollection<PhanHoi> PhanHois { get; set; } = new List<PhanHoi>();
+
+    public virtual ICollection<PhieuNhap> PhieuNhaps { get; set; } = new List<PhieuNhap>();
 
     public virtual ICollection<SanPhamYeuThich> SanPhamYeuThiches { get; set; } = new List<SanPhamYeuThich>();
 }

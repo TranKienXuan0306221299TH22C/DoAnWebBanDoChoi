@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - Bootstrap Admin Template</title>
+    <title>@ViewData["Title"] - Admin</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -29,32 +29,39 @@
 </head>
 
 <body>
+    @if (TempData["Success"] != null)
+    {
+        <input type="hidden" id="temp-success-msg" value="@TempData["Success"]" />
+    }
+    @if (TempData["Error"] != null)
+    {
+        <input type="hidden" id="temp-error-msg" value="@TempData["Error"]" />
+    }
     <div class="container-xxl position-relative bg-white d-flex p-0">
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End -->
-        @await Html.PartialAsync("_Sidebar")
+        <!-- Sidebar -->  
+
+        @await Component.InvokeAsync("Sidebar")
         <!-- Content Start -->
         <div class="content">
             <!-- Navbar Start -->
-            @await Html.PartialAsync("_Navbar")
-            <!-- Navbar End -->
-            <!-- Blank Start -->
+            <nav class="navbar navbar-expand bg-light navbar-light sticky-top px-4 py-0">
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </nav>
+         
 			@RenderBody()
         
         </div>
-        <!-- Content End -->
-        <!-- Back to Top -->
+      
        
     </div>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://esgoo.net/scripts/jquery.js"></script> 
     <script src="~/Admin/lib/chart/chart.min.js" asp-append-version="true"></script>
     <script src="~/Admin/lib/easing/easing.min.js" asp-append-version="true"></script>
     <script src="~/Admin/lib/waypoints/waypoints.min.js" asp-append-version="true"></script>
@@ -62,9 +69,11 @@
     <script src="~/Admin/lib/tempusdominus/js/moment.min.js" asp-append-version="true"></script>
     <script src="~/Admin/lib/tempusdominus/js/moment-timezone.min.js" asp-append-version="true"></script>
     <script src="~/Admin/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js" asp-append-version="true"></script>
-
+    <script src="~/admin/js/alert.js"></script>
+    <partial name="_ValidationScriptsPartial" />
     <!-- Template Javascript -->
     <script src="~/Admin/js/main.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 
 </html>
