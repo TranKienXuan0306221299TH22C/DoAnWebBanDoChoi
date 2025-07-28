@@ -11,3 +11,22 @@
     border: solid 1px #686868;
     border-radius: 5px;
 }
+
+.text-limit {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.text-limit-2-line {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    min-width: 200px;
+    line-height: 1.4em;
+    min-height: 2.8em !important;
+    word-break: break-word;

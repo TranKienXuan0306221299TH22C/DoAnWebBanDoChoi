@@ -1,21 +1,56 @@
 ﻿@model List<DoAnWebBanDoChoi.Models.SanPham>
 
+@{
+    ViewData["Title"] = "Danh sách sản phẩm";
+    var danhMucs = ViewBag.DanhMucs;
+    var search = ViewBag.CurrentSearch as string;
+    var currentDanhMuc = ViewBag.CurrentDanhMuc as int?;
+}
 
+</style>
 <div class="container-fluid pt-4 px-4">
     <div class="bg-white rounded shadow p-4 border">
+
         <div class="d-flex justify-content-between mb-4">
             <h5 class="text-primary fw-bold">Danh sách sản phẩm</h5>
             <a asp-action="Create" class="btn btn-success btn-sm">
                 <i class="fa fa-plus me-1"></i> Thêm sản phẩm
             </a>
         </div>
+
+        <!-- TÌM KIẾM -->
+        <form method="get" asp-action="SanPham" class="row g-2 mb-4">
+            <div class="col-md-4">
+                <input type="text" name="search" class="form-control" placeholder="Tìm theo tên sản phẩm..." value="@search" />
+            </div>
+            <div class="col-md-3">
+                <select name="maDm" class="form-select">
+                    <option value="">-- Chọn danh mục --</option>
+                        @foreach (var dm in danhMucs)
+                    {
+                        var danhsach = (currentDanhMuc == dm.MaDm) ? "selected" : "";
+                        @:<option value="@dm.MaDm" @danhsach>@dm.TenDanhMuc</option>
+                    }
+
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+            </div>
+            <div class="col-md-2">
+                <a asp-action="SanPham" class="btn btn-warning w-100">Hiện tất cả</a>
+            </div>
+        </form>
+
+
         <div style="max-height: 450px; overflow: auto;">
-            <table class="table table-bordered table-hover align-middle text-nowrap">
+            <table class="table table-bordered table-hover align-middle ">
                 <thead class="table-primary text-center sticky-top" style="top: 0; z-index: 1;">
                     <tr>
                         <th>#</th>
                         <th>Tên</th>
                         <th>Ảnh</th>
+                        <th>Mô tả</th>
                         <th>Danh mục</th>
                         <th>Thương hiệu</th>
                         <th>Nhà cung cấp</th>
@@ -32,24 +67,27 @@
                     {
                         <tr>
                             <td class="text-center">@sp.MaSp</td>
-                            <td>@sp.TenSanPham</td>
+                            <td style="min-width:200px;">@sp.TenSanPham</td>
                             <td>
                                 @if (!string.IsNullOrEmpty(sp.HinhAnh))
                                 {
                                     <img src="~/img/product/dochoi/@sp.HinhAnh" width="60" />
                                 }
                             </td>
-                            <td>@sp.MaDmNavigation?.TenDanhMuc</td>
-                            <td>@sp.MaThNavigation?.TenThuongHieu</td>
-                            <td>@sp.MaNccNavigation?.TenNhaCungCap</td>
-                            <td class="text-end">@sp.GiaGoc.ToString("N0") đ</td> 
-                            <td class="text-end">@sp.DonGia.ToString("N0") đ</td>
+                            <td title="@sp.MoTa">
+                                <div class="text-limit-2-line">@sp.MoTa</div>
+                            </td>
+                            <td  class="text-nowrap">@sp.MaDmNavigation?.TenDanhMuc</td>
+                            <td class="text-nowrap">@sp.MaThNavigation?.TenThuongHieu</td>
+                            <td style="min-width:200px;">@sp.MaNccNavigation?.TenNhaCungCap</td>
+                            <td class="text-end text-nowrap">@sp.GiaGoc.ToString("N0") đ</td>
+                            <td class="text-end text-nowrap">@sp.DonGia.ToString("N0") đ</td>
                             <td class="text-center">@sp.SoLuong</td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">
                                 @(sp.TrangThai == 1 ? "Hoạt động" : "Ngừng bán")
                             </td>
-                            <td class="text-center">@sp.NgayTao.ToString("dd/MM/yyyy")</td>
-                            <td class="text-center">
+                            <td class="text-center text-nowrap">@sp.NgayTao.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center text-nowrap">
                                 <a asp-action="Edit" asp-route-id="@sp.MaSp" class="btn btn-sm btn-warning">
                                     <i class="fa fa-edit"></i>
                                 </a>
@@ -65,6 +103,7 @@
         </div>
     </div>
 </div>
+
 
 @section Scripts {
    

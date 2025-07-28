@@ -17,15 +17,44 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             _context = context;
         }
 
-        public IActionResult SanPham()
+        //public IActionResult SanPham()
+        //{
+        //    var sanPhams = _context.SanPhams
+        //        .Include(sp => sp.MaDmNavigation)
+        //        .Include(sp => sp.MaThNavigation)
+        //        .Include(sp => sp.MaNccNavigation)
+        //        .ToList();
+        //    return View(sanPhams);
+        //}
+        public IActionResult SanPham(string? search, int? maDm)
         {
-            var sanPhams = _context.SanPhams
+            var query = _context.SanPhams
                 .Include(sp => sp.MaDmNavigation)
                 .Include(sp => sp.MaThNavigation)
                 .Include(sp => sp.MaNccNavigation)
-                .ToList();
-            return View(sanPhams);
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                string khongDau = SlugHelper.GenerateSlug(search);
+                query = query.Where(sp =>
+                    sp.TenSanPham.Contains(search) || sp.Slug.Contains(khongDau)
+                );
+            }
+
+            if (maDm.HasValue)
+            {
+                query = query.Where(sp => sp.MaDm == maDm.Value);
+            }
+
+            ViewBag.DanhMucs = _context.DanhMucs.ToList();
+            ViewBag.CurrentSearch = search;
+            ViewBag.CurrentDanhMuc = maDm;
+
+            var sanPhamList = query.ToList();
+            return View(sanPhamList);
         }
+
 
         public IActionResult Create()
         {
