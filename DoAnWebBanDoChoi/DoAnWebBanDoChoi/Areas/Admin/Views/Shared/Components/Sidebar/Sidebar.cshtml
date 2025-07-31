@@ -18,14 +18,7 @@
         </div>
         <div class="navbar-nav w-100">
             <a href="index.html" class="nav-item nav-link "><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle " data-bs-toggle="dropdown"><i class="bi bi-file-earmark-text me-2"></i> phiếu nhập</a>
-                <div class="dropdown-menu bg-transparent border-0">
-                    <a href="button.html" class="dropdown-item">Phiếu nhập</a>
-                    <a href="typography.html" class="dropdown-item">Chi tiết phiếu nhập</a>
-
-                </div>
-            </div>
+           
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle w-100 " data-bs-toggle="dropdown">
                     <i class="fbi bi-building me-2"></i> nhà cung cấp
@@ -39,11 +32,28 @@
                     </a>
                 </div>
             </div>
-
-
-            <a asp-controller="Product" asp-action="SanPham" class="nav-item nav-link"><i class="fa fa-box me-2"></i> sản phẩm</a>
-            <a asp-controller="Category" asp-action="DanhMuc" class="nav-item nav-link"><i class="fa fa-list me-2"></i> danh mục</a>
-            <a href="table.html" class="nav-item nav-link"><i class="fa fa-receipt me-2"></i> đơn hàng</a>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle w-100 " data-bs-toggle="dropdown">
+                    <i class="fa fa-receipt me-2"></i>Đơn hàng
+                </a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a asp-controller="Order" asp-action="ChoXacNhan" class="dropdown-item custom-hover">
+                        Chờ xác nhận
+                    </a>
+                    <a asp-controller="Order" asp-action="DaXacNhan" class="dropdown-item custom-hover">
+                        Đã xác nhấn
+                    </a>
+                    <a asp-controller="Order" asp-action="DangGiao" class="dropdown-item custom-hover">
+                        Đang giao
+                    </a>
+                    <a asp-controller="Order" asp-action="DaGiao" class="dropdown-item custom-hover">
+                        Hoàn thành
+                    </a>
+                    <a asp-controller="Order" asp-action="DaHuy" class="dropdown-item custom-hover">
+                        Hủy đơn hàng
+                    </a>
+                </div>
+            </div>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle w-100 " data-bs-toggle="dropdown">
                     <i class="fbi bi-building me-2"></i> Tài khoản
@@ -60,6 +70,22 @@
                     }
                 </div>
             </div>
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle w-100 " data-bs-toggle="dropdown">
+                    <i class="bi bi-journal-bookmark me-2"></i>Phiếu nhập
+                </a>
+                <div class="dropdown-menu bg-transparent border-0">
+                    <a asp-controller="PhieuNhap" asp-action="Index" class="dropdown-item custom-hover">
+                        Phiếu nhập
+                    </a>
+                    <a asp-controller="Product" asp-action="SanPham" class="dropdown-item custom-hover">
+                        Sản phẩm
+                    </a>
+                </div>
+            </div>
+           @*  <a asp-controller="Product" asp-action="SanPham" class="nav-item nav-link"><i class="fa fa-box me-2"></i> sản phẩm</a>
+            <a asp-controller="PhieuNhap" asp-action="Index" class="nav-item nav-link "><i class="bi bi-journal-bookmark me-2"></i>Phiếu nhập</a> *@
+            <a asp-controller="Category" asp-action="DanhMuc" class="nav-item nav-link"><i class="fa fa-list me-2"></i> danh mục</a>
             <a asp-controller="Transport" asp-action="VanChuyen" class="nav-item nav-link"><i class="bi bi-truck me-2"></i>Phí vận chuyển</a>
             <a href="chart.html" class="nav-item nav-link"><i class="fa fa-info-circle me-2"></i>Thông tin website</a>
 

@@ -17,15 +17,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             _context = context;
         }
 
-        //public IActionResult SanPham()
-        //{
-        //    var sanPhams = _context.SanPhams
-        //        .Include(sp => sp.MaDmNavigation)
-        //        .Include(sp => sp.MaThNavigation)
-        //        .Include(sp => sp.MaNccNavigation)
-        //        .ToList();
-        //    return View(sanPhams);
-        //}
+   
         public IActionResult SanPham(string? search, int? maDm)
         {
             var query = _context.SanPhams
@@ -34,7 +26,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
                 .Include(sp => sp.MaNccNavigation)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(search))
+            if (!string.IsNullOrWhiteSpace(search))
             {
                 string khongDau = SlugHelper.GenerateSlug(search);
                 query = query.Where(sp =>
@@ -48,12 +40,13 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             }
 
             ViewBag.DanhMucs = _context.DanhMucs.ToList();
-            ViewBag.CurrentSearch = search;
+            ViewBag.CurrentSearch = search ?? "";
             ViewBag.CurrentDanhMuc = maDm;
 
             var sanPhamList = query.ToList();
             return View(sanPhamList);
         }
+
 
 
         public IActionResult Create()

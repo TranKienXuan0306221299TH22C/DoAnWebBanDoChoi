@@ -80,6 +80,8 @@ namespace DoAnWebBanDoChoi.Controllers
                     HttpContext.Session.Set("MaNd", user.MaNd);             
                     HttpContext.Session.SetString("DangNhap", "true");
                     HttpContext.Session.SetString("VaiTro", user.VaiTro);
+                    HttpContext.Session.SetString("HoTen", user.TenDangNhap);
+
                     if (user.VaiTro == "admin" || user.VaiTro == "nhanvien")
                     {
                         return RedirectToAction("Index", "Home", new { area = "Admin" });

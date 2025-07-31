@@ -1,0 +1,28 @@
+﻿@model PhieuNhap
+@{
+    var nccList = ViewBag.DanhSachNCC as List<NhaCungCap>;
+}
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+        <h2>Tạo phiếu nhập</h2>
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label>Nhà cung cấp</label>
+                <select class="form-control" asp-for="MaNcc">
+                    <option value="">-- Chọn nhà cung cấp --</option>
+                    @foreach (var ncc in nccList)
+                    {
+                        <option value="@ncc.MaNcc">@ncc.TenNhaCungCap</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Ghi chú</label>
+                <textarea class="form-control" asp-for="GhiChu"></textarea>
+                <span class="text-danger" asp-validation-for="GhiChu"></span>
+            </div>
+            <button class="btn btn-success" type="submit">Tạo phiếu nhập</button>
+        </form>
+    </div>
+</div>
+

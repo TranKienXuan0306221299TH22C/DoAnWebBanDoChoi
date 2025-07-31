@@ -1,0 +1,44 @@
+﻿@model List<PhieuNhap>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+
+        <h2>Danh sách phiếu nhập</h2>
+        <a class="btn btn-primary mb-3" asp-action="Create">➕ Tạo phiếu nhập</a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Mã PN</th>
+                    <th>Ngày nhập</th>
+                    <th>Nhà cung cấp</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.MaPn</td>
+                        <td>@item.NgayNhap.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@item.MaNccNavigation.TenNhaCungCap</td>
+                        <td>
+                            @if (item.TrangThai == 1)
+                            {
+                                <span class="badge bg-success">Đã duyệt</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Chờ duyệt</span>
+                            }
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-info" asp-action="ChiTiet" asp-route-id="@item.MaPn">Chi tiết</a>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        </div>
+</div>

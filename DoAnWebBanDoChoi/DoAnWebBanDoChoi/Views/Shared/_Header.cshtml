@@ -2,6 +2,9 @@
     var ch = (DoAnWebBanDoChoi.Models.CauHinh)ViewBag.CauHinh;
 } *@
 @{
+    var hoTen = Context.Session.GetString("HoTen");
+}
+@{
     var daDangNhap = Context.Session.GetString("DangNhap") == "true";
 }
 
@@ -37,9 +40,17 @@
                                          width="30"
                                          height="30"
                                          style="object-fit: cover !important;">
-                                    <span class="ms-2 fw-semibold text-dark" style="font-size: 12px !important;">
+                                   @*  <span class="ms-2 fw-semibold text-dark" style="font-size: 12px !important;">
                                         TaiKhoan
-                                    </span>
+                                    </span> *@
+                                    @if (!string.IsNullOrEmpty(hoTen))
+                                    {
+                                        <span class="ms-2 fw-semibold text-dark" style="font-size: 12px !important;">
+                                            <strong>@hoTen</strong>
+                                        </span>
+
+                                        
+                                    }
                                 </a>
                                 <!-- Logout -->
                                 <a asp-controller="Account" asp-action="Logout"
@@ -53,7 +64,7 @@
                         else
                         {
                             <div class="header__top__right__auth">
-                                <a asp-controller="Account" asp-action="Login"><i class="fa fa-user"></i> Login</a>
+                                <a asp-controller="Account" asp-action="Login"><i class="fa fa-user"></i> Đăng nhập</a>
 
                             </div>
                             <div class="header__top__right__auth">
@@ -61,7 +72,7 @@
                             </div>
                             <div class="header__top__right__auth">
 
-                                <a asp-controller="Account" asp-action="Register"><i class=""></i> Register</a>
+                                <a asp-controller="Account" asp-action="Register"><i class=""></i> Đăng ký</a>
                             </div>
                         }
 

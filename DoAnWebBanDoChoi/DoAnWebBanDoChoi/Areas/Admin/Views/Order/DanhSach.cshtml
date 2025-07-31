@@ -1,0 +1,82 @@
+﻿@model List<DoAnWebBanDoChoi.ViewModels.DonHangVM>
+@using DoAnWebBanDoChoi.Helpers;
+@using DoAnWebBanDoChoi.Enums
+
+@{
+    ViewData["Title"] = ViewBag.TieuDe ?? "Đơn hàng";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+        <h3 class="text-primary">@ViewData["Title"]</h3>
+
+        <table class="table table-bordered table-striped">
+            <thead class="table-light text-center text-nowrap">
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>SĐT</th>
+                    <th>Địa chỉ</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Thanh toán</th>
+                    <th >Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td >@item.MaDh</td>
+                        <td >@item.HoTen</td>
+                        <td >@item.DienThoai</td>
+                        <td>@item.DiaChiDayDu</td>
+                        <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
+                        <td>@item.TongTien.ToString("N0") ₫</td>
+                        <td><span class="badge bg-info">@item.TrangThaiHienThi</span></td>
+                        <td >@item.PhuongThucThanhToan</td>
+                        <td >
+                            <a asp-area="Admin" asp-controller="Order" asp-action="ChiTiet" asp-route-id="@item.MaDh" class="btn btn-sm btn-primary">Xem</a>
+
+                           
+                            @if (item.TrangThai == TrangThaiDonHang.ChoXacNhan ||
+                           item.TrangThai == TrangThaiDonHang.DaXacNhan ||
+                           item.TrangThai == TrangThaiDonHang.DangGiao)
+                            {
+                                <form asp-area="Admin" asp-controller="Order" asp-action="HuyDon" method="post" style="display:inline">
+                                    <input type="hidden" name="id" value="@item.MaDh" />
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Bạn có chắc muốn huỷ đơn này?')">
+                                        Huỷ
+                                    </button>
+                                </form>
+                            }
+
+                            @{
+                                TrangThaiDonHang? trangThaiKeTiep = item.TrangThai switch
+                                {
+                                    TrangThaiDonHang.ChoXacNhan => TrangThaiDonHang.DaXacNhan,
+                                    TrangThaiDonHang.DaXacNhan => TrangThaiDonHang.DangGiao,
+                                    TrangThaiDonHang.DangGiao => TrangThaiDonHang.DaGiao,
+                                    _ => null
+                                };
+                            }
+
+                            @if (trangThaiKeTiep != null)
+                            {
+                                <form asp-area="Admin" asp-controller="Order" asp-action="CapNhatTrangThai" method="post" style="display:inline">
+                                    <input type="hidden" name="id" value="@item.MaDh" />
+                                    <input type="hidden" name="trangThaiMoi" value="@((int)trangThaiKeTiep)" />
+                                    <button type="submit" class="btn btn-sm btn-success">
+                                        Chuyển: @trangThaiKeTiep.Value.GetDisplayName()
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -3,11 +3,10 @@
 @{
     ViewData["Title"] = "Danh sách sản phẩm";
     var danhMucs = ViewBag.DanhMucs;
-    var search = ViewBag.CurrentSearch as string;
-    var currentDanhMuc = ViewBag.CurrentDanhMuc as int?;
+    string search = ViewBag.CurrentSearch as string ?? "";
+    int? currentDanhMuc = ViewBag.CurrentDanhMuc as int?;
 }
 
-</style>
 <div class="container-fluid pt-4 px-4">
     <div class="bg-white rounded shadow p-4 border">
 
@@ -45,7 +44,7 @@
 
         <div style="max-height: 450px; overflow: auto;">
             <table class="table table-bordered table-hover align-middle ">
-                <thead class="table-primary text-center sticky-top" style="top: 0; z-index: 1;">
+                <thead class="table-primary text-center sticky-top text-nowrap" style="top: 0; z-index: 1;">
                     <tr>
                         <th>#</th>
                         <th>Tên</th>
@@ -77,7 +76,7 @@
                             <td title="@sp.MoTa">
                                 <div class="text-limit-2-line">@sp.MoTa</div>
                             </td>
-                            <td  class="text-nowrap">@sp.MaDmNavigation?.TenDanhMuc</td>
+                            <td  class="">@sp.MaDmNavigation?.TenDanhMuc</td>
                             <td class="text-nowrap">@sp.MaThNavigation?.TenThuongHieu</td>
                             <td style="min-width:200px;">@sp.MaNccNavigation?.TenNhaCungCap</td>
                             <td class="text-end text-nowrap">@sp.GiaGoc.ToString("N0") đ</td>
