@@ -45,7 +45,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<ThuongHieu> ThuongHieus { get; set; }
 
- 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BinhLuan>(entity =>
@@ -58,7 +58,8 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.MaNd).HasColumnName("MaND");
             entity.Property(e => e.MaSp).HasColumnName("MaSP");
             entity.Property(e => e.NgayTao).HasDefaultValueSql("(getdate())");
-            entity.Property(e => e.NoiDung).HasMaxLength(1000);
+            entity.Property(e => e.NoiDungBinhLuan).HasMaxLength(1000);
+            entity.Property(e => e.PhanHoiBinhLuan).HasMaxLength(1000);
 
             entity.HasOne(d => d.MaNdNavigation).WithMany(p => p.BinhLuans)
                 .HasForeignKey(d => d.MaNd)

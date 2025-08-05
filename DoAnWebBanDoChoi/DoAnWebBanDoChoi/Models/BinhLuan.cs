@@ -13,7 +13,11 @@ public partial class BinhLuan
 
     public int Diem { get; set; }
 
-    public string NoiDung { get; set; } = null!;
+    public string? PhanHoiBinhLuan { get; set; }
+
+    public string? NoiDungBinhLuan { get; set; }
+
+    public int TrangThai { get; set; }
 
     public DateTime NgayTao { get; set; }
 

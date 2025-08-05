@@ -14,7 +14,7 @@ namespace DoAnWebBanDoChoi.ViewModels
         [Required(ErrorMessage = "Địa chỉ không được bỏ trống")]
         public string DiaChi { get; set; }
 
-        public string GhiChu { get; set; }
+        public string? GhiChu { get; set; }
 
         [Required(ErrorMessage = "Vui lòng chọn phương thức thanh toán")]
         public string PhuongThucThanhToan { get; set; }

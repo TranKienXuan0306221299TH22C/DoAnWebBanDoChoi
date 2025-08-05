@@ -1,0 +1,136 @@
+﻿@* @model DoAnWebBanDoChoi.ViewModels.BinhLuanVM
+
+<div class="container mt-4">
+    <h4 class="mb-3">Bình luận sản phẩm</h4>
+
+    <div class="mb-3 text-center">
+        <img src="~/img/product/dochoi/@Model.HinhAnh" alt="@Model.TenSanPham" class="img-thumbnail" style="width: 150px;" />
+        <h5 class="mt-2">@Model.TenSanPham</h5>
+    </div>
+
+    <form asp-action="ThemBinhLuan" method="post">
+        <input type="hidden" asp-for="MaSp" />
+        <div class="mb-3">
+            <label class="form-label">Chọn số sao (1–5):</label>
+            <select class="form-select" asp-for="SoSao">
+                <option value="">-- Chọn --</option>
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <option value="@i">@i sao</option>
+                }
+            </select>
+            <span class="text-danger" asp-validation-for="SoSao"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Nội dung:</label>
+            <textarea class="form-control" asp-for="NoiDung" rows="4"></textarea>
+            <span class="text-danger" asp-validation-for="NoiDung"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Gửi bình luận</button>
+        <a asp-action="BinhLuan" class="btn btn-secondary ms-2">Quay lại</a>
+    </form>
+</div>
+
+
+ *@
+ @model DoAnWebBanDoChoi.ViewModels.BinhLuanVM
+
+@{
+    ViewData["Title"] = "Bình luận sản phẩm";
+}
+
+<div class="container mt-4">
+    <h4 class="mb-3">Bình luận sản phẩm</h4>
+
+    <div class="mb-3 text-center">
+        <img src="~/img/product/dochoi/@Model.HinhAnh" alt="@Model.TenSanPham"
+             class="img-thumbnail" style="width: 150px;" />
+        <h5 class="mt-2">@Model.TenSanPham</h5>
+    </div>
+
+    <form asp-action="ThemBinhLuan" method="post">
+        <input type="hidden" asp-for="MaSp" />
+        <input type="hidden" asp-for="SoSao" id="SoSao" />
+
+        <div class="mb-3">
+            <label class="form-label d-block">Chọn số sao:</label>
+            <div id="rating-stars">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    <span class="star" data-value="@i">&#9733;</span>
+                }
+            </div>
+            <span class="text-danger" asp-validation-for="SoSao"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Nội dung:</label>
+            <textarea class="form-control" asp-for="NoiDung" rows="4"></textarea>
+            <span class="text-danger" asp-validation-for="NoiDung"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Gửi bình luận</button>
+        <div class="d-grid gap-2 d-md-flex justify-content-end mt-4 mb-5">
+            <a  asp-action="BinhLuan" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+<style>
+    .star {
+        font-size: 2rem;
+        color: #ccc;
+        cursor: pointer;
+        transition: color 0.2s;
+        display: inline-block;
+    }
+
+        .star.hover,
+        .star.selected {
+            color: gold;
+        }
+</style>
+
+@section Scripts {
+    <script>
+        const stars = document.querySelectorAll('#rating-stars .star');
+        const ratingInput = document.getElementById('SoSao');
+        let selectedRating = parseInt(ratingInput.value) || 0;
+
+        function highlightStars(index) {
+            stars.forEach((star, i) => {
+                star.classList.toggle('hover', i <= index);
+            });
+        }
+
+        function resetStars() {
+            stars.forEach(star => star.classList.remove('hover'));
+        }
+
+        function setSelectedStars(index) {
+            selectedRating = index + 1;
+            ratingInput.value = selectedRating;
+            stars.forEach((star, i) => {
+                star.classList.toggle('selected', i < selectedRating);
+            });
+        }
+
+        stars.forEach((star, index) => {
+            star.addEventListener('mouseenter', () => highlightStars(index));
+            star.addEventListener('mouseleave', resetStars);
+            star.addEventListener('click', () => setSelectedStars(index));
+        });
+
+        // Nếu reload lại trang với giá trị đã chọn
+        if (selectedRating > 0) {
+            setSelectedStars(selectedRating - 1);
+        }
+    </script>
+
+    @* Validation ASP.NET *@
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

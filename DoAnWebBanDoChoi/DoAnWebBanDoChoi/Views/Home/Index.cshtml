@@ -1,15 +1,15 @@
-﻿@using X.PagedList.Mvc.Core
-
+﻿@model DoAnWebBanDoChoi.ViewModels.TrangChuVM
+@using X.PagedList.Mvc.Core
+@using DoAnWebBanDoChoi.Helpers
 @{
     ViewData["Title"] = "Trang chủ";
+    var daDangNhap = Context.Session.GetString("DangNhap") == "true";
 }
-@*  @model X.PagedList.IPagedList<DoAnWebBanDoChoi.Models.SanPham>   *@
-    @model DoAnWebBanDoChoi.ViewModels.TrangChuVM
 
 <section class="product spad">
     <div class="container">
         <div class="row">
-            <div class="col-lg-3 col-md-5">
+            <div class="col-lg-3 col-md-5 bg-light p-3 rounded shadow-sm">
                 <div class="sidebar">
                     <div class="sidebar__item">
                         <form method="get" asp-controller="Home" asp-action="Index">
@@ -21,7 +21,8 @@
                                     <option value="price-asc">Giá tăng dần</option>
                                     <option value="price-desc">Giá giảm dần</option>
                                     <option value="hot">Bán chạy</option>
-                                    <option value="favorite">Yêu thích nhiều nhất</option>
+                                   
+                                    <option value="all">Tất cả</option>
                                 </select>
                             </div>
                         </form>
@@ -30,82 +31,8 @@
                     @await Component.InvokeAsync("DanhMuc")
 
 
-                    <div class="sidebar__item">
-                        <h4>Popular Size</h4>
-                        <div class="sidebar__item__size">
-                            <label for="large">
-                                Large
-                                <input type="radio" id="large">
-                            </label>
-                        </div>
-                        <div class="sidebar__item__size">
-                            <label for="medium">
-                                Medium
-                                <input type="radio" id="medium">
-                            </label>
-                        </div>
-                        <div class="sidebar__item__size">
-                            <label for="small">
-                                Small
-                                <input type="radio" id="small">
-                            </label>
-                        </div>
-                        <div class="sidebar__item__size">
-                            <label for="tiny">
-                                Tiny
-                                <input type="radio" id="tiny">
-                            </label>
-                        </div>
-                    </div>
-                    <div class="sidebar__item">
-                        <div class="latest-product__text">
-                            <h4>Latest Products</h4>
-                            <div class="latest-product__slider owl-carousel">
-                                <div class="latest-prdouct__slider__item">
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="img/latest-product/lp-1.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
+             @*      ghichuthem2caidooiday *@
 
-                                </div>
-                                <div class="latest-prdouct__slider__item">
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="img/latest-product/lp-1.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="img/latest-product/lp-2.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="latest-product__item">
-                                        <div class="latest-product__item__pic">
-                                            <img src="img/latest-product/lp-3.jpg" alt="">
-                                        </div>
-                                        <div class="latest-product__item__text">
-                                            <h6>Crab Pool Security</h6>
-                                            <span>$30.00</span>
-                                        </div>
-                                    </a>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="col-lg-9 col-md-7">
@@ -135,6 +62,16 @@
                     </div>
 
                 </div>
+                <!-- Danh sách sản phẩm  -->
+           @*      <div class="filter__item mt-5">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="section-title">
+                                <h2>Tất cả sản phẩm</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div> *@
                 <div class="filter__item">
                     <div class="row">
                         <div class="col-lg-12">
@@ -143,19 +80,81 @@
                             </div>
                             <div class="featured__controls">
                                 <ul>
-                                    <li class="active" data-filter="*">All</li>
-                                    <li data-filter=".oranges">Oranges</li>
-                                    <li data-filter=".fresh-meat">Fresh Meat</li>
-                                    <li data-filter=".vegetables">Vegetables</li>
-                                    <li data-filter=".fastfood">Fastfood</li>
+                                    <li >
+                                        <a asp-action="Index" class="text-pink-500 hover:text-pink-700 font-semibold">All</a>
+                                    </li>
+                                
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-    @*      @await Html.PartialAsync("DanhSachSanPham",Model) *@
-                @await Html.PartialAsync("DanhSachSanPham", Model.DanhSachSanPham)
-         
+                <div class="row">
+                    @foreach (var sp in Model.DanhSachSanPham)
+                    {
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg">
+                                    <a asp-controller="Home" asp-action="Detail" asp-route-slug="@sp.Slug" asp-route-id="@sp.MaSp">
+                                        <img src="@Url.Content("~/img/product/dochoi/" + sp.HinhAnh)" alt="@sp.TenSanPham" class="product__item__pic" />
+                                    </a>
+                                    <ul class="product__item__pic__hover">
+                                        <li>
+                                            @if (daDangNhap)
+                                            {
+                                                <a href="javascript:;" class="btn-yeu-thich" data-id="@sp.MaSp">
+                                                    <i class="fa fa-heart"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:;" onclick="xacNhanDangNhapYeuThich()">
+                                                    <i class="fa fa-heart"></i>
+                                                </a>
+                                            }
+                                        </li>
+                                        <li>
+                                            @if (daDangNhap)
+                                            {
+                                                <a href="javascript:;" onclick="submitThemGio(@sp.MaSp)">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a href="javascript:;" onclick="xacNhanDangNhap()">
+                                                    <i class="fa fa-shopping-cart"></i>
+                                                </a>
+                                            }
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6>
+                                        <a asp-controller="Home" asp-action="Detail" asp-route-slug="@sp.Slug" asp-route-id="@sp.MaSp">
+                                            @sp.TenSanPham
+                                        </a>
+                                    </h6>
+                                    <h5>@sp.DonGia.ToString("N0") đ</h5>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="product__pagination">
+                    <div class="text-center mt-4">
+                        @Html.PagedListPager(Model.DanhSachSanPham,
+                                 page => Url.Action("Index", new { page, sort = Context.Request.Query["sort"], loai = Context.Request.Query["loai"] }),
+                                 new PagedListRenderOptions
+                        {
+                            UlElementClasses = new[] { "pagination", "justify-content-center" },
+                            LiElementClasses = new[] { "page-item" },
+                            PageClasses = new[] { "page-link" },
+                            ActiveLiElementClass = "active"
+                        }
+                                 )
+                    </div>
+                </div>
             </div>
         </div>
     </div>

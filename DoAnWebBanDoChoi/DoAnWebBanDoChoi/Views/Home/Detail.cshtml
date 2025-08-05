@@ -1,4 +1,9 @@
-﻿ @model DoAnWebBanDoChoi.Models.SanPham
+﻿@*  @model DoAnWebBanDoChoi.Models.SanPham *@
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+
+
+@model DoAnWebBanDoChoi.ViewModels.ChiTietSanPhamVM
 @{
     var daDangNhap = Context.Session.GetString("DangNhap") == "true";
     ViewData["Title"] = "Chi tiết";
@@ -11,14 +16,14 @@
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
                         <img class="product__details__pic__item--large"
-                             src="@Url.Content("~/img/product/dochoi/" + Model.HinhAnh)" alt="" >
+                        src="@Url.Content("~/img/product/dochoi/" + @Model.SanPham.HinhAnh)" alt="" >
                     </div>
-                  
+
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
-                    <h3>@Model.TenSanPham</h3>
+                    <h3>@Model.SanPham.TenSanPham</h3>
                     <div class="product__details__rating">
                         <i class="fa fa-star"></i>
                         <i class="fa fa-star"></i>
@@ -27,18 +32,11 @@
                         <i class="fa fa-star-half-o"></i>
                         <span>(18 reviews)</span>
                     </div>
-                    <div class="product__details__price">@Model.DonGia.ToString("N0") đ</div>
+                    <div class="product__details__price">@Model.SanPham.DonGia.ToString("N0") đ</div>
                     <p>
-                      @Model.MoTa
+                        @Model.SanPham.MoTa
                     </p>
-        @*             <div class="product__details__quantity">
-                        <div class="quantity">
-                            <div class="pro-qty">
-                                <input type="text" value="1">
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#" class="primary-btn">ADD TO CARD</a> *@
+             
                     <div class="product__details__quantity">
                         <div class="quantity">
                             <div class="pro-qty">
@@ -49,7 +47,7 @@
 
                     @if (daDangNhap)
                     {
-                        <button onclick="themChiTietGio(@Model.MaSp)" class="primary-btn">ADD TO CART</button>
+                        <button onclick="themChiTietGio(@Model.SanPham.MaSp)" class="primary-btn">ADD TO CART</button>
                     }
                     else
                     {
@@ -57,9 +55,9 @@
                     }
                     <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                     <ul>
-                        <li><b>Thương hiệu</b> <span>@Model.MaThNavigation.TenThuongHieu</span></li>
-                   
-                        <li><b>Danh mục</b> <span>@Model.MaDmNavigation.TenDanhMuc</span></li>
+                        <li><b>Thương hiệu</b> <span>@Model.SanPham.MaThNavigation.TenThuongHieu</span></li>
+
+                        <li><b>Danh mục</b> <span>@Model.SanPham.MaDmNavigation.TenDanhMuc</span></li>
                         <li>
                             <b>Share on</b>
                             <div class="share">
@@ -73,62 +71,66 @@
                 </div>
             </div>
             <div class="col-lg-12">
-                <div class="product__details__tab">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab"
-                               aria-selected="true">Description</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab"
-                               aria-selected="false">Information</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab"
-                               aria-selected="false">Reviews <span>(1)</span></a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
-                            <div class="product__details__tab__desc">
-                                <h6>Products Infomation</h6>
-                                <p>
-                                    Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
-                                    Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus. Vivamus
-                                    suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam sit amet quam
-                                    vehicula elementum sed sit amet dui. Donec rutrum congue leo eget malesuada.
-                            
-                                </p>
-                       
+                <div class="bg-light p-3 rounded mb-4 mt-4">
+                    <h5 class="fw-bold text-dark text-center">— Bình luận —</h5>
+                    <!-- Bình luận 1 -->
+                    @foreach (var bl in Model.BinhLuans)
+                    {
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start" style="gap: 12px;">
+                                    <img src="https://th.bing.com/th/id/OIP.wQFQco1izbZGsWcSyy9aUQHaHa?w=180&h=181&c=7&r=0&o=7&dpr=1.6&pid=1.7&rm=3"
+                                         class="rounded-circle me-3" alt="Avatar" style="width: 60px; height: 60px; object-fit: cover;">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">@bl.MaNdNavigation.TenDangNhap</h6>
+                                        <small class="text-muted">@bl.NgayTao.ToString("dd/MM/yyyy HH:mm")</small>
+
+                                        <div class="text-warning mb-2">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                if (i <= bl.Diem)
+                                                {
+                                                    <i class="fa fa-star"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-star-o"></i>
+                                                }
+                                            }
+                                        </div>
+
+                                        <p class="mb-1">@bl.NoiDungBinhLuan</p>
+
+                                        @if (!string.IsNullOrEmpty(bl.PhanHoiBinhLuan))
+                                        {
+                                            <div class="bg-light p-2 rounded">
+                                                <strong>Phản hồi của người bán:</strong><br />
+                                                @bl.PhanHoiBinhLuan
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="tab-pane" id="tabs-2" role="tabpanel">
-                            <div class="product__details__tab__desc">
-                                <h6>Products Infomation</h6>
-                          
-                                <p>
-                                    Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Lorem
-                                    ipsum dolor sit amet, consectetur adipiscing elit. Mauris blandit aliquet
-                                    elit, eget tincidunt nibh pulvinar a. Cras ultricies ligula sed magna dictum
-                                    porta. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus
-                                    nibh. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="tabs-3" role="tabpanel">
-                            <div class="product__details__tab__desc">
-                                <h6>Products Infomation</h6>
-                                <p>
-                                    Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
-                                    Pellentesque in ipsum id orci porta dapibus. Proin eget tortor risus.
-                                    Vivamus suscipit tortor eget felis porttitor volutpat. Vestibulum ac diam
-                                    sit amet quam vehicula elementum sed sit amet dui. Donec rutrum congue leo
-                                 
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    }
+
+                    
+
+
                 </div>
+                <div class="text-center">
+                    @Html.PagedListPager(Model.BinhLuans, page => Url.Action("Detail", new { slug = Model.SanPham.Slug, id = Model.SanPham.MaSp, page }),
+                             new PagedListRenderOptions
+                    {
+                        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                        DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                        DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                        DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                        MaximumPageNumbersToDisplay = 3,
+                        UlElementClasses = new[] { "pagination", "justify-content-center", "mt-3" }
+                    })
+                </div>
+
             </div>
         </div>
     </div>
@@ -160,51 +162,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-2.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Crab Pool Security</a></h6>
-                        <h5>$30.00</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-3.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Crab Pool Security</a></h6>
-                        <h5>$30.00</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-7.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Crab Pool Security</a></h6>
-                        <h5>$30.00</h5>
-                    </div>
-                </div>
-            </div>
+           
         </div>
     </div>
 </section>
