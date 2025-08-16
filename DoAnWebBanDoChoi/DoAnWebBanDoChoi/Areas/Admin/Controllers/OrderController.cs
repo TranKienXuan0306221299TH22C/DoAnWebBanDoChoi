@@ -3,6 +3,7 @@ using DoAnWebBanDoChoi.Models;
 using DoAnWebBanDoChoi.Enums;
 using DoAnWebBanDoChoi.Filters;
 using DoAnWebBanDoChoi.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
 {
@@ -50,6 +51,22 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             var list = GetDonHangTheoTrangThai(TrangThaiDonHang.DaHuy);
             ViewBag.TieuDe = "Đơn hàng đã huỷ";
             return View("DanhSach", list);
+        }
+        public IActionResult ChiTiet(int id)
+        {
+
+            var donHang = _context.DonHangs
+                .Include(d => d.ChiTietDonHangs)
+                .ThenInclude(ct => ct.MaSpNavigation)
+                .FirstOrDefault(d => d.MaDh == id);
+
+            if (donHang == null)
+            {
+                TempData["Error"] = "Không tìm thấy đơn hàng.";
+                return RedirectToAction("DonHang");
+            }
+
+            return View(donHang);
         }
 
         [HttpPost]

@@ -18,34 +18,74 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             _context = context;
         }
 
-
         public IActionResult QuanLyBinhLuan()
         {
-            var maNd = HttpContext.Session.Get<int>("MaNd");
-
             var vm = new QuanLyBinhLuanVM
             {
-                BinhLuanChuaDuyet = LayDanhSachBinhLuan(maNd, 0),
-                BinhLuanDaDuyet = LayDanhSachBinhLuan(maNd, 1)
+                BinhLuanChuaDuyet = LayDanhSachBinhLuan(0),
+                BinhLuanDaDuyet = LayDanhSachBinhLuan(1),
+                BinhLuanDaAn = LayDanhSachBinhLuan(2)
             };
 
             return View(vm);
         }
 
-        private List<SanPhamDaMuaVM> LayDanhSachBinhLuan(int maNd, int trangThai)
+        private List<BinhLuanPhanHoiVM> LayDanhSachBinhLuan(int trangThai)
         {
             return _context.BinhLuans
-                .Where(b => b.MaNd == maNd && b.TrangThai == trangThai)
+                .Where(b => b.TrangThai == trangThai)
                 .Include(b => b.MaSpNavigation)
-                .Select(b => new SanPhamDaMuaVM
+                .Include(b => b.MaNdNavigation)
+                .OrderByDescending(b => b.NgayTao)
+                .Select(b => new BinhLuanPhanHoiVM
                 {
-                    MaSp = b.MaSp,
+                    MaBl = b.MaBl,
+                   
                     TenSanPham = b.MaSpNavigation.TenSanPham,
-                    HinhAnh = b.MaSpNavigation.HinhAnh,
-                    DonGia = b.MaSpNavigation.DonGia,
-                    DaBinhLuan = true
+                    TenNguoiDung = b.MaNdNavigation.HoTenHienThi ?? b.MaNdNavigation.TenDangNhap, // tùy tên trường
+                    Diem = b.Diem,
+                    NoiDung = b.NoiDungBinhLuan,
+                    PhanHoi = b.PhanHoiBinhLuan,
+                    TrangThai = b.TrangThai,
+                    NgayTao = b.NgayTao
                 })
                 .ToList();
         }
+
+        [HttpPost]
+        public IActionResult Duyet(int id)
+        {
+            var bl = _context.BinhLuans.Find(id);
+            if (bl == null) return NotFound();
+            bl.TrangThai = 1;
+            _context.SaveChanges();
+            return RedirectToAction("QuanLyBinhLuan");
+        }
+
+        [HttpPost]
+        public IActionResult An(int id)
+        {
+            var bl = _context.BinhLuans.Find(id);
+            if (bl == null) return NotFound();
+            bl.TrangThai = 2;
+            _context.SaveChanges();
+            return RedirectToAction("QuanLyBinhLuan");
+        }
+
+        [HttpPost]
+        public IActionResult PhanHoi(int id, string noiDung)
+        {
+            var bl = _context.BinhLuans.Find(id);
+            if (bl == null) return NotFound();
+            if (!string.IsNullOrEmpty(bl.PhanHoiBinhLuan))
+            {
+                TempData["Error"] = "Bình luận này đã được phản hồi.";
+                return RedirectToAction("QuanLyBinhLuan");
+            }
+            bl.PhanHoiBinhLuan = noiDung;
+            _context.SaveChanges();
+            return RedirectToAction("QuanLyBinhLuan");
+        }
     }
+
 }

@@ -1,24 +1,26 @@
 ﻿@model DoAnWebBanDoChoi.ViewModels.QuanLyBinhLuanVM
 
-<h4 class="mb-4">Quản lý bình luận</h4>
-
-<ul class="nav nav-tabs" id="commentTab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="tab-chua-tab" data-bs-toggle="tab" data-bs-target="#tab-chua" type="button" role="tab">Chưa duyệt</button>
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link active" data-bs-toggle="tab" href="#chuaDuyet">Chưa duyệt</a>
     </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-da-tab" data-bs-toggle="tab" data-bs-target="#tab-da" type="button" role="tab">Đã duyệt</button>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#daDuyet">Đã duyệt</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="tab" href="#daAn">Đã ẩn</a>
     </li>
 </ul>
 
-<div class="tab-content mt-3" id="commentTabContent">
-    <!-- Chưa duyệt -->
-    <div class="tab-pane fade show active" id="tab-chua" role="tabpanel">
-        @Html.Partial("_BinhLuanTable", Model.BinhLuanChuaDuyet)
+<div class="tab-content mt-3">
+    <div class="tab-pane fade show active" id="chuaDuyet">
+        @Html.Partial("_TableBinhLuan", Model.BinhLuanChuaDuyet, new ViewDataDictionary(ViewData) { { "TrangThaiTab", 0 } })
     </div>
-
-    <!-- Đã duyệt -->
-    <div class="tab-pane fade" id="tab-da" role="tabpanel">
-        @Html.Partial("_BinhLuanTable", Model.BinhLuanDaDuyet)
+    <div class="tab-pane fade" id="daDuyet">
+        @Html.Partial("_TableBinhLuan", Model.BinhLuanDaDuyet, new ViewDataDictionary(ViewData) { { "TrangThaiTab", 1 } })
+    </div>
+    <div class="tab-pane fade" id="daAn">
+        @Html.Partial("_TableBinhLuan", Model.BinhLuanDaAn, new ViewDataDictionary(ViewData) { { "TrangThaiTab", 2 } })
     </div>
 </div>
+

@@ -1,0 +1,52 @@
+﻿@model DoAnWebBanDoChoi.Models.DonHang
+@using DoAnWebBanDoChoi.Enums
+@using DoAnWebBanDoChoi.Helpers
+
+
+
+<div class="container">
+    <h3 class="mb-3">Chi tiết đơn hàng <span class="text-primary">#@Model.MaDh</span></h3>
+    <p><strong>Ngày đặt:</strong> @Model.NgayTao.ToString("dd/MM/yyyy")</p>
+    <p><strong>Trạng thái:</strong> @(((TrangThaiDonHang)Model.TrangThai).GetDisplayName())</p>
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Sản phẩm</th>
+                <th>Hình ảnh</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var stt = 1; // Biến đếm số thứ tự
+            }
+            @foreach (var ct in Model.ChiTietDonHangs)
+            {
+
+                <tr>
+                    <td>@stt</td>
+                    <td>@ct.MaSpNavigation.TenSanPham</td>
+                    <td>
+
+                        <img src="~/img/product/dochoi/@ct.MaSpNavigation.HinhAnh"
+                             alt="@ct.MaSpNavigation.TenSanPham"
+                             style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;" />
+                    </td>
+                    <td>@ct.SoLuong</td>
+                    <td>@ct.DonGia.ToString("N0") đ</td>
+                    @{
+                        var thanhTien = ct.SoLuong * ct.DonGia;
+                    }
+                    <td>@thanhTien.ToString("N0") đ</td>
+                </tr>
+                stt++;
+            }
+        </tbody>
+    </table>
+    <div class="d-grid gap-2 d-md-flex justify-content-end mt-4 mb-5">
+        <a asp-action="DanhSach" class="btn btn-secondary">Quay lại</a>
+    </div>
+</div>

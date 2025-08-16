@@ -1,0 +1,67 @@
+﻿@model List<DoAnWebBanDoChoi.ViewModels.BinhLuanPhanHoiVM>
+@{
+    int curTrangThai = (int)ViewData["TrangThaiTab"];
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Người dùng</th>
+            <th>Điểm</th>
+            <th>Nội dung</th>
+            <th>Phản hồi</th>
+            <th>Ngày tạo</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bl in Model)
+        {
+            <tr>
+                <td>@bl.TenSanPham</td>
+                <td>@bl.TenNguoiDung</td>
+                <td>@bl.Diem</td>
+                <td>@bl.NoiDung</td>
+                <td>@bl.PhanHoi</td>
+                <td>@bl.NgayTao.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    @if (curTrangThai == 0) // Tab Chưa duyệt
+                    {
+                        <form asp-action="Duyet" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@bl.MaBl" />
+                            <button type="submit" class="btn btn-sm btn-success">Duyệt</button>
+                        </form>
+                    }
+
+                    @if (curTrangThai == 1) // Tab Đã duyệt
+                    {
+                        if (string.IsNullOrEmpty(bl.PhanHoi))
+                        {
+                            <form asp-action="PhanHoi" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@bl.MaBl" />
+                                <input type="text" name="noiDung" placeholder="Nội dung phản hồi" class="form-control mb-1" />
+                                <button type="submit" class="btn btn-sm btn-primary">Gửi</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Đã phản hồi</span>
+                        }
+                    }
+
+                    @if (curTrangThai != 2) // Cả 2 tab đầu đều có nút Ẩn
+                    {
+                        <form asp-action="An" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@bl.MaBl" />
+                            <button type="submit" class="btn btn-sm btn-danger">Ẩn</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

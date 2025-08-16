@@ -9,9 +9,9 @@ namespace DoAnWebBanDoChoi.Helpers
             return trangThai switch
             {
                 TrangThaiDonHang.ChoXacNhan => "Chờ xác nhận",
-                TrangThaiDonHang.DaXacNhan => "Đã xác nhận",
-                TrangThaiDonHang.DangGiao => "Đang vận chuyển",
-                TrangThaiDonHang.DaGiao => "Đã hoàn thành",
+                TrangThaiDonHang.DaXacNhan => "Xác nhận",
+                TrangThaiDonHang.DangGiao => "Vận chuyển",
+                TrangThaiDonHang.DaGiao => "Hoàn thành",
                 TrangThaiDonHang.DaHuy => "Đã huỷ",
                 _ => "Không rõ"
             };

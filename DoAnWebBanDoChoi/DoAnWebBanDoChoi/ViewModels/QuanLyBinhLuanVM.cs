@@ -2,7 +2,8 @@
 {
     public class QuanLyBinhLuanVM
     {
-        public List<SanPhamDaMuaVM> BinhLuanChuaDuyet { get; set; }
-        public List<SanPhamDaMuaVM> BinhLuanDaDuyet { get; set; }
+        public List<BinhLuanPhanHoiVM> BinhLuanChuaDuyet { get; set; } = new();
+        public List<BinhLuanPhanHoiVM> BinhLuanDaDuyet { get; set; } = new();
+        public List<BinhLuanPhanHoiVM> BinhLuanDaAn { get; set; } = new();
     }
 }

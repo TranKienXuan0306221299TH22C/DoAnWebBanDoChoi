@@ -1,33 +1,10 @@
-﻿@model List<DoAnWebBanDoChoi.Models.PhiVanChuyen>
+﻿ @model List<DoAnWebBanDoChoi.Models.PhiVanChuyen>
 
 @{
     ViewData["Title"] = "Quản lý phí vận chuyển";
 }
 
-<style>
-    .css_select_div {
-        text-align: center;
-        margin-top: 20px;
-    }
 
-    .css_select {
-        display: inline-table;
-        width: 25%;
-        padding: 5px;
-        margin: 5px 2%;
-        border: solid 1px #686868;
-        border-radius: 5px;
-    }
-
-    .btn-them {
-        margin: 10px auto;
-        display: block;
-    }
-
-    table {
-        margin-top: 30px;
-    }
-</style>
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <div class="col-12">
@@ -35,17 +12,28 @@
 
                 <h3 class="text-center">Quản lý phí vận chuyển</h3>
 
-                <div class="css_select_div">
+                <div class="css_select_div d-flex gap-2">
                     <select class="css_select" id="tinh" title="Chọn Tỉnh Thành">
                         <option value="0">Tỉnh Thành</option>
                     </select>
                     <select class="css_select" id="quan" title="Chọn Quận Huyện">
                         <option value="0">Quận Huyện</option>
                     </select>
-                    <input type="number" class="css_select" id="phiship" placeholder="Phí vận chuyển (vnđ)" />
-                    <button class="btn btn-primary btn-them" id="btnThem">Thêm</button>
-                </div>
+                 
+                    <div class="input-group" style="width: 200px;">
+                        <input type="number" class="form-control" id="phiship" placeholder="Nhập số" min="0" />
+                        <span class="input-group-text">000đ</span>
+                    </div>
 
+                   
+
+
+                </div>
+                <div class="d-flex gap-2 mt-2 justify-content-end">
+                    <button class="btn btn-success py-2 px-4" id="btnTimKiem">Tìm kiếm</button>
+                    <button class="btn btn-primary py-2 px-4" id="btnThem">Thêm</button>
+                    <button class="btn btn-secondary py-2 px-4" id="btnHienTatCa">Hiện tất cả</button>
+                </div>
                 <table class="table table-bordered text-center">
                     <thead class="table-light">
                         <tr>
@@ -54,6 +42,8 @@
                             <th>Huyện</th>
                             <th>Phí Ship</th>
                             <th>Ngày Tạo</th>
+                            <th>Thao tác</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -68,6 +58,14 @@
                                     <td>@item.TenHuyen</td>
                                     <td>@item.PhiShip.ToString("N0") vnđ</td>
                                     <td>@item.NgayTao?.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm btn-sua"
+                                                data-id="@item.MaPvc"
+                                                data-phi="@item.PhiShip">
+                                            Sửa
+                                        </button>
+                                    </td>
+
                                 </tr>
                             }
                         }
@@ -81,30 +79,66 @@
         </div>
     </div>
 </div>
+<!-- Modal Sửa Phí -->
+<div class="modal fade" id="modalSuaPhi" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sửa phí vận chuyển</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editId" />
+                <div class="mb-3">
+                    <label for="editPhi" class="form-label">Phí vận chuyển (vnđ)</label>
+                    <input type="number" id="editPhi" class="form-control" min="0" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" id="btnLuuPhi">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 @section Scripts {
+  
     <script>
         $(document).ready(function () {
-            
+
+            // Kích hoạt Select2 cho dropdown tỉnh/huyện
+            $('#tinh').select2({
+                placeholder: 'Chọn Tỉnh Thành',
+                allowClear: true
+            });
+            $('#quan').select2({
+                placeholder: 'Chọn Quận Huyện',
+                allowClear: true
+            });
+                    
+            // Load danh sách tỉnh
             $.getJSON('https://esgoo.net/api-tinhthanh/1/0.htm', function (data_tinh) {
                 if (data_tinh.error == 0) {
                     $.each(data_tinh.data, function (k, v) {
                         $('#tinh').append(`<option value="${v.full_name}" data-id="${v.id}">${v.full_name}</option>`);
                     });
+                    $('#tinh').trigger('change.select2'); // Cập nhật Select2
                 }
             });
 
-           
+            // Khi chọn tỉnh -> load huyện
             $('#tinh').change(function () {
                 const idTinh = $('#tinh option:selected').data('id');
-                $('#quan').html('<option value="0">Quận Huyện</option>');
+                $('#quan').html('<option value="0">Quận Huyện</option>').trigger('change.select2');
 
                 $.getJSON('https://esgoo.net/api-tinhthanh/2/' + idTinh + '.htm', function (data_quan) {
                     if (data_quan.error == 0) {
                         $.each(data_quan.data, function (k, v) {
                             $('#quan').append(`<option value="${v.full_name}">${v.full_name}</option>`);
                         });
+                        $('#quan').trigger('change.select2');
                     }
                 });
             });
@@ -140,7 +174,53 @@
                     }
                 });
             });
+            $('#btnTimKiem').click(function () {
+            const tinh = $('#tinh').val();
+            const huyen = $('#quan').val();
+
+            window.location.href = `/Admin/Transport/TimKiem?tinh=${tinh}&huyen=${huyen}`;
+            });
+            $('#btnHienTatCa').click(function () {
+            window.location.href = '/Admin/Transport/VanChuyen';
+            });
+
+         // Mở modal khi bấm Sửa
+        $(document).on('click', '.btn-sua', function () {
+            const id = $(this).data('id');
+            const phi = $(this).data('phi');
+            $('#editId').val(id);
+            $('#editPhi').val(phi);
+            var myModal = new bootstrap.Modal(document.getElementById('modalSuaPhi'));
+            myModal.show();
+        });
+
+        // Lưu phí mới
+        $('#btnLuuPhi').click(function () {
+            const id = $('#editId').val();
+            const phiMoi = $('#editPhi').val();
+
+            if (!phiMoi || isNaN(phiMoi) || phiMoi <= 0) {
+                alert("Vui lòng nhập phí hợp lệ.");
+                return;
+            }
+
+            $.ajax({
+                url: '/Admin/Transport/SuaPhi',
+                type: 'POST',
+                data: { id: id, phiShip: phiMoi },
+                success: function (res) {
+                    alert(res);
+                    location.reload();
+                },
+                error: function (xhr) {
+                    alert("Cập nhật thất bại!");
+                }
+            });
+        });
+
         });
     </script>
 }
 
+
+ 

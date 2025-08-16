@@ -36,8 +36,8 @@
                         <td>@item.TongTien.ToString("N0") ₫</td>
                         <td><span class="badge bg-info">@item.TrangThaiHienThi</span></td>
                         <td >@item.PhuongThucThanhToan</td>
-                        <td >
-                            <a asp-area="Admin" asp-controller="Order" asp-action="ChiTiet" asp-route-id="@item.MaDh" class="btn btn-sm btn-primary">Xem</a>
+                        <td class="text-nowrap">
+                            <a  asp-controller="Order" asp-action="ChiTiet" asp-route-id="@item.MaDh" class="btn btn-sm btn-primary">Xem</a>
 
                            
                             @if (item.TrangThai == TrangThaiDonHang.ChoXacNhan ||

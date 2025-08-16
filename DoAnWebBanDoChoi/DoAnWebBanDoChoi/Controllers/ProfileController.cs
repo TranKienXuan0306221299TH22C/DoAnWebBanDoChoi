@@ -34,9 +34,10 @@ namespace DoAnWebBanDoChoi.Controllers
                 HinhAnh = nd.HinhAnh,
                 DonHangs = nd.DonHangs
                     .OrderByDescending(d => d.NgayTao)
-                    .ToList()
+                    .ToList(),
+                
             };
-
+           
             return View(vm);
         }
         public IActionResult DonHang()
@@ -115,22 +116,48 @@ namespace DoAnWebBanDoChoi.Controllers
             TempData["Success"] = "Cập nhật thông tin thành công!";
             return RedirectToAction("Index");
         }
+        //public IActionResult ChiTietDonHang(int id)
+        //{
+        //    var maNd = HttpContext.Session.Get<int>("MaNd");
+
+        //    var donHang = _context.DonHangs
+        //        .Include(d => d.ChiTietDonHangs)
+        //        .ThenInclude(ct => ct.MaSpNavigation)
+        //        .FirstOrDefault(d => d.MaDh == id && d.MaNd == maNd);
+
+        //    if (donHang == null)
+        //    {
+        //        TempData["Error"] = "Không tìm thấy đơn hàng.";
+        //        return RedirectToAction("DonHang");
+        //    }
+
+        //    return View(donHang);
+        //}
         public IActionResult ChiTietDonHang(int id)
         {
             var maNd = HttpContext.Session.Get<int>("MaNd");
 
             var donHang = _context.DonHangs
-                .Include(d => d.ChiTietDonHangs)
-                .ThenInclude(ct => ct.MaSpNavigation)
-                .FirstOrDefault(d => d.MaDh == id && d.MaNd == maNd);
+                .Include(dh => dh.ChiTietDonHangs)
+                    .ThenInclude(ct => ct.MaSpNavigation)
+                .FirstOrDefault(dh => dh.MaDh == id && dh.MaNd == maNd);
 
             if (donHang == null)
-            {
-                TempData["Error"] = "Không tìm thấy đơn hàng.";
-                return RedirectToAction("DonHang");
-            }
+                return NotFound();
 
-            return View(donHang);
+            var chiTietVM = donHang.ChiTietDonHangs.Select(ct => new ChiTietDonHangBinhLuanVM
+            {
+                MaCtdh = ct.MaCtdh,
+                MaSp = ct.MaSp,
+                TenSanPham = ct.MaSpNavigation.TenSanPham,
+                HinhAnh = ct.MaSpNavigation.HinhAnh,
+                SoLuong = ct.SoLuong,
+                DonGia = ct.DonGia,
+                DaBinhLuan = _context.BinhLuans.Any(b => b.MaNd == maNd && b.MaSp == ct.MaSp && b.MaNd == donHang.MaNd)
+            }).ToList();
+
+            ViewBag.DonHang = donHang; // giữ lại thông tin đơn hàng chung
+            return View(chiTietVM);
         }
 
 

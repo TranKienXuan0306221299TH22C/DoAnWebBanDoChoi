@@ -42,7 +42,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             {
                 TenTinh = TenTinh,
                 TenHuyen = TenHuyen,
-                PhiShip = PhiShip,
+                PhiShip = PhiShip * 1000,
                 NgayTao = DateTime.Now
             };
 
@@ -50,6 +50,32 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             _context.SaveChanges();
 
             return Ok();
+        }
+        [HttpGet]
+        public IActionResult TimKiem(string tinh, string huyen)
+        {
+            var query = _context.PhiVanChuyens.AsQueryable();
+
+            if (!string.IsNullOrEmpty(tinh) && tinh != "0")
+                query = query.Where(p => p.TenTinh == tinh);
+
+            if (!string.IsNullOrEmpty(huyen) && huyen != "0")
+                query = query.Where(p => p.TenHuyen == huyen);
+
+            var dsPhi = query.OrderByDescending(x => x.NgayTao).ToList();
+
+            return View("VanChuyen", dsPhi); // Dùng lại view VanChuyen
+        }
+        [HttpPost]
+        public IActionResult SuaPhi(int id, decimal phiShip)
+        {
+            var pvc = _context.PhiVanChuyens.FirstOrDefault(p => p.MaPvc == id);
+            if (pvc == null) return NotFound("Không tìm thấy bản ghi.");
+
+            pvc.PhiShip = phiShip;
+            _context.SaveChanges();
+
+            return Ok("Cập nhật thành công.");
         }
     }
 }
