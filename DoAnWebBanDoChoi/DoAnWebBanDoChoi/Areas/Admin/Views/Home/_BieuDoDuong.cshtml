@@ -1,0 +1,65 @@
+﻿<div class="row mt-4">
+    <div class="col-md-3">
+        <form id="form-year" method="get" action="@Url.Action("BieuDoDuong", "Home", new { area="Admin" })">
+            <label class="fw-bold">Chọn năm</label>
+            <select name="nam" class="form-control" onchange="this.form.submit()">
+                @if (ViewBag.AvailableYears != null)
+                {
+                    foreach (var y in (List<int>)ViewBag.AvailableYears)
+                    {
+                        if (y == (int)ViewBag.Year)
+                        {
+                            <option value="@y" selected="selected">@y</option>
+                        }
+                        else
+                        {
+                            <option value="@y">@y</option>
+                        }
+                    }
+                }
+
+            </select>
+        </form>
+    </div>
+</div>
+
+<div id="chart"></div>
+
+@section Scripts {
+  
+    <script>
+                $(function(){
+            // Hàm load chart
+            function loadChart(nam) {
+                $.get('@Url.Action("BieuDoDuong", "Home", new { area = "Admin" })', { nam: nam }, function(html){
+                    $('#chart-container').html(html);
+                });
+            }
+
+            // Load chart lần đầu
+            loadChart(@ViewBag.Year);
+
+            // Khi đổi năm
+            $('#form-year select').change(function(){
+                var nam = $(this).val();
+                loadChart(nam);
+            });
+        });
+        var options = {
+            series: [{
+                name: "Doanh thu",
+                data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.DoanhThuData))
+            }],
+            chart: { height: 350, type: 'line', zoom: { enabled: false } },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'straight' },
+            title: { text: 'Doanh thu theo tháng - Năm @ViewBag.Year', align: 'left' },
+            xaxis: {
+                categories: ['Th1','Th2','Th3','Th4','Th5','Th6','Th7','Th8','Th9','Th10','Th11','Th12']
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+    </script>
+}

@@ -1,0 +1,25 @@
+﻿@model DoAnWebBanDoChoi.ViewModels.InfoHeaderVM
+
+
+<div class="d-flex align-items-center">
+
+  
+    @if (!string.IsNullOrEmpty(Model.HinhAnh))
+    {
+        <img src="@Url.Content("~/img/profile/" + Model.HinhAnh)"
+             alt="Ảnh đại diện"
+             class="rounded-circle"
+             style="width: 30px; height: 30px; object-fit: cover; border: 1px solid #ddd;">
+    }
+    else
+    {
+        
+        <i class="bi bi-person-circle" style="font-size: 2rem;"></i>
+    }
+
+  
+    <span class="ms-2 fw-semibold text-dark" style="font-size: 12px !important;">
+        @(Model.HoTenHienThi ?? Model.HoTenDangNhap)
+    </span>
+   
+</div>

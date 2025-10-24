@@ -13,5 +13,6 @@ namespace DoAnWebBanDoChoi.ViewModels
         public string? HinhAnh { get; set; }
 
         public List<DonHang>? DonHangs { get; set; }
+        public IFormFile? HinhAnhFile { get; set; }
     }
 }

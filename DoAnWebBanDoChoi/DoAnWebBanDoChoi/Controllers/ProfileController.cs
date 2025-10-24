@@ -3,6 +3,7 @@ using DoAnWebBanDoChoi.Models;
 using DoAnWebBanDoChoi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace DoAnWebBanDoChoi.Controllers
 {
@@ -39,6 +40,59 @@ namespace DoAnWebBanDoChoi.Controllers
             };
            
             return View(vm);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DoiAnhDaiDien(ProfileVM model)
+        {
+            // 1. Kiểm tra file và người dùng
+            if (model.HinhAnhFile == null)
+            {
+                TempData["Error"] = "Vui lòng chọn một file ảnh.";
+                return RedirectToAction("Index");
+            }
+
+            var maNd = HttpContext.Session.Get<int>("MaNd");
+            var nguoiDung = await _context.NguoiDungs.FindAsync(maNd);
+
+            if (nguoiDung == null)
+                return NotFound();
+
+            // 2. Xử lý lưu file vật lý (Sử dụng cách đơn giản của bạn)
+            string? fileName = null;
+            try
+            {
+                // Xác định thư mục upload ảnh đại diện: [Thư mục gốc]/wwwroot/img
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/profile");
+
+                // Tạo thư mục nếu nó chưa tồn tại (tốt nhất nên thêm)
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                // Tạo tên file duy nhất
+                fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.HinhAnhFile.FileName);
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                // Lưu file vào thư mục
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.HinhAnhFile.CopyToAsync(stream);
+                }
+
+                // 3. Cập nhật DB
+                nguoiDung.HinhAnh = fileName;
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] = "Đổi ảnh đại diện thành công!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Lỗi khi lưu file: {ex.Message}";
+            }
+
+            return RedirectToAction("Index");
         }
         public IActionResult DonHang()
         {

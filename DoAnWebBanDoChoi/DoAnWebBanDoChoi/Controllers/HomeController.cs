@@ -127,10 +127,18 @@ namespace DoAnWebBanDoChoi.Controllers
                 .OrderByDescending(bl => bl.NgayTao)
                 .ToPagedList(pageNumber, pageSize);
 
+            // Lấy sản phẩm liên quan (cùng danh mục, khác sản phẩm hiện tại)
+            var sanPhamLienQuan = _context.SanPhams
+                .Where(sp => sp.MaDm == sanPham.MaDm && sp.MaSp != sanPham.MaSp && sp.TrangThai == 1)
+                .OrderByDescending(sp => sp.NgayTao) // mới nhất
+                .Take(4) // giới hạn 4 sản phẩm
+                .ToList();
+
             var model = new ChiTietSanPhamVM
             {
                 SanPham = sanPham,
-                BinhLuans = binhLuan
+                BinhLuans = binhLuan,
+                SanPhamLienQuan = sanPhamLienQuan
             };
 
             return View(model);

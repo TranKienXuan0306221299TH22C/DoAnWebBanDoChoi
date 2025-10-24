@@ -1,9 +1,5 @@
-﻿@* @{
-    var ch = (DoAnWebBanDoChoi.Models.CauHinh)ViewBag.CauHinh;
-} *@
-@{
-    var hoTen = Context.Session.GetString("HoTen");
-}
+﻿
+
 @{
     var daDangNhap = Context.Session.GetString("DangNhap") == "true";
 }
@@ -35,22 +31,9 @@
                                 <a asp-controller="Profile" asp-action="Index"
                                    class="d-flex align-items-center text-decoration-none"
                                    style="max-width: 250px;">
-                                    <img src="/img/user.png"
-                                         class="rounded-circle"
-                                         width="30"
-                                         height="30"
-                                         style="object-fit: cover !important;">
-                                   @*  <span class="ms-2 fw-semibold text-dark" style="font-size: 12px !important;">
-                                        TaiKhoan
-                                    </span> *@
-                                    @if (!string.IsNullOrEmpty(hoTen))
-                                    {
-                                        <span class="ms-2 fw-semibold text-dark" style="font-size: 12px !important;">
-                                            <strong>@hoTen</strong>
-                                        </span>
-
-                                        
-                                    }
+                                   
+                                    @await Component.InvokeAsync("UserInfo")
+                                
                                 </a>
                                 <!-- Logout -->
                                 <a asp-controller="Account" asp-action="Logout"
@@ -103,7 +86,7 @@
                             </ul>
                         </li>
                        
-                        <li><a href="./contact.html">Liên hệ</a></li>
+                        <li><a asp-controller="Contact" asp-action="LienHe">Liên hệ</a></li>
                     </ul>
                 </nav>
             </div>

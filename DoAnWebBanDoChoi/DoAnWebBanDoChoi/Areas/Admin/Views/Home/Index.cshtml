@@ -1,1 +1,186 @@
-﻿<h1>Hello World!</h1>
+﻿@model DoAnWebBanDoChoi.ViewModels.DashboardVM
+
+
+<div class="container-fluid pt-4 px-4">
+    <!-- Bộ lọc Tháng/Năm -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label><strong>Tháng</strong></label>
+            <select name="thang" class="form-control">
+                <option value="">-- Tất cả --</option>
+                @for (int i = 1; i <= 12; i++)
+                {
+                    if (Model.Thang == i)
+                    {
+                        <option value="@i" selected="selected">Tháng @i</option>
+                    }
+                    else
+                    {
+                        <option value="@i">Tháng @i</option>
+                    }
+                }
+
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label><strong>Năm</strong></label>
+            <select name="nam" class="form-control">
+                <option value="">-- Tất cả --</option>
+                @for (int y = Model.MaxYear; y >= Model.MinYear; y--)
+                {
+                    if (Model.Nam == y)
+                    {
+                        <option value="@y" selected="selected">@y</option>
+                    }
+                    else
+                    {
+                        <option value="@y">@y</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary">Lọc</button>
+            <a href="@Url.Action("Index", "Home", new { area = "Admin" })" class="btn btn-secondary">Reset</a>
+        </div>
+    </form>
+    <!-- số liệu -->
+    
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-primary text-white rounded d-flex align-items-center justify-content-between p-4 dashboard-card">
+                <i class="fa fa-chart-line fa-3x"></i>
+                <div class="ms-3">
+                    <p class="mb-2 w-bold">Tổng doanh thu</p>
+                    <h6 class="mb-0">@Model.TongDoanhThu.ToString("N0") đ</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-success text-white rounded d-flex align-items-center justify-content-between p-4 dashboard-card">
+                <i class="fa fa-dollar-sign fa-3x"></i>
+                <div class="ms-3">
+                    <p class="mb-2 w-bold">Tổng lợi nhuận</p>
+                    <h6 class="mb-0">@Model.TongLoiNhuan.ToString("N0") đ</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-warning text-white rounded d-flex align-items-center justify-content-between p-4 dashboard-card">
+                <i class="fa fa-shopping-cart fa-3x"></i>
+                <div class="ms-3">
+                    <p class="mb-2 w-bold">Đơn hàng hoàn thành</p>
+                    <h6 class="mb-0">@Model.TongDonHang</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-danger text-white rounded d-flex align-items-center justify-content-between p-4 dashboard-card">
+                <i class="fa fa-users fa-3x"></i>
+                <div class="ms-3">
+                    <p class="mb-2 w-bold">Khách hàng</p>
+                    <h6 class="mb-0">@Model.TongKhachHang</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Chart Start -->
+<div class="container-fluid pt-4 px-4">
+<div class="row g-4">
+    <div class="col-sm-12 col-xl-12">
+        <div class="bg-light rounded h-100 p-4">
+                <h4 class="text-center mt-4">Biểu đồ doanh thu 12 tháng năm @Model.Nam</h4>
+            <canvas id="doanhThuLine"></canvas>
+        </div>
+    </div>
+    <div class="col-sm-12 col-xl-12">
+        <div class="bg-light rounded h-100 p-4">
+                <h4 class="text-center mt-4">Doanh thu theo danh mục sản phẩm năm @Model.Nam</h4>
+            <canvas id="danhMucBar"></canvas>
+        </div>
+    </div>
+    <div class="col-sm-12 col-xl-6">
+        <div class="bg-light rounded h-100 p-4">
+                <h4 class="text-center mt-4">Tỷ lệ trạng thái đơn hàng năm @Model.Nam</h4>
+            <canvas id="trangThaiPie"></canvas>
+        </div>
+    </div>
+</div>
+</div>
+@section Scripts {
+   
+    <script>
+        var nam = @Html.Raw(Model.Nam ?? DateTime.Now.Year);
+
+        // Biểu đồ đường: Doanh thu 12 tháng
+        $.get('@Url.Action("BieuDoDoanhThu", "Home", new { area = "Admin" })', { nam: nam }, function (data) {
+            new Chart(document.getElementById('doanhThuLine'), {
+                type: 'line',
+                data: {
+                    labels: data.map(x => "Tháng " + x.thang),
+                    datasets: [{
+                        label: 'Doanh thu',
+                        data: data.map(x => x.doanhThu),
+                        borderColor: 'blue',
+                        fill: false
+                    }]
+                }
+            });
+        });
+
+        // Biểu đồ cột: Doanh thu theo danh mục
+        $.get('@Url.Action("BieuDoDanhMuc", "Home", new { area = "Admin" })', { nam: nam }, function (data) {
+            new Chart(document.getElementById('danhMucBar'), {
+                type: 'bar',
+                data: {
+                    labels: data.map(x => x.danhMuc),
+                    datasets: [{
+                        label: 'Doanh thu',
+                        data: data.map(x => x.doanhThu),
+                        backgroundColor: 'green'
+                    }]
+                }
+            });
+        });
+
+        // Biểu đồ tròn: Tỷ lệ trạng thái đơn hàng
+                $.get('@Url.Action("BieuDoTrangThai", "Home", new { area = "Admin" })', { nam: nam }, function (data) {
+            new Chart(document.getElementById('trangThaiPie'), {
+                type: 'pie',
+                data: {
+                    labels: data.map(x => x.trangThai),
+                    datasets: [{
+                        data: data.map(x => x.soLuong),
+                        backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1']
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { font: { size: 14 } }
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            formatter: (value, ctx) => {
+                                let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                let percentage = (value * 100 / sum).toFixed(1) + "%";
+                                return value + " (" + percentage + ")";
+                            },
+                            font: { weight: 'bold', size: 12 }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels] // bật plugin
+            });
+        });
+
+    </script>
+}
+
+
