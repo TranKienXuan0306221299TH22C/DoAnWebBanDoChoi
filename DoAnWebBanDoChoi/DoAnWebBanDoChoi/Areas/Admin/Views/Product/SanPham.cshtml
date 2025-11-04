@@ -50,6 +50,10 @@
                         <th>Tên</th>
                         <th>Ảnh</th>
                         <th>Mô tả</th>
+                        <th>Chất liệu</th>
+                        <th>Kích thước</th>
+                        <th>Độ tuổi</th>
+                        <th>Trọng lượng</th>
                         <th>Danh mục</th>
                         <th>Thương hiệu</th>
                         <th>Nhà cung cấp</th>
@@ -76,6 +80,10 @@
                             <td title="@sp.MoTa">
                                 <div class="text-limit-2-line">@sp.MoTa</div>
                             </td>
+                            <td class="text-nowrap">@sp.ChatLieu</td>
+                            <td class="text-nowrap">@sp.KichThuoc</td>
+                            <td class="text-nowrap">@sp.DoTuoiPhuHop</td>
+                            <td class="text-nowrap">@sp.TrongLuong</td>
                             <td  class="">@sp.MaDmNavigation?.TenDanhMuc</td>
                             <td class="text-nowrap">@sp.MaThNavigation?.TenThuongHieu</td>
                             <td style="min-width:200px;">@sp.MaNccNavigation?.TenNhaCungCap</td>

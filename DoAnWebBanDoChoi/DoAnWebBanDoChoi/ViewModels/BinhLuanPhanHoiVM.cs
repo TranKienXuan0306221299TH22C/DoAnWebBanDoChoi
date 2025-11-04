@@ -3,7 +3,9 @@
     public class BinhLuanPhanHoiVM
     {
         public int MaBl { get; set; }
+        public int MaSP { get; set; }
         public string TenSanPham { get; set; } = "";
+        public string Slug { get; set; } = "";
         public string TenNguoiDung { get; set; } = "";
         public int Diem { get; set; }
         public string NoiDung { get; set; } = "";

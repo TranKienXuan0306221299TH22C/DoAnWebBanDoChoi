@@ -20,6 +20,47 @@
                 <textarea asp-for="MoTa" class="form-control"></textarea>
                 <span asp-validation-for="MoTa" class="text-danger"></span>
             </div>
+            <div class="mb-3">
+                <label asp-for="ChatLieu" class="form-label"></label>
+                <input asp-for="ChatLieu" class="form-control" />
+                <span asp-validation-for="ChatLieu" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="KichThuoc" class="form-label"></label>
+                <input asp-for="KichThuoc" class="form-control" />
+                <span asp-validation-for="KichThuoc" class="text-danger"></span>
+            </div>
+           @*  <div class="mb-3">
+                <label asp-for="DoTuoiPhuHop" class="form-label"></label>
+                <input asp-for="DoTuoiPhuHop" class="form-control" />
+                <span asp-validation-for="DoTuoiPhuHop" class="text-danger"></span>
+            </div> *@
+            <div class="mb-3">
+                <label asp-for="DoTuoiPhuHop" class="form-label"></label>
+
+                <input asp-for="DoTuoiPhuHop"
+                       type="text"
+                       class="form-control"
+                       list="age-options"
+                       placeholder="Chọn gợi ý hoặc nhập độ tuổi khác..." />
+
+                <span asp-validation-for="DoTuoiPhuHop" class="text-danger"></span>
+
+                <datalist id="age-options">
+                    @if (ViewBag.AgeSuggestions is List<string> suggestions)
+                    {
+                        @foreach (var suggestion in suggestions)
+                        {
+                            <option value="@suggestion"></option>
+                        }
+                    }
+                </datalist>
+            </div>
+            <div class="mb-3">
+                <label asp-for="TrongLuong" class="form-label"></label>
+                <input asp-for="TrongLuong" class="form-control" />
+                <span asp-validation-for="TrongLuong" class="text-danger"></span>
+            </div>
 
             <div class="mb-3">
                 <label asp-for="HinhAnhFile" class="form-label"></label>

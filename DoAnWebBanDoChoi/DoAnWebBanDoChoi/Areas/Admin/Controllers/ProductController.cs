@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using DoAnWebBanDoChoi.Filters;
+using DoAnWebBanDoChoi.Helpers;
 using DoAnWebBanDoChoi.Models;
 using DoAnWebBanDoChoi.ViewModels;
-using DoAnWebBanDoChoi.Helpers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
 {
     [Area("Admin")]
-
+    [AdminAuthorize]
     public class ProductController : Controller
     {
         private readonly AppDbContext _context;
@@ -48,12 +49,21 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
         }
 
 
-
+        private List<string> GetAgeSuggestions()
+        {
+            return new List<string>
+    {
+        "Bé từ 3 tuổi trở lên",
+        "Bé từ 1 tuổi trở lên",
+        "Trẻ từ 3 đến 5 tuổi"
+    };
+        }
         public IActionResult Create()
         {
             ViewBag.DanhMucs = _context.DanhMucs.ToList();
             ViewBag.ThuongHieus = _context.ThuongHieus.ToList();
             ViewBag.NhaCungCaps = _context.NhaCungCaps.ToList();
+            ViewBag.AgeSuggestions = GetAgeSuggestions();
             return View();
         }
 
@@ -79,6 +89,10 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
                 {
                     TenSanPham = model.TenSanPham,
                     MoTa = model.MoTa,
+                    ChatLieu = model.ChatLieu,
+                    KichThuoc = model.KichThuoc,
+                    DoTuoiPhuHop = model.DoTuoiPhuHop,
+                    TrongLuong = model.TrongLuong,
                     HinhAnh = fileName,
                     MaDm = model.MaDm.Value,
                     MaTh = model.MaTh.Value,
@@ -97,6 +111,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             ViewBag.DanhMucs = _context.DanhMucs.ToList();
             ViewBag.ThuongHieus = _context.ThuongHieus.ToList();
             ViewBag.NhaCungCaps = _context.NhaCungCaps.ToList();
+            ViewBag.AgeSuggestions = GetAgeSuggestions();
             return View(model);
         }
 
@@ -109,6 +124,10 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             {
                 TenSanPham = sp.TenSanPham,
                 MoTa = sp.MoTa,
+                ChatLieu = sp.ChatLieu,
+                KichThuoc = sp.KichThuoc,
+                DoTuoiPhuHop = sp.DoTuoiPhuHop,
+                TrongLuong = sp.TrongLuong,
                 MaDm = sp.MaDm,
                 MaTh = sp.MaTh,
                 MaNcc = sp.MaNcc,
@@ -140,6 +159,10 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             // Cập nhật thông tin
             sp.TenSanPham = model.TenSanPham;
             sp.MoTa = model.MoTa;
+            sp.ChatLieu = model.ChatLieu;
+            sp.KichThuoc = model.KichThuoc;
+            sp.DoTuoiPhuHop = model.DoTuoiPhuHop;
+            sp.TrongLuong = model.TrongLuong;
             sp.MaDm = model.MaDm.Value;
             sp.MaTh = model.MaTh.Value;
             sp.MaNcc = model.MaNcc.Value;

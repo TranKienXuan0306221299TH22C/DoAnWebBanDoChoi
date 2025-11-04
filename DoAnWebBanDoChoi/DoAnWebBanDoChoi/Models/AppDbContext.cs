@@ -45,7 +45,7 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<ThuongHieu> ThuongHieus { get; set; }
 
-
+  
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BinhLuan>(entity =>
@@ -230,11 +230,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.HoTen).HasMaxLength(100);
             entity.Property(e => e.SoDienThoai).HasMaxLength(15);
             entity.Property(e => e.ThoiGianGui).HasDefaultValueSql("(getdate())");
-
-            entity.HasOne(d => d.MaNdNavigation).WithMany(p => p.PhanHois)
-                .HasForeignKey(d => d.MaNd)
-                .OnDelete(DeleteBehavior.SetNull)
-                .HasConstraintName("FK_PhanHoi_NguoiDung");
+            entity.Property(e => e.TrangThai).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<PhiVanChuyen>(entity =>
@@ -283,9 +279,12 @@ public partial class AppDbContext : DbContext
             entity.HasIndex(e => e.Slug, "UQ__SanPham__BC7B5FB647D27560").IsUnique();
 
             entity.Property(e => e.MaSp).HasColumnName("MaSP");
+            entity.Property(e => e.ChatLieu).HasMaxLength(100);
+            entity.Property(e => e.DoTuoiPhuHop).HasMaxLength(100);
             entity.Property(e => e.DonGia).HasColumnType("decimal(18, 0)");
             entity.Property(e => e.GiaGoc).HasColumnType("decimal(18, 0)");
             entity.Property(e => e.HinhAnh).HasMaxLength(100);
+            entity.Property(e => e.KichThuoc).HasMaxLength(100);
             entity.Property(e => e.MaDm).HasColumnName("MaDM");
             entity.Property(e => e.MaNcc).HasColumnName("MaNCC");
             entity.Property(e => e.MaTh).HasColumnName("MaTH");
@@ -293,6 +292,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.NgayTao).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Slug).HasMaxLength(150);
             entity.Property(e => e.TenSanPham).HasMaxLength(100);
+            entity.Property(e => e.TrongLuong).HasMaxLength(100);
 
             entity.HasOne(d => d.MaDmNavigation).WithMany(p => p.SanPhams)
                 .HasForeignKey(d => d.MaDm)

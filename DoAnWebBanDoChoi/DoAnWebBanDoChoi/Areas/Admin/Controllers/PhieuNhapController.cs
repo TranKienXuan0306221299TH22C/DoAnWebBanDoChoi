@@ -63,7 +63,40 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
 
             return View(pn);
         }
+        // Thêm vào PhieuNhapController.cs
 
+        // 5️⃣ Xóa phiếu nhập (POST)
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            var pn = _context.PhieuNhaps
+                .Include(p => p.ChiTietPhieuNhaps)
+                .FirstOrDefault(p => p.MaPn == id);
+
+            if (pn == null)
+            {
+                TempData["Error"] = "⚠️ Phiếu nhập không tồn tại.";
+                return RedirectToAction("Index");
+            }
+
+            // ⛔️ KHÔNG CHO PHÉP XÓA nếu phiếu đã được duyệt (TrangThai == 1)
+            if (pn.TrangThai == 1)
+            {
+                TempData["Error"] = "⚠️ Không thể xóa phiếu nhập đã được xác nhận.";
+                return RedirectToAction("ChiTiet", new { id });
+            }
+
+            // 1. Xóa tất cả ChiTietPhieuNhap liên quan trước
+            _context.ChiTietPhieuNhaps.RemoveRange(pn.ChiTietPhieuNhaps);
+
+            // 2. Xóa PhieuNhap
+            _context.PhieuNhaps.Remove(pn);
+
+            _context.SaveChanges();
+
+            TempData["Success"] = $"✔️ Đã xóa phiếu nhập #{id} thành công.";
+            return RedirectToAction("Index");
+        }
         // 4️⃣ Trang thêm sản phẩm vào chi tiết phiếu nhập (GET)
         public IActionResult ThemChiTiet(int id, string? search)
         {

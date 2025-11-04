@@ -10,7 +10,20 @@ namespace DoAnWebBanDoChoi.ViewModels
 
         [Display(Name = "Mô tả")]
         public string? MoTa { get; set; }
+        [Display(Name = "Chất liệu")]
+        [Required(ErrorMessage = "Vui lòng nhập chất liệu")]
+        public string? ChatLieu { get; set; }
 
+        [Display(Name = "Kích thước")]
+        [Required(ErrorMessage = "Vui lòng nhập kích thước")]
+        public string? KichThuoc { get; set; }
+
+        [Display(Name = "Độ tuổi phù hợp")]
+        [Required(ErrorMessage = "Vui lòng nhập độ tuổi phù hợp")]
+        public string? DoTuoiPhuHop { get; set; }
+
+        [Display(Name = "Trọng lượng")]
+        public string? TrongLuong { get; set; }
         [Display(Name = "Giá bán")]
         [Required(ErrorMessage = "Vui lòng nhập giá bán")]
         public decimal DonGia { get; set; }

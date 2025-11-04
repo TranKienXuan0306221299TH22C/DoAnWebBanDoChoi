@@ -1,0 +1,240 @@
+﻿@model DoAnWebBanDoChoi.ViewModels.DanhSachSanPhamVM
+@using X.PagedList.Mvc.Core
+@using DoAnWebBanDoChoi.Helpers
+@{
+    ViewData["Title"] = "Kết quả tìm kiếm: " + Model.Keyword;
+
+    // 🚩 Tính toán tham số GỐC SẠCH (đã có từ code trước, giữ nguyên) 🚩
+    string currentLoai = Context.Request.Query["loai"];
+    string currentKeyword = Context.Request.Query["keyword"];
+    string currentSort = Context.Request.Query["sort"];
+
+    string formAction = !string.IsNullOrEmpty(currentLoai) ? "Category" :
+                        !string.IsNullOrEmpty(currentKeyword) ? "Search" :
+                        "Category";
+    var daDangNhap = Context.Session.GetString("DangNhap") == "true";
+}
+<button id="toggleFilterBtn" class="btn btn-info mb-3">
+    <i class="fa fa-filter"></i> Bộ Lọc Sản Phẩm
+</button>
+
+<div id="filterSidebar" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+
+    <form asp-action="@formAction" asp-controller="Home" method="get">
+
+        @* THAM SỐ GỐC: Chỉ gửi LOAI hoặc KEYWORD để xác định bối cảnh *@
+        @if (!string.IsNullOrEmpty(currentLoai))
+        {
+            <input type="hidden" name="loai" value="@currentLoai" />
+        }
+        @if (!string.IsNullOrEmpty(currentKeyword))
+        {
+            <input type="hidden" name="keyword" value="@currentKeyword" />
+        }
+
+        <input type="hidden" name="sort" value="@currentSort" />
+
+        <div class="row">
+
+            @* 1. Bộ lọc THƯƠNG HIỆU *@
+            <div class="col-lg-4">
+                <h5>Thương Hiệu</h5>
+                @if (Model.DanhSachThuongHieu != null)
+                {
+                    @foreach (var brand in Model.DanhSachThuongHieu)
+                    {
+                        bool isChecked = Model.SelectedBrands != null && Model.SelectedBrands.Contains(brand.MaTh);
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="brands" value="@brand.MaTh" id="brand-@brand.MaTh" @(isChecked ? "checked" : "")>
+                            <label class="form-check-label" for="brand-@brand.MaTh">
+                                @brand.TenThuongHieu @* Tên bạn yêu cầu *@
+                            </label>
+                        </div>
+                    }
+                }
+            </div>
+
+            @* 2. Bộ lọc DANH MỤC *@
+            <div class="col-lg-4">
+                <h5>Danh Mục</h5>
+                @if (Model.DanhSachDanhMuc != null)
+                {
+                    @foreach (var dm in Model.DanhSachDanhMuc)
+                    {
+                        bool isChecked = Model.SelectedCategories != null && Model.SelectedCategories.Contains(dm.MaDm);
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="selectedCategories"
+                                   value="@dm.MaDm"
+                                   id="category-@dm.MaDm"
+                                   @(isChecked ? "checked" : "")>
+
+                            <label class="form-check-label" for="category-@dm.MaDm">
+                                @dm.TenDanhMuc @* Tên bạn yêu cầu *@
+                            </label>
+                        </div>
+                    }
+                }
+            </div>
+
+            @* 3. Bộ lọc ĐỘ TUỔI *@
+            <div class="col-lg-4">
+                <h5>Độ Tuổi</h5>
+                @if (Model.DanhSachDoTuoi != null)
+                {
+                    @foreach (var ageString in Model.DanhSachDoTuoi)
+                    {
+                        bool isChecked = Model.SelectedAges != null && Model.SelectedAges.Contains(ageString);
+                        string safeId = ageString.Replace(" ", "-").Replace("+", "plus");
+
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="ages"
+                                   value="@ageString"
+                                   id="age-@safeId"
+                                   @(isChecked ? "checked" : "")>
+
+                            <label class="form-check-label" for="age-@safeId">
+                                @ageString
+                            </label>
+                        </div>
+                    }
+                }
+            </div>
+
+            <div class="col-lg-12 mt-3">
+                <button type="submit" class="btn btn-primary">Áp Dụng Bộ Lọc</button>
+
+                @* NÚT XÓA BỘ LỌC *@
+                <a asp-action="@formAction"
+                   asp-route-keyword="@(formAction == "Search" ? currentKeyword : null)"
+                   asp-route-loai="@(formAction == "Category" ? currentLoai : null)"
+                   @* 🚩 THÊM CÁC THAM SỐ NULL RÕ RÀNG VÀO ĐÂY ĐỂ XÓA SẠCH TRẠNG THÁI CŨ 🚩 *@
+                   asp-route-brands="@(null as List<int>)"
+                   asp-route-ages="@(null as List<string>)"
+                   asp-route-selectedCategories="@(null as List<int>)"
+                   class="btn btn-secondary">Xóa Bộ Lọc</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                
+                </div>
+            </div>
+        </div>
+
+        @* Hiển thị danh sách sản phẩm tìm được *@
+        <div class="row">
+            @if (Model.DanhSachSanPham.Any())
+            {
+                @foreach (var sp in Model.DanhSachSanPham)
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        @* **Copy toàn bộ phần hiển thị sản phẩm từ Index.cshtml vào đây** *@
+                        <div class="product__item">
+                            <div class="product__item__pic set-bg">
+                                <a asp-controller="Home" asp-action="Detail" asp-route-slug="@sp.Slug" asp-route-id="@sp.MaSp">
+                                    <img src="@Url.Content("~/img/product/dochoi/" + sp.HinhAnh)" alt="@sp.TenSanPham" class="product__item__pic" />
+                                </a>
+                                <ul class="product__item__pic__hover">
+                                    @* Giữ lại phần Yêu Thích và Giỏ hàng *@
+                                    <li>
+                                        @if (daDangNhap)
+                                        {
+                                            <a href="javascript:;" class="btn-yeu-thich" data-id="@sp.MaSp">
+                                                <i class="fa fa-heart"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="javascript:;" onclick="xacNhanDangNhapYeuThich()">
+                                                <i class="fa fa-heart"></i>
+                                            </a>
+                                        }
+                                    </li>
+                                    <li>
+                                        @if (daDangNhap)
+                                        {
+                                            <a href="javascript:;" onclick="submitThemGio(@sp.MaSp)">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="javascript:;" onclick="xacNhanDangNhap()">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </a>
+                                        }
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="product__item__text">
+                                <h6>
+                                    <a asp-controller="Home" asp-action="Detail" asp-route-slug="@sp.Slug" asp-route-id="@sp.MaSp">
+                                        @sp.TenSanPham
+                                    </a>
+                                </h6>
+                                <h5>@sp.DonGia.ToString("N0") đ</h5>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12 text-center py-5">
+                    <p class="h4">Không tìm thấy sản phẩm nào phù hợp với từ khóa "**@Model.Keyword**".</p>
+                </div>
+            }
+        </div>
+
+        @* Phân trang cho kết quả tìm kiếm *@
+        <div class="product__pagination">
+            <div class="text-center mt-4">
+                @Html.PagedListPager(Model.DanhSachSanPham,
+                page => Url.Action("Search", new { page, keyword = Model.Keyword }),
+                                new PagedListRenderOptions
+                                {
+                                    UlElementClasses = new[] { "pagination", "justify-content-center" },
+                                    LiElementClasses = new[] { "page-item" },
+                                    PageClasses = new[] { "page-link" },
+                                    ActiveLiElementClass = "active"
+                                }
+                                )
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@* Giữ lại Form và Script cho Giỏ hàng / Yêu thích nếu cần *@
+<form id="form-them-gio" style="display:none;">
+    <input type="hidden" name="maSp" id="inputMaSp" />
+    <input type="hidden" name="soLuong" id="inputSoLuong" value="1" />
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Mặc định ẩn bộ lọc khi load trang
+            $("#filterSidebar").hide();
+
+            // Logic ẩn/hiện khi nhấn nút
+            $("#toggleFilterBtn").click(function () {
+                $("#filterSidebar").slideToggle(300); // Hiệu ứng trượt lên/xuống
+            });
+
+            // ... (Các script khác: yêu thích, giỏ hàng) ...
+        });
+    </script>
+}

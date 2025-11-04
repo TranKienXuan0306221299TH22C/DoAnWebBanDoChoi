@@ -1,9 +1,7 @@
-﻿@*  @model DoAnWebBanDoChoi.Models.SanPham *@
+﻿@model DoAnWebBanDoChoi.ViewModels.ChiTietSanPhamVM
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 
-
-@model DoAnWebBanDoChoi.ViewModels.ChiTietSanPhamVM
 @{
     var daDangNhap = Context.Session.GetString("DangNhap") == "true";
     ViewData["Title"] = "Chi tiết";
@@ -33,9 +31,9 @@
                         <span>(18 reviews)</span>
                     </div>
                     <div class="product__details__price">@Model.SanPham.DonGia.ToString("N0") đ</div>
-                    <p>
-                        @Model.SanPham.MoTa
-                    </p>
+                    @* <pre> @Model.SanPham.MoTa</pre> *@
+                       
+                    
              
                     <div class="product__details__quantity">
                         <div class="quantity">
@@ -74,6 +72,42 @@
                     </ul>
                 </div>
             </div>
+            <div class="product-details-container">
+                <h2 class="product-details-heading">Chi Tiết Sản Phẩm</h2>
+
+                <table class="table table-bordered product-details-table">
+                    <tbody>
+                        <tr>
+                            <td class="detail-label fw-bold" style="width: 200px;">Tên sản phẩm</td>
+                            <td class="detail-value">@(Model.SanPham.TenSanPham ?? "")</td>
+                        </tr>
+                        <tr>
+                            <td class="detail-label fw-bold" style="width: 200px;">Thương hiệu</td>
+                            <td class="detail-value">@(Model.SanPham.MaThNavigation?.TenThuongHieu ?? "")</td>
+                        </tr>
+
+                        <tr>
+                            <td class="detail-label fw-bold">Kích thước (Dài x Rộng x Cao)</td>
+                            <td class="detail-value">@(Model.SanPham.KichThuoc ?? "")</td>
+                        </tr>
+                        <tr>
+                            <td class="detail-label fw-bold">Chất liệu</td>
+                            <td class="detail-value">@(Model.SanPham.ChatLieu ?? "")</td>
+                        </tr>
+                        <tr>
+                            <td class="detail-label fw-bold">Độ tuổi phù hợp</td>
+                            <td class="detail-value">@(Model.SanPham.DoTuoiPhuHop ?? "")</td>
+                        </tr>
+                        <tr>
+                            <td class="detail-label fw-bold">Trọng lượng sản phẩm</td>
+                            <td class="detail-value">@(Model.SanPham.TrongLuong ?? "")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="white-space: pre-wrap;">
+                <span class="fw-bold">Mô tả:</span> @Model.SanPham.MoTa
+            </div>
             <div class="col-lg-12">
                 <div class="bg-light p-3 rounded mb-4 mt-4">
                     <h5 class="fw-bold text-dark text-center">— Bình luận —</h5>
@@ -83,7 +117,7 @@
                         <div class="card mb-3">
                             <div class="card-body">
                                 <div class="d-flex align-items-start" style="gap: 12px;">
-                                    <img src="https://th.bing.com/th/id/OIP.wQFQco1izbZGsWcSyy9aUQHaHa?w=180&h=181&c=7&r=0&o=7&dpr=1.6&pid=1.7&rm=3"
+                                    <img src="@Url.Content("~/img/profile/" + bl.MaNdNavigation.HinhAnh)"
                                          class="rounded-circle me-3" alt="Avatar" style="width: 60px; height: 60px; object-fit: cover;">
                                     <div>
                                         <h6 class="mb-0 fw-bold">@bl.MaNdNavigation.TenDangNhap</h6>
@@ -139,6 +173,7 @@
         </div>
     </div>
 </section>
+
 <!-- Product Details Section End -->
 <!-- Related Product Section Begin -->
 <section class="related-product">
@@ -150,24 +185,7 @@
                 </div>
             </div>
         </div>
-  @*       <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-6">
-                <div class="product__item">
-                    <div class="product__item__pic set-bg" data-setbg="img/product/product-1.jpg">
-                        <ul class="product__item__pic__hover">
-                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="product__item__text">
-                        <h6><a href="#">Crab Pool Security</a></h6>
-                        <h5>$30.00</h5>
-                    </div>
-                </div>
-            </div>
-           
-        </div> *@
+
         <div class="row">
             @foreach (var sp in Model.SanPhamLienQuan)
             {

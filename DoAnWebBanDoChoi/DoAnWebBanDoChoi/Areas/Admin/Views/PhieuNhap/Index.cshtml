@@ -25,17 +25,30 @@
                         <td>
                             @if (item.TrangThai == 1)
                             {
-                                <span class="badge bg-success">Đã duyệt</span>
+                                <span class="badge bg-success">Hoàn Thành</span>
                             }
                             else
                             {
-                                <span class="badge bg-secondary">Chờ duyệt</span>
+                                <span class="badge bg-secondary">Chưa hoàn thành</span>
                             }
                         </td>
+                      
+                       
                         <td>
                             <a class="btn btn-sm btn-info" asp-action="ChiTiet" asp-route-id="@item.MaPn">Chi tiết</a>
 
+                            @if (item.TrangThai == 0) // Chỉ cho phép xóa khi trạng thái là "Chờ duyệt"
+                            {
+                                <form asp-action="Delete" method="post" asp-route-id="@item.MaPn" class="d-inline">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa phiếu nhập #@item.MaPn này không? Toàn bộ chi tiết sẽ bị xóa theo.');">
+                                        ❌ Xóa
+                                    </button>
+                                </form>
+                            }
                         </td>
+                        ...
                     </tr>
                 }
             </tbody>

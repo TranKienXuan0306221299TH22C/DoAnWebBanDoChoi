@@ -13,6 +13,9 @@
         <div class="col-lg-12">
             <h3>Chi tiết đơn hàng #@donHang.MaDh</h3>
             <p><strong>Ngày đặt:</strong> @donHang.NgayTao.ToString("dd/MM/yyyy")</p>
+            <p><strong>Ngày hoàn thành:</strong> @(donHang.NgaySua?.ToString("dd/MM/yyyy") ?? "Chưa hoàn thành")</p>
+            <p><strong>Phí Ship:</strong>@(donHang.PhiVanChuyen?.ToString("N0") + " đ" ?? "Free SHip")</p>
+            <p><strong>Tông tiền:</strong> @donHang.TongTien.ToString("N0") đ</p>
             <table class="table table-bordered text-center align-middle">
                 <thead class="table-light">
                     <tr>

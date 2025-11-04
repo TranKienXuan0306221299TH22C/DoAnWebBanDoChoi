@@ -127,8 +127,12 @@
             <div class="col-lg-9">
                 <div class="hero__search">
                     <div class="hero__search__form">
-                        <form action="/Home/Search" method="get">
-                            <input type="text" name="keyword" placeholder="Bạn muốn tìm gì?">
+                        @* <form action="/Home/Search" method="get">
+                            <input type="text" name="keyword" placeholder="Bạn muốn tìm gì?" value="@Context.Request.Query["keyword"]">
+                            <button type="submit" class="site-btn">TÌM KIẾM</button>
+                        </form> *@
+                        <form id="searchHeaderForm" asp-controller="Home" asp-action="Search" method="get">
+                            <input type="text" name="keyword" placeholder="Bạn muốn tìm gì?" value="@Context.Request.Query["keyword"]">
                             <button type="submit" class="site-btn">TÌM KIẾM</button>
                         </form>
                     </div>
@@ -139,6 +143,7 @@
     </div>
 </section>
 <!-- Hero Section End -->
+
 <script>
     function kiemTraDangNhap() {
         fetch('/Cart/KiemTraDangNhap')
@@ -166,4 +171,7 @@
             }
         });
     }
+
+    
 </script>
+

@@ -17,6 +17,14 @@ public partial class SanPham
 
     public int SoLuong { get; set; }
 
+    public string? ChatLieu { get; set; }
+
+    public string? KichThuoc { get; set; }
+
+    public string? DoTuoiPhuHop { get; set; }
+
+    public string? TrongLuong { get; set; }
+
     public string? HinhAnh { get; set; }
 
     public int MaTh { get; set; }

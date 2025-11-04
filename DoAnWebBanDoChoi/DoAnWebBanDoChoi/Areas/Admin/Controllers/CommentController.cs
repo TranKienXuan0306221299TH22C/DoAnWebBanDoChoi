@@ -40,8 +40,9 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
                 .Select(b => new BinhLuanPhanHoiVM
                 {
                     MaBl = b.MaBl,
-                   
+                    MaSP=b.MaSp,
                     TenSanPham = b.MaSpNavigation.TenSanPham,
+                    Slug=b.MaSpNavigation.Slug,
                     TenNguoiDung = b.MaNdNavigation.HoTenHienThi ?? b.MaNdNavigation.TenDangNhap, // tùy tên trường
                     Diem = b.Diem,
                     NoiDung = b.NoiDungBinhLuan,

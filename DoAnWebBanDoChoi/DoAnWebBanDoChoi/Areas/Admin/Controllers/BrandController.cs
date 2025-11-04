@@ -92,9 +92,5 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             return RedirectToAction("DanhSachXoa");
         }
 
-
-
-
-
     }
 }

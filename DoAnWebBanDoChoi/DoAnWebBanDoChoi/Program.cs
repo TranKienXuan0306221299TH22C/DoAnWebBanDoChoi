@@ -1,6 +1,7 @@
 using DoAnWebBanDoChoi.Models;
 using DoAnWebBanDoChoi.Services.VNpay;
 using Microsoft.EntityFrameworkCore;
+using DoAnWebBanDoChoi.Services.Ham;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,7 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromDays(7);
     options.Cookie.IsEssential = true;
 });
-
+builder.Services.AddScoped<IFilterService, FilterService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 var app = builder.Build();

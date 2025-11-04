@@ -1,0 +1,193 @@
+﻿
+@model List<DoAnWebBanDoChoi.ViewModels.Admin.PhanHoiVM>
+@{
+    ViewData["Title"] = "Quản lý Liên hệ/Phản hồi";
+    
+    var chuaXem = Model.Where(ph => !ph.IsRead).ToList();
+    var daXem = Model.Where(ph => ph.IsRead).ToList();
+}
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+<h2>Quản Lý Phản Hồi Khách Hàng</h2>
+
+<hr />
+
+<ul class="nav nav-tabs" id="phanHoiTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="chua-xem-tab" data-bs-toggle="tab" data-bs-target="#chua-xem" type="button" role="tab" aria-controls="chua-xem" aria-selected="true">
+            Chưa Xem (@chuaXem.Count)
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="da-xem-tab" data-bs-toggle="tab" data-bs-target="#da-xem" type="button" role="tab" aria-controls="da-xem" aria-selected="false">
+            Đã Xem (@daXem.Count)
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="phanHoiTabsContent">
+
+    <div class="tab-pane fade show active" id="chua-xem" role="tabpanel" aria-labelledby="chua-xem-tab">
+        <br />
+       
+        @if (chuaXem.Any())
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Khách hàng</th>
+                        <th>Nội dung</th>
+                        <th>Thời gian</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in chuaXem)
+                    {
+                        <tr id="row-@item.MaPhanHoi">
+                            <td>@item.MaPhanHoi</td>
+                            <td>
+                                <strong>@item.HoTen</strong> <br />
+                                <small>@item.Email - @item.SoDienThoai</small>
+                            </td>
+                            <td>@item.NoiDung</td>
+                            <td>@item.ThoiGianGui.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>
+                                <button class="btn btn-sm btn-info btn-mark-read" data-id="@item.MaPhanHoi">
+                                    Đã xem
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-success">Không có phản hồi nào chưa được xem.</div>
+        }
+    </div>
+
+    <div class="tab-pane fade" id="da-xem" role="tabpanel" aria-labelledby="da-xem-tab">
+        <br />
+        @if (daXem.Any())
+        {
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Khách hàng</th>
+                        <th>Nội dung</th>
+                        <th>Thời gian</th>
+                    </tr>
+                </thead>
+                <tbody id="da-xem-body">
+                    @foreach (var item in daXem)
+                    {
+                        <tr id="row-@item.MaPhanHoi-read" class="table-secondary">
+                            <td>@item.MaPhanHoi</td>
+                            <td>
+                                <strong>@item.HoTen</strong> <br />
+                                <small>@item.Email - @item.SoDienThoai</small>
+                            </td>
+                            <td>@item.NoiDung</td>
+                            <td>@item.ThoiGianGui.ToString("dd/MM/yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-warning">Chưa có phản hồi nào được đánh dấu là Đã xem.</div>
+        }
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Hàm hỗ trợ cập nhật số lượng trên Tab
+            function updateTabCounts() {
+                // Đếm số hàng trong <tbody> của mỗi tab
+                var chuaXemCount = $('#chua-xem tbody tr').length;
+                var daXemCount = $('#da-xem-body tr').length;
+
+                // Cập nhật nội dung nút tab
+                $('#chua-xem-tab').html('Chưa Xem (' + chuaXemCount + ')');
+                $('#da-xem-tab').html('Đã Xem (' + daXemCount + ')');
+
+                // Hiển thị/Ẩn thông báo "Không có phản hồi"
+                if (chuaXemCount === 0) {
+                     $('#chua-xem').find('.alert-success').show();
+                } else {
+                     $('#chua-xem').find('.alert-success').hide();
+                }
+
+                // (Tùy chọn) Có thể thêm logic xử lý thông báo "Đã xem" nếu cần
+            }
+
+
+            // Sự kiện click nút "Đánh dấu Đã xem"
+            $(document).on('click', '.btn-mark-read', function () {
+                var maPhanHoi = $(this).data('id');
+                var $row = $('#row-' + maPhanHoi);
+                var $button = $(this);
+
+                // Tắt nút để tránh click kép
+                $button.prop('disabled', true).text('Đang chuyển...');
+
+                // Lấy đối tượng <tr> gốc và tạo bản sao để chuyển sang tab "Đã xem"
+                var $newRow = $row.clone();
+
+                $.ajax({
+                    type: "POST",
+                    // Url: đã đúng
+                    url: "/Admin/Contact/MarkAsRead",
+                    data: { id: maPhanHoi },
+
+                    success: function (response) {
+                        if (response.success) {
+
+                            // 1. CHUẨN BỊ BẢN SAO CHO TAB "ĐÃ XEM"
+                            // - Xóa cột thao tác (là cột cuối cùng)
+                            $newRow.find('td:last-child').remove();
+
+                            // - Cập nhật ID mới và thêm class đã xem (màu xám)
+                            $newRow.attr('id', 'row-' + maPhanHoi + '-read');
+                            $newRow.addClass('table-secondary');
+
+                            // 2. CẬP NHẬT TAB "ĐÃ XEM"
+                            // Thêm bản sao đã chỉnh sửa vào <tbody> của tab "Đã xem"
+                            $('#da-xem-body').prepend($newRow);
+
+                            // 3. CẬP NHẬT TAB "CHƯA XEM"
+                            // Xóa hàng gốc khỏi tab "Chưa xem"
+                            $row.remove();
+
+                            // 4. CẬP NHẬT SỐ LƯỢNG
+                            updateTabCounts();
+
+                            // Thông báo thành công
+                            // alert('Đã đánh dấu phản hồi #' + maPhanHoi + ' là Đã xem.');
+                        } else {
+                            // Xử lý lỗi từ Server
+                            alert('Lỗi: ' + (response.message || 'Không thể cập nhật trạng thái.'));
+                            $button.prop('disabled', false).text('Đánh dấu Đã xem');
+                        }
+                    },
+                    error: function () {
+                        // Xử lý lỗi kết nối
+                        alert("Lỗi kết nối server. Vui lòng thử lại.");
+                        $button.prop('disabled', false).text('Đánh dấu Đã xem');
+                    }
+                });
+            });
+
+            // Gọi lần đầu để đảm bảo count và alert hiển thị đúng
+            updateTabCounts();
+        });
+    </script>
+}

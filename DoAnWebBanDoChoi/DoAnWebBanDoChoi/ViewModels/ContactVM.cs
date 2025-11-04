@@ -18,7 +18,8 @@ namespace DoAnWebBanDoChoi.ViewModels
 
         [Required(ErrorMessage = "Vui lòng nhập số điện thoại.")]
         [Display(Name = "Số điện thoại")]
-        [Phone(ErrorMessage = "Số điện thoại không hợp lệ.")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "Số điện thoại phải đủ 10 chữ số và không chứa ký tự khác.")]
+        [Phone(ErrorMessage = "Định dạng số điện thoại không hợp lệ.")]
         [StringLength(20)]
         public string SoDienThoai { get; set; }
 

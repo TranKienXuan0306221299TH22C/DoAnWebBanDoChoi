@@ -1,18 +1,32 @@
 ﻿@model IEnumerable<DoAnWebBanDoChoi.ViewModels.DanhMucVM>
-
+@* 
 <div class="sidebar__item">
     <h4>Danh mục</h4>
     <ul>
          @foreach (var item in Model)
         {
             <li>
-                <a href="@Url.Action("Index", "Home", new { loai = item.MaDanhMuc })" onclick="scrollToSanPham()">
+                <a href="@Url.Action("Category", "Home", new { loai = item.MaDanhMuc })" onclick="scrollToSanPham()">
                     @item.TenDanhMuc
                 </a>
              
             </li>
         }
 
+    </ul>
+</div> *@
+<div class="sidebar__item">
+    <h4>Danh mục</h4>
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>
+                @* 🚩 SỬA LINK: Đảm bảo chỉ truyền 'loai', loại bỏ các tham số khác 🚩 *@
+                <a href="@Url.Action("Category", "Home", new { loai = item.MaDanhMuc, brands = (string)null, ages = (string)null, selectedCategories = (string)null, sort = (string)null })" onclick="scrollToSanPham()">
+                    @item.TenDanhMuc
+                </a>
+            </li>
+        }
     </ul>
 </div>
 
