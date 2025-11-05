@@ -23,6 +23,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<ChiTietPhieuNhap> ChiTietPhieuNhaps { get; set; }
 
+    public virtual DbSet<ChinhSach> ChinhSaches { get; set; }
+
     public virtual DbSet<DanhMuc> DanhMucs { get; set; }
 
     public virtual DbSet<DonHang> DonHangs { get; set; }
@@ -45,7 +47,10 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<ThuongHieu> ThuongHieus { get; set; }
 
-  
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=PC\\SQLEXPRESS;Initial Catalog=CuaHangDoChoi;Integrated Security=True;Trust Server Certificate=True");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BinhLuan>(entity =>
@@ -127,6 +132,16 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.MaSp)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ChiTietPhieuNhap_SanPham");
+        });
+
+        modelBuilder.Entity<ChinhSach>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("ChinhSach");
+
+            entity.Property(e => e.MaCs).HasColumnName("MaCS");
+            entity.Property(e => e.TieuDe).HasMaxLength(50);
         });
 
         modelBuilder.Entity<DanhMuc>(entity =>
