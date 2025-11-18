@@ -1,262 +1,87 @@
-﻿@model List<DoAnWebBanDoChoi.ViewModels.Admin.PhanHoiVM>
+﻿@model DoAnWebBanDoChoi.ViewModels.ContactVM
 @{
-    ViewData["Title"] = "Quản lý Liên hệ/Phản hồi";
-    
-    // Đảm bảo các hàng được phân loại
-    var chuaXem = Model.Where(ph => !ph.IsRead).ToList();
-    var daXem = Model.Where(ph => ph.IsRead).ToList();
+    ViewData["Title"] = "Liên Hệ Khách Hàng";
+    Layout = "_Layout";
 }
 
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <!-- Card chính, đơn giản hơn -->
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h1 class="h4 mb-0">Gửi Ý Kiến & Liên Hệ</h1>
+                </div>
+                <div class="card-body p-4 p-md-5">
 
-<div class="container-fluid pt-4 px-4">
-    <div class="bg-white rounded shadow p-4 border">
-        <h2>Quản Lý Phản Hồi Khách Hàng</h2>
+                    <!-- Message Alert (Hiển thị nếu gửi thành công) -->
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
 
-        <hr />
+                    <!-- 1. THÔNG TIN CỬA HÀNG (Sử dụng list-group) -->
+                    <h2 class="h5 mb-3 text-primary"><i class="fas fa-info-circle me-2"></i> Thông tin liên hệ Shop</h2>
+                    <ul class="list-group list-group-flush mb-4 border rounded">
+                        <li class="list-group-item">
+                            <i class="fas fa-phone-alt me-2 text-danger"></i> Hotline: 0703337106
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-envelope me-2 text-info"></i> Email: cskh@phuclong.com
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-map-marker-alt me-2 text-success"></i> Địa chỉ: 65 Huỳnh Thúc Kháng, P.Bến Thành, TP.HCM.
+                        </li>
+                    </ul>
 
-        <ul class="nav nav-tabs" id="phanHoiTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="chua-xem-tab" data-bs-toggle="tab" data-bs-target="#chua-xem" type="button" role="tab" aria-controls="chua-xem" aria-selected="true">
-                    Chưa Xem (@chuaXem.Count)
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="da-xem-tab" data-bs-toggle="tab" data-bs-target="#da-xem" type="button" role="tab" aria-controls="da-xem" aria-selected="false">
-                    Đã Xem (@daXem.Count)
-                </button>
-            </li>
-        </ul>
+                    <!-- 2. FORM GỬI Ý KIẾN -->
+                    <form asp-controller="Contact" asp-action="LienHe" method="post" class="needs-validation" novalidate>
 
-        <div class="tab-content" id="phanHoiTabsContent">
+                        @Html.AntiForgeryToken() <!-- Đã thêm lại Anti-forgery Token -->
+                        <!-- HỌ VÀ TÊN -->
+                        <div class="mb-3">
+                            <label asp-for="HoTen" class="form-label">@Html.DisplayNameFor(model => model.HoTen) <span class="text-danger">*</span></label>
+                            <input asp-for="HoTen" type="text" class="form-control" placeholder="Nhập họ và tên của bạn">
+                            <!-- Hiển thị lỗi validation -->
+                            <span asp-validation-for="HoTen" class="text-danger small"></span>
+                        </div>
 
-            <div class="tab-pane fade show active" id="chua-xem" role="tabpanel" aria-labelledby="chua-xem-tab">
-                <br />
+                        <!-- EMAIL & SỐ ĐIỆN THOẠI (Dùng grid của Bootstrap cho 2 cột) -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Email" class="form-label">@Html.DisplayNameFor(model => model.Email) <span class="text-danger">*</span></label>
+                                <input asp-for="Email" type="email" class="form-control" placeholder="Nhập email của bạn">
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
 
-                @if (chuaXem.Any())
-                {
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Khách hàng</th>
-                                <th>Nội dung</th>
-                                <th>Thời gian</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody id="chua-xem-body">
-                            @foreach (var item in chuaXem)
-                            {
-                                <tr id="row-@item.MaPhanHoi">
-                                    <td>@item.MaPhanHoi</td>
-                                    <td>
-                                        <strong>@item.HoTen</strong> <br />
-                                        <small>@item.Email - @item.SoDienThoai</small>
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("ChiTiet", "Contact", new { id = item.MaPhanHoi })" class="text-decoration-none text-dark d-block content-preview">
-                                            @if (!string.IsNullOrEmpty(item.TieuDe))
-                                            {
-                                                <b>@item.TieuDe</b> <span class="text-muted">- @item.NoiDung</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-muted">@item.NoiDung</span>
-                                            }
-                                        </a>
-                                    </td>
-                                    <td>@item.ThoiGianGui.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-info btn-mark-read" data-id="@item.MaPhanHoi">
-                                            Đã xem
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <div class="alert alert-success">Không có phản hồi nào chưa được xem.</div>
-                }
-            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="SoDienThoai" class="form-label">@Html.DisplayNameFor(model => model.SoDienThoai) <span class="text-danger">*</span></label>
+                                <input asp-for="SoDienThoai" type="tel" class="form-control" placeholder="Nhập số điện thoại">
+                                <span asp-validation-for="SoDienThoai" class="text-danger small"></span>
+                            </div>
+                        </div>
 
-            <div class="tab-pane fade" id="da-xem" role="tabpanel" aria-labelledby="da-xem-tab">
-                <br />
-                @if (daXem.Any())
-                {
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Mã</th>
-                                <th>Khách hàng</th>
-                                <th>Nội dung</th>
-                                <th>Thời gian</th>
-                                <th>Thao tác</th> </tr>
-                        </thead>
-                        <tbody id="da-xem-body">
-                            @foreach (var item in daXem)
-                            {
-                                <tr id="row-@item.MaPhanHoi-read" class="table-secondary">
-                                    <td>@item.MaPhanHoi</td>
-                                    <td>
-                                        <strong>@item.HoTen</strong> <br />
-                                        <small>@item.Email - @item.SoDienThoai</small>
-                                    </td>
-                                    <td>
-                                        <a href="@Url.Action("ChiTiet", "Contact", new { id = item.MaPhanHoi })" class="text-decoration-none text-dark d-block content-preview">
-                                            @if (!string.IsNullOrEmpty(item.TieuDe))
-                                            {
-                                                <b>@item.TieuDe</b> <span class="text-muted">- @item.NoiDung</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="text-muted">@item.NoiDung</span>
-                                            }
-                                        </a>
-                                    </td>
-                                    <td>@item.ThoiGianGui.ToString("dd/MM/yyyy HH:mm")</td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning btn-mark-unread" data-id="@item.MaPhanHoi">
-                                            Chưa xem
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <div class="alert alert-warning">Chưa có phản hồi nào được đánh dấu là Đã xem.</div>
-                }
+                        <!-- NỘI DUNG LIÊN HỆ -->
+                        <div class="mb-4">
+                            <label asp-for="NoiDung" class="form-label">@Html.DisplayNameFor(model => model.NoiDung) <span class="text-danger">*</span></label>
+                            <textarea asp-for="NoiDung" rows="5" class="form-control" placeholder="Nhập nội dung bạn muốn liên hệ..."></textarea>
+                            <span asp-validation-for="NoiDung" class="text-danger small"></span>
+                        </div>
+
+                        <!-- NÚT GỬI VÀ NHẬP LẠI -->
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i> Gửi liên hệ
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            // Hàm hỗ trợ cập nhật số lượng trên Tab và Alert
-            function updateTabCounts() {
-                var chuaXemCount = $('#chua-xem-body tr').length;
-                var daXemCount = $('#da-xem-body tr').length;
-
-                // Cập nhật nội dung nút tab
-                $('#chua-xem-tab').html('Chưa Xem (' + chuaXemCount + ')');
-                $('#da-xem-tab').html('Đã Xem (' + daXemCount + ')');
-
-                // Hiển thị/Ẩn thông báo "Không có phản hồi"
-                if (chuaXemCount === 0) {
-                    $('#chua-xem').find('.alert-success').show();
-                    $('#chua-xem').find('table').hide(); // Ẩn bảng khi không có dữ liệu
-                } else {
-                    $('#chua-xem').find('.alert-success').hide();
-                    $('#chua-xem').find('table').show();
-                }
-
-                if (daXemCount === 0) {
-                    $('#da-xem').find('.alert-warning').show();
-                    $('#da-xem').find('table').hide();
-                } else {
-                    $('#da-xem').find('.alert-warning').hide();
-                    $('#da-xem').find('table').show();
-                }
-            }
-
-
-            // Hàm xử lý chung việc chuyển trạng thái
-            function handleMarkStatus(maPhanHoi, actionUrl, isRead, $row, $button, newButtonClass, newButtonText, targetBodyId, newRowIdSuffix, targetRowClass) {
-                
-                // Tắt nút để tránh click kép
-                $button.prop('disabled', true).text('Đang chuyển...');
-
-                var $newRow = $row.clone(); // Lấy đối tượng <tr> gốc và tạo bản sao
-
-                $.ajax({
-                    type: "POST",
-                    url: actionUrl,
-                    data: { id: maPhanHoi, isRead: isRead }, // Truyền trạng thái cần cập nhật
-
-                    success: function (response) {
-                        if (response.success) {
-
-                            // 1. CHUẨN BỊ BẢN SAO CHO TAB ĐÍCH
-                            // - Cập nhật ID mới và thêm/xóa class màu
-                            $newRow.attr('id', 'row-' + maPhanHoi + newRowIdSuffix);
-                            if (targetRowClass) {
-                                $newRow.addClass(targetRowClass);
-                            } else {
-                                $newRow.removeClass('table-secondary'); // Xóa màu xám nếu chuyển sang Chưa xem
-                            }
-                            
-                            // - Cập nhật lại nút thao tác (tạo nút mới cho bản sao)
-                            var $newButton = $('<button class="btn btn-sm ' + newButtonClass + '"></button>')
-                                .attr('data-id', maPhanHoi)
-                                .text(newButtonText);
-                            
-                            // Gắn class xử lý sự kiện cho nút mới
-                            if (isRead) {
-                                // Nếu chuyển sang Đã xem, nút mới là "Chưa xem"
-                                $newButton.addClass('btn-mark-unread');
-                                // Xóa cột cuối cùng (cột Thao tác) cũ (Đã xem)
-                                $newRow.find('td:last-child').html($newButton);
-                            } else {
-                                // Nếu chuyển sang Chưa xem, nút mới là "Đã xem"
-                                $newButton.addClass('btn-mark-read');
-                                // Cập nhật nội dung cột cuối cùng (cột Thao tác)
-                                $newRow.find('td:last-child').html($newButton); 
-                            }
-
-
-                            // 2. CẬP NHẬT TAB ĐÍCH
-                            $('#' + targetBodyId).prepend($newRow);
-
-                            // 3. CẬP NHẬT TAB GỐC
-                            $row.remove();
-
-                            // 4. CẬP NHẬT SỐ LƯỢNG
-                            updateTabCounts();
-
-                        } else {
-                            // Xử lý lỗi từ Server
-                            alert('Lỗi: ' + (response.message || 'Không thể cập nhật trạng thái.'));
-                            $button.prop('disabled', false).text(isRead ? 'Đã xem' : 'Chưa xem'); // Khôi phục nút
-                        }
-                    },
-                    error: function () {
-                        // Xử lý lỗi kết nối
-                        alert("Lỗi kết nối server. Vui lòng thử lại.");
-                        $button.prop('disabled', false).text(isRead ? 'Đã xem' : 'Chưa xem'); // Khôi phục nút
-                    }
-                });
-            }
-
-            // SỰ KIỆN: Click nút "Đánh dấu Đã xem" (Chuyển từ Chưa xem -> Đã xem)
-            $(document).on('click', '.btn-mark-read', function () {
-                var maPhanHoi = $(this).data('id');
-                var $row = $('#row-' + maPhanHoi);
-                var $button = $(this);
-                
-                // Tham số: maPhanHoi, actionUrl, isRead, $row, $button, newButtonClass, newButtonText, targetBodyId, newRowIdSuffix, targetRowClass
-                handleMarkStatus(maPhanHoi, "/Admin/Contact/MarkAsReadUnread", true, $row, $button, 'btn-warning', 'Chưa xem', 'da-xem-body', '-read', 'table-secondary');
-            });
-
-            // SỰ KIỆN: Click nút "Đánh dấu Chưa xem" (Chuyển từ Đã xem -> Chưa xem)
-            $(document).on('click', '.btn-mark-unread', function () {
-                var maPhanHoi = $(this).data('id');
-                var $row = $('#row-' + maPhanHoi + '-read'); // ID có suffix -read
-                var $button = $(this);
-                
-                // Tham số: maPhanHoi, actionUrl, isRead, $row, $button, newButtonClass, newButtonText, targetBodyId, newRowIdSuffix, targetRowClass
-                handleMarkStatus(maPhanHoi, "/Admin/Contact/MarkAsReadUnread", false, $row, $button, 'btn-info', 'Đã xem', 'chua-xem-body', '', null); // Không có suffix và không có class màu cho tab Chưa xem
-            });
-
-
-            // Gọi lần đầu để đảm bảo count và alert hiển thị đúng
-            updateTabCounts();
-        });
-    </script>
-}

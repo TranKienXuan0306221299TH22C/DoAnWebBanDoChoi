@@ -3,46 +3,60 @@
 <div class="container-fluid pt-4 px-4">
     <div class="bg-white rounded shadow p-4 border">
 
-                <h2>Chi tiết phiếu nhập #@Model.MaPn</h2>
-                <p><strong>Ngày nhập:</strong> @Model.NgayNhap.ToString("dd/MM/yyyy HH:mm")</p>
-                <p><strong>Nhà cung cấp:</strong> @Model.MaNccNavigation.TenNhaCungCap</p>
-                <p><strong>Trạng thái:</strong> @(Model.TrangThai == 1 ? "Đã duyệt" : "Chờ duyệt")</p>
+        <h2>Chi tiết phiếu nhập #@Model.MaPn</h2>
+        <p><strong>Ngày nhập:</strong> @Model.NgayNhap.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Nhà cung cấp:</strong> @Model.MaNccNavigation.TenNhaCungCap</p>
+        <p><strong>Trạng thái:</strong> @(Model.TrangThai == 1 ? "Đã duyệt" : "Chờ duyệt")</p>
 
-                @if (Model.TrangThai == 1)
+
+        @if (Model.TrangThai == 1)
+        {
+            <button class="btn btn-secondary mb-3" disabled>✔️ Đã xác nhận</button>
+            <a asp-action="Index" class="btn btn-info mb-3">⬅️ Quay lại danh sách</a>
+        }
+        else
+        {
+            <a class="btn btn-primary mb-3" asp-action="ThemChiTiet" asp-route-id="@Model.MaPn">➕ Thêm sản phẩm</a>
+
+
+            @if (Model.ChiTietPhieuNhaps != null && Model.ChiTietPhieuNhaps.Any())
+            {
+                <form asp-action="XacNhanPhieuNhap" method="post" class="d-inline">
+                    <input type="hidden" name="id" value="@Model.MaPn" />
+                    <button type="submit" class="btn btn-success mb-3">✔️ Xác nhận phiếu nhập</button>
+                </form>
+            }
+            else
+            {
+                <button type="button" class="btn btn-secondary mb-3" disabled
+                        data-toggle="tooltip" title="Vui lòng thêm sản phẩm trước khi xác nhận.">
+                    ⚠️ Xác nhận phiếu nhập
+                </button>
+            }
+        }
+
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá nhập</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ct in Model.ChiTietPhieuNhaps)
                 {
-                    <button class="btn btn-secondary mb-3" disabled>✔️ Đã xác nhận</button>
+                    <tr>
+                        <td>@ct.MaSpNavigation.TenSanPham</td>
+                        <td>@ct.SoLuong</td>
+                        <td>@ct.GiaNhap.ToString("N0")</td>
+                        <td>@((ct.GiaNhap * ct.SoLuong).ToString("N0"))</td>
+                    </tr>
                 }
-                else
-                {
-                    <a class="btn btn-primary mb-3" asp-action="ThemChiTiet" asp-route-id="@Model.MaPn">➕ Thêm sản phẩm</a>
-                    <form asp-action="XacNhanPhieuNhap" method="post" class="d-inline">
-                        <input type="hidden" name="id" value="@Model.MaPn" />
-                        <button type="submit" class="btn btn-success mb-3">✔️ Xác nhận phiếu nhập</button>
-                    </form>
-                }
-
-
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Sản phẩm</th>
-                            <th>Số lượng</th>
-                            <th>Giá nhập</th>
-                            <th>Thành tiền</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var ct in Model.ChiTietPhieuNhaps)
-                        {
-                            <tr>
-                                <td>@ct.MaSpNavigation.TenSanPham</td>
-                                <td>@ct.SoLuong</td>
-                                <td>@ct.GiaNhap.ToString("N0")</td>
-                        <td>**@((ct.GiaNhap * ct.SoLuong).ToString("N0"))**</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            </tbody>
+        </table>
 
     </div>
 </div>
