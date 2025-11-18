@@ -23,6 +23,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<ChiTietPhieuNhap> ChiTietPhieuNhaps { get; set; }
 
+    public virtual DbSet<ChinhSach> ChinhSaches { get; set; }
+
     public virtual DbSet<DanhMuc> DanhMucs { get; set; }
 
     public virtual DbSet<DonHang> DonHangs { get; set; }
@@ -129,6 +131,18 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("FK_ChiTietPhieuNhap_SanPham");
         });
 
+        modelBuilder.Entity<ChinhSach>(entity =>
+        {
+            entity.HasKey(e => e.MaCs);
+
+            entity.ToTable("ChinhSach");
+
+            entity.Property(e => e.MaCs)
+                .ValueGeneratedNever()
+                .HasColumnName("MaCS");
+            entity.Property(e => e.TieuDe).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<DanhMuc>(entity =>
         {
             entity.HasKey(e => e.MaDm).HasName("PK__DanhMuc__2725866EC3B710E1");
@@ -230,6 +244,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.HoTen).HasMaxLength(100);
             entity.Property(e => e.SoDienThoai).HasMaxLength(15);
             entity.Property(e => e.ThoiGianGui).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.TieuDe).HasMaxLength(100);
             entity.Property(e => e.TrangThai).HasDefaultValue(false);
         });
 

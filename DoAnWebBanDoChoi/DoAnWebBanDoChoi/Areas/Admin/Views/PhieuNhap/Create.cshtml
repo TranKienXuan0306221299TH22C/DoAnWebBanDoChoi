@@ -1,26 +1,44 @@
-﻿@model PhieuNhap
+﻿@model DoAnWebBanDoChoi.ViewModels.Admin.TaoPhieuNhapVM
+@using DoAnWebBanDoChoi.Models // Cần using để sử dụng NhaCungCap
+
 @{
+    // Lấy danh sách Nhà cung cấp từ ViewBag
     var nccList = ViewBag.DanhSachNCC as List<NhaCungCap>;
+    // Đặt tên tiêu đề trang
+    ViewData["Title"] = "Tạo Phiếu Nhập";
 }
+
 <div class="container-fluid pt-4 px-4">
     <div class="bg-white rounded shadow p-4 border">
+
         <h2>Tạo phiếu nhập</h2>
+        <a asp-action="Index" class="btn btn-secondary mb-3">⬅️ Quay lại danh sách</a>
+
         <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="mb-3">
-                <label>Nhà cung cấp</label>
+                <label asp-for="MaNcc">Nhà cung cấp</label>
                 <select class="form-control" asp-for="MaNcc">
                     <option value="">-- Chọn nhà cung cấp --</option>
-                    @foreach (var ncc in nccList)
+                    @if (nccList != null)
                     {
-                        <option value="@ncc.MaNcc">@ncc.TenNhaCungCap</option>
+                        @foreach (var ncc in nccList)
+                        {
+                            <option value="@ncc.MaNcc">@ncc.TenNhaCungCap</option>
+                        }
                     }
                 </select>
+                <span class="text-danger" asp-validation-for="MaNcc"></span>
             </div>
+
             <div class="mb-3">
-                <label>Ghi chú</label>
+                <label asp-for="GhiChu">Ghi chú</label>
                 <textarea class="form-control" asp-for="GhiChu"></textarea>
                 <span class="text-danger" asp-validation-for="GhiChu"></span>
             </div>
+
             <button class="btn btn-success" type="submit">Tạo phiếu nhập</button>
         </form>
     </div>

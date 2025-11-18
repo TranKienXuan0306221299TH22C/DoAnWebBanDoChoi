@@ -30,6 +30,7 @@ namespace DoAnWebBanDoChoi.Controllers
                     Email = model.Email,
                     SoDienThoai = model.SoDienThoai,
                     NoiDung = model.NoiDung,
+                    TieuDe = model.TieuDe,
                     ThoiGianGui = DateTime.Now,
                     TrangThai = false // Luôn là 'Chưa đọc' khi mới gửi
                 };

@@ -27,6 +27,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
                     Email = ph.Email,
                     SoDienThoai = ph.SoDienThoai,
                     NoiDung = ph.NoiDung,
+                    TieuDe = ph.TieuDe,
                     ThoiGianGui = ph.ThoiGianGui,
                     // TrangThai là bool? -> IsRead là true nếu TrangThai == true, ngược lại là false
                     IsRead = ph.TrangThai ?? false
@@ -35,10 +36,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
 
             return View(phanHois);
         }
-
-        // Action xử lý AJAX để cập nhật trạng thái "Đã xem"
-        [HttpPost]
-        public async Task<IActionResult> MarkAsRead(int id)
+        public async Task<IActionResult> ChiTiet(int id)
         {
             var phanHoi = await _context.PhanHois.FindAsync(id);
 
@@ -47,18 +45,51 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // Cập nhật trạng thái: true = đã xem
-            phanHoi.TrangThai = true;
+            // Nếu phản hồi chưa được đánh dấu là đã đọc, tự động đánh dấu
+            if (phanHoi.TrangThai == false || phanHoi.TrangThai == null)
+            {
+                phanHoi.TrangThai = true;
+                await _context.SaveChangesAsync();
+            }
+
+            // Ánh xạ sang ViewModel để hiển thị
+            var model = new PhanHoiVM
+            {
+                MaPhanHoi = phanHoi.MaPhanHoi,
+                HoTen = phanHoi.HoTen,
+                Email = phanHoi.Email,
+                SoDienThoai = phanHoi.SoDienThoai,
+                NoiDung = phanHoi.NoiDung,
+                TieuDe = phanHoi.TieuDe,
+                ThoiGianGui = phanHoi.ThoiGianGui,
+                IsRead = phanHoi.TrangThai ?? false
+            };
+
+            return View(model);
+        }
+        // Action xử lý AJAX để cập nhật trạng thái "Đã xem"
+        [HttpPost]
+        public async Task<IActionResult> MarkAsReadUnread(int id, bool isRead)
+        {
+            var phanHoi = await _context.PhanHois.FindAsync(id);
+
+            if (phanHoi == null)
+            {
+                return Json(new { success = false, message = "Không tìm thấy phản hồi." });
+            }
+
+            // Cập nhật trạng thái dựa trên tham số isRead
+            phanHoi.TrangThai = isRead;
 
             try
             {
                 await _context.SaveChangesAsync();
                 // Trả về JSON để báo hiệu thành công và cập nhật giao diện
-                return Json(new { success = true, maPhanHoi = id });
+                return Json(new { success = true, maPhanHoi = id, isRead = isRead });
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi (ví dụ: log lỗi)
+                // Nên log ex.Message ở đây
                 return Json(new { success = false, message = "Lỗi khi cập nhật database." });
             }
         }

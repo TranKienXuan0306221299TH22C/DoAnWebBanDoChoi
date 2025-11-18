@@ -94,12 +94,13 @@
                 <div class="header__cart">
                     <ul>
                         <li>
-                            <a href="javascript:void(0);" onclick="kiemTraDangNhapYeuThich();">
+                            <a href="javascript:void(0);" onclick="xacNhanDangNhap();">
                                 <i class="fa fa-heart"></i>
                                 <span id="soLuongYeuThich" class="badge badge-danger">0</span>
                             </a>
                         </li>
-                        <li><a href="javascript:void(0);" onclick="kiemTraDangNhap();">
+                        <li>
+                            <a href="javascript:void(0);" onclick="xacNhanDangNhap();">
                             <i class="fa fa-shopping-bag"></i>  <span id="gioHangSoLuong" class="badge badge-danger">0</span>
                             </a>
                             </li>
@@ -144,34 +145,4 @@
 </section>
 <!-- Hero Section End -->
 
-<script>
-    function kiemTraDangNhap() {
-        fetch('/Cart/KiemTraDangNhap')
-            .then(res => res.json())
-            .then(data => {
-                if (data.daDangNhap) {
-                    // Nếu đã đăng nhập thì chuyển tới giỏ hàng
-                    window.location.href = '/Cart/ChiTietGioHang';
-                } else {
-                    // Nếu chưa → thông báo xác nhận
-                    if (confirm("Bạn cần đăng nhập để xem giỏ hàng. Bạn có muốn đăng nhập ngay không?")) {
-                        window.location.href = '/Account/Login';
-                    }
-                }
-            });
-    }
-        function kiemTraDangNhapYeuThich() {
-        $.get('/Cart/KiemTraDangNhap', function (res) {
-            if (res.daDangNhap) {
-                window.location.href = '/Favorite/DanhSachYeuThich';
-            } else {
-                if (confirm("Bạn cần đăng nhập để xem sản phẩm yêu thích. Bạn có muốn đăng nhập ngay không?")) {
-                    window.location.href = '/Account/Login';
-                }
-            }
-        });
-    }
-
-    
-</script>
 

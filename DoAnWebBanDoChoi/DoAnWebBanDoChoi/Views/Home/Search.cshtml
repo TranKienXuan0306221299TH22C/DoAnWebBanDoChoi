@@ -22,16 +22,20 @@
 
     <form asp-action="@formAction" asp-controller="Home" method="get">
 
-        @* THAM SỐ GỐC: Chỉ gửi LOAI hoặc KEYWORD để xác định bối cảnh *@
         @if (!string.IsNullOrEmpty(currentLoai))
         {
+            // Gửi tham số loai (cho Category Action)
             <input type="hidden" name="loai" value="@currentLoai" />
         }
         @if (!string.IsNullOrEmpty(currentKeyword))
         {
+            // Gửi tham số keyword (cho Search Action)
             <input type="hidden" name="keyword" value="@currentKeyword" />
         }
 
+        <input type="hidden" name="page" value="1" />
+
+        @* Giữ lại tham số Sort hiện tại *@
         <input type="hidden" name="sort" value="@currentSort" />
 
         <div class="row">
@@ -104,18 +108,14 @@
                     }
                 }
             </div>
+            @*4. sắp xếp *@
+           
 
             <div class="col-lg-12 mt-3">
                 <button type="submit" class="btn btn-primary">Áp Dụng Bộ Lọc</button>
 
-                @* NÚT XÓA BỘ LỌC *@
-                <a asp-action="@formAction"
-                   asp-route-keyword="@(formAction == "Search" ? currentKeyword : null)"
-                   asp-route-loai="@(formAction == "Category" ? currentLoai : null)"
-                   @* 🚩 THÊM CÁC THAM SỐ NULL RÕ RÀNG VÀO ĐÂY ĐỂ XÓA SẠCH TRẠNG THÁI CŨ 🚩 *@
-                   asp-route-brands="@(null as List<int>)"
-                   asp-route-ages="@(null as List<string>)"
-                   asp-route-selectedCategories="@(null as List<int>)"
+                <a asp-action="Category"
+                   asp-controller="Home"
                    class="btn btn-secondary">Xóa Bộ Lọc</a>
             </div>
         </div>
@@ -193,7 +193,7 @@
             else
             {
                 <div class="col-12 text-center py-5">
-                    <p class="h4">Không tìm thấy sản phẩm nào phù hợp với từ khóa "**@Model.Keyword**".</p>
+                    <p class="h4">Không tìm thấy sản phẩm nào phù hợp!".</p>
                 </div>
             }
         </div>

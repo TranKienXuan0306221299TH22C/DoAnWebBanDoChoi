@@ -1,0 +1,13 @@
+﻿.content-preview {
+    /* Giới hạn nội dung chỉ trong một dòng */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Thêm dấu "..." */
+    max-width: 400px; /* Chiều rộng tối đa cho nội dung rút gọn */
+    display: block;
+}
+
+/* Hiệu ứng trỏ chuột (màu xám nhạt) cho các dòng chưa xem */
+.table-hover tbody tr:not(.table-secondary):hover {
+    background-color: #f5f5f5 !important;
+}

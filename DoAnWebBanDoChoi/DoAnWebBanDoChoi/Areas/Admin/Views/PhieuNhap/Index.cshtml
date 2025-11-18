@@ -5,12 +5,23 @@
 
         <h2>Danh sách phiếu nhập</h2>
         <a class="btn btn-primary mb-3" asp-action="Create">➕ Tạo phiếu nhập</a>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Mã PN</th>
                     <th>Ngày nhập</th>
                     <th>Nhà cung cấp</th>
+                    <th>Tên nhân viên</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
@@ -22,36 +33,35 @@
                         <td>@item.MaPn</td>
                         <td>@item.NgayNhap.ToString("dd/MM/yyyy HH:mm")</td>
                         <td>@item.MaNccNavigation.TenNhaCungCap</td>
+                        <td>@item.NguoiNhapNavigation.HoTenHienThi</td>
                         <td>
                             @if (item.TrangThai == 1)
                             {
-                                <span class="badge bg-success">Hoàn Thành</span>
+                                <span class="badge bg-success">Hoàn thành</span>
                             }
                             else
                             {
                                 <span class="badge bg-secondary">Chưa hoàn thành</span>
                             }
                         </td>
-                      
-                       
                         <td>
                             <a class="btn btn-sm btn-info" asp-action="ChiTiet" asp-route-id="@item.MaPn">Chi tiết</a>
 
-                            @if (item.TrangThai == 0) // Chỉ cho phép xóa khi trạng thái là "Chờ duyệt"
+                            
+                            @if (item.TrangThai == 0 && (item.ChiTietPhieuNhaps == null || !item.ChiTietPhieuNhaps.Any()))
                             {
-                                <form asp-action="Delete" method="post" asp-route-id="@item.MaPn" class="d-inline">
-                                    <button type="submit"
-                                            class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Bạn có chắc chắn muốn xóa phiếu nhập #@item.MaPn này không? Toàn bộ chi tiết sẽ bị xóa theo.');">
-                                        ❌ Xóa
-                                    </button>
+                                <form asp-action="Delete"
+                                      asp-route-id="@item.MaPn"
+                                      method="post"
+                                      style="display:inline;"
+                                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa phiếu nhập mã @item.MaPn này không?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
                                 </form>
                             }
                         </td>
-                        ...
                     </tr>
                 }
             </tbody>
         </table>
-        </div>
+    </div>
 </div>

@@ -27,5 +27,11 @@ namespace DoAnWebBanDoChoi.ViewModels
         [Display(Name = "Nội dung liên hệ")]
         // Không giới hạn độ dài cho nội dung (giả định cột NộiDung trong DB là NVARCHAR(MAX))
         public string NoiDung { get; set; }
+
+        [Required(ErrorMessage = "Vui lòng nhập tiêu đề.")]
+        [Display(Name = "Tiêu đề liên hệ")]
+        // Không giới hạn độ dài cho nội dung (giả định cột NộiDung trong DB là NVARCHAR(MAX))
+        public string TieuDe { get; set; }
+
     }
 }
