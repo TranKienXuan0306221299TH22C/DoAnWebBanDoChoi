@@ -1,0 +1,12 @@
+﻿@model List<DoAnWebBanDoChoi.Models.Policy>
+
+<ul>
+    @foreach (var p in Model)
+    {
+        <li>
+            <a asp-controller="Policy" asp-action="Detail" asp-route-id="@p.Id">
+                @p.TenChinhSach
+            </a>
+        </li>
+    }
+</ul>

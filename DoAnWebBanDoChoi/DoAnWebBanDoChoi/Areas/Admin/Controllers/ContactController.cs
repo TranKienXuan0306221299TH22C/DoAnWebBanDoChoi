@@ -13,7 +13,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
 
         public ContactController(AppDbContext context)
         {
-            _context=context;
+            _context = context;
         }
         public IActionResult LienHe()
         {
