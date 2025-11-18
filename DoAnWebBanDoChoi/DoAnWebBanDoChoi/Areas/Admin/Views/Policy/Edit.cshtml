@@ -1,0 +1,35 @@
+﻿@model DoAnWebBanDoChoi.Models.Policy
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-12">
+            <div class="bg-white rounded shadow p-4 border">
+                <h5 class="fw-bold text-primary mb-4">Sửa chính sách</h5>
+
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề</label>
+                        <input asp-for="TenChinhSach" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Nội dung</label>
+                        <textarea asp-for="NoiDung" id="editor" class="form-control"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Cập nhật</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor.create(document.querySelector('#editor'));
+    </script>
+}

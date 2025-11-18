@@ -422,10 +422,7 @@ namespace DoAnWebBanDoChoi.Controllers
                 DanhSachSanPham = danhSach,
                 SanPhamMoi = sanPhamMoi
             };
-
-           
             return View("Index", model);
         }
-
     }
 }
