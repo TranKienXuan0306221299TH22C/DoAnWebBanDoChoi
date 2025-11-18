@@ -69,7 +69,10 @@
                     </div>
                     <div class="mb-3">
                         <label>Giá nhập</label>
-                        <input type="number" name="GiaNhap" class="form-control" required />
+                        <div class="input-group">
+                            <input type="number" name="GiaNhap" class="form-control" id="GiaNhap" required min="0" />
+                            <span class="input-group-text">000₫</span>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
