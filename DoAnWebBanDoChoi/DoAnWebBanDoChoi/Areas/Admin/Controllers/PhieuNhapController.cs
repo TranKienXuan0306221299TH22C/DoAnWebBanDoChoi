@@ -1,12 +1,15 @@
-﻿using DoAnWebBanDoChoi.Helpers;
+﻿using DoAnWebBanDoChoi.Filters;
+using DoAnWebBanDoChoi.Helpers;
 using DoAnWebBanDoChoi.Models;
 using DoAnWebBanDoChoi.ViewModels;
+using DoAnWebBanDoChoi.ViewModels.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [AdminAuthorize]
     public class PhieuNhapController : Controller
     {
         private readonly AppDbContext _context;
@@ -19,7 +22,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
         // 1️⃣ Trang danh sách phiếu nhập
         public IActionResult Index()
         {
-            var list = _context.PhieuNhaps.Include(p => p.MaNccNavigation).ToList();
+            var list = _context.PhieuNhaps.Include(p => p.MaNccNavigation).Include(p => p.NguoiNhapNavigation).ToList();
             return View(list);
         }
 
@@ -30,24 +33,33 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             return View();
         }
 
+        // Trong PhieuNhapController.cs
         [HttpPost]
-        public IActionResult Create(PhieuNhap model)
+        public IActionResult Create(TaoPhieuNhapVM viewModel) // 👈 Nhận ViewModel
         {
             if (!ModelState.IsValid)
             {
                 // Gửi lại danh sách nhà cung cấp nếu bị lỗi
                 ViewBag.DanhSachNCC = _context.NhaCungCaps.ToList();
-                return View(model); // Trả lại View kèm lỗi
+                return View(viewModel); // 👈 Trả lại View kèm ViewModel
             }
 
-            model.NgayNhap = DateTime.Now;
-            model.TrangThai = 0;
-            model.NguoiNhap = HttpContext.Session.Get<int>("MaNd");
+            // 1. Chuyển đổi từ ViewModel sang Entity Model
+            var model = new PhieuNhap
+            {
+                MaNcc = viewModel.MaNcc,
+                GhiChu = viewModel.GhiChu,
+
+                // 2. Gán các trường tự động (không cần validation)
+                NgayNhap = DateTime.Now,
+                TrangThai = 0,
+                NguoiNhap = HttpContext.Session.Get<int>("MaNd") // Giả sử MaNd là int
+            };
 
             _context.PhieuNhaps.Add(model);
             _context.SaveChanges();
 
-            TempData["Success"] = "Tạo phiếu nhập thành công. Bạn có thể thêm sản phẩm.";
+
             return RedirectToAction("ChiTiet", new { id = model.MaPn });
         }
 
@@ -63,40 +75,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
 
             return View(pn);
         }
-        // Thêm vào PhieuNhapController.cs
 
-        // 5️⃣ Xóa phiếu nhập (POST)
-        [HttpPost]
-        public IActionResult Delete(int id)
-        {
-            var pn = _context.PhieuNhaps
-                .Include(p => p.ChiTietPhieuNhaps)
-                .FirstOrDefault(p => p.MaPn == id);
-
-            if (pn == null)
-            {
-                TempData["Error"] = "⚠️ Phiếu nhập không tồn tại.";
-                return RedirectToAction("Index");
-            }
-
-            // ⛔️ KHÔNG CHO PHÉP XÓA nếu phiếu đã được duyệt (TrangThai == 1)
-            if (pn.TrangThai == 1)
-            {
-                TempData["Error"] = "⚠️ Không thể xóa phiếu nhập đã được xác nhận.";
-                return RedirectToAction("ChiTiet", new { id });
-            }
-
-            // 1. Xóa tất cả ChiTietPhieuNhap liên quan trước
-            _context.ChiTietPhieuNhaps.RemoveRange(pn.ChiTietPhieuNhaps);
-
-            // 2. Xóa PhieuNhap
-            _context.PhieuNhaps.Remove(pn);
-
-            _context.SaveChanges();
-
-            TempData["Success"] = $"✔️ Đã xóa phiếu nhập #{id} thành công.";
-            return RedirectToAction("Index");
-        }
         // 4️⃣ Trang thêm sản phẩm vào chi tiết phiếu nhập (GET)
         public IActionResult ThemChiTiet(int id, string? search)
         {
@@ -131,7 +110,10 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ThemChiTiet(ThemChiTietPhieuNhapVM model)
         {
-            // Kiểm tra trùng sản phẩm
+            // 1. Xử lý logic nhập giá nhanh: Nhân giá nhập với 1000
+            model.GiaNhap = model.GiaNhap * 1000; // 👈 Dòng code cần thêm
+
+            // 2. Kiểm tra trùng sản phẩm
             bool trung = _context.ChiTietPhieuNhaps
                 .Any(c => c.MaPn == model.MaPn && c.MaSp == model.MaSp);
 
@@ -142,7 +124,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
                     MaPn = model.MaPn,
                     MaSp = model.MaSp,
                     SoLuong = model.SoLuong,
-                    GiaNhap = model.GiaNhap
+                    GiaNhap = model.GiaNhap // Đã là giá trị thực tế sau khi nhân 1000
                 };
                 _context.ChiTietPhieuNhaps.Add(ct);
                 _context.SaveChanges();
@@ -150,13 +132,14 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             }
             else
             {
-                TempData["Success"] = "⚠️ Sản phẩm đã tồn tại trong phiếu nhập.";
+                // Đổi thành "Error" để hiển thị cảnh báo
+                TempData["Error"] = "⚠️ Sản phẩm đã tồn tại trong phiếu nhập.";
             }
 
             return RedirectToAction("ChiTiet", new { id = model.MaPn });
         }
 
-       
+
         [HttpPost]
         public IActionResult XacNhanPhieuNhap(int id)
         {
@@ -203,7 +186,40 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             TempData["Success"] = "✔️ Xác nhận phiếu nhập thành công.";
             return RedirectToAction("ChiTiet", new { id });
         }
+        // Trong PhieuNhapController.cs
 
+        // Xóa bỏ Action này:
+        // public IActionResult Delete(int id) { ... } 
+
+        // Giữ lại và sửa Action POST này:
+        [HttpPost]
+
+        public IActionResult Delete(int id) // Đổi tên từ DeleteConfirmed sang Delete
+        {
+            var pn = _context.PhieuNhaps
+                .Include(p => p.ChiTietPhieuNhaps)
+                .FirstOrDefault(p => p.MaPn == id);
+
+            if (pn == null)
+            {
+                TempData["Error"] = "❌ Không tìm thấy phiếu nhập cần xóa.";
+                return RedirectToAction("Index");
+            }
+
+            // Tái kiểm tra điều kiện trước khi xóa
+            if (pn.TrangThai != 0 || (pn.ChiTietPhieuNhaps != null && pn.ChiTietPhieuNhaps.Any()))
+            {
+                // Đây là kiểm tra logic cốt lõi bạn muốn
+                TempData["Error"] = "❌ Chỉ có thể xóa phiếu nhập **Chưa hoàn thành** và **chưa có sản phẩm**.";
+                return RedirectToAction("Index");
+            }
+
+            _context.PhieuNhaps.Remove(pn);
+            _context.SaveChanges();
+
+            TempData["Success"] = $"🗑️ Đã xóa thành công phiếu nhập **Mã PN: {pn.MaPn}**.";
+            return RedirectToAction("Index");
+        }
 
     }
 }
