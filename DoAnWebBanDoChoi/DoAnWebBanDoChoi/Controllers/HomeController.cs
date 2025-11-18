@@ -85,7 +85,9 @@ namespace DoAnWebBanDoChoi.Controllers
         public IActionResult Index(int page = 1) // Chỉ cần tham số phân trang 'page'
         {
             // Lấy danh sách sản phẩm MỚI nhất (dùng cho Carousel, giữ nguyên)
+            // 💡 Thêm điều kiện Trạng thái == 1 ở đây nếu bạn muốn Carousel cũng chỉ hiện sp đang bán
             var sanPhamMoi = _context.SanPhams
+                .Where(sp => sp.TrangThai == 1) // **ĐIỀU KIỆN MỚI CHO SẢN PHẨM MỚI**
                 .OrderByDescending(sp => sp.NgayTao)
                 .Take(6)
                 .ToList();
@@ -94,10 +96,13 @@ namespace DoAnWebBanDoChoi.Controllers
             int pageSize = 6;
 
             var query = _context.SanPhams
+                // **THÊM ĐIỀU KIỆN TRẠNG THÁI == 1 Ở ĐÂY**
+                .Where(sp => sp.TrangThai == 1)
                 // Sắp xếp mặc định cho trang chủ (ví dụ: theo MaSp hoặc NgayTao)
-                .OrderByDescending(sp => sp.MaSp);
+                .OrderBy(sp => sp.MaSp);
 
             // Áp dụng Phân Trang
+            // Lưu ý: Đảm bảo đã cài đặt thư viện 'X.PagedList' hoặc tương đương.
             var danhSach = query.ToPagedList(page, pageSize);
 
             var model = new TrangChuVM
@@ -112,7 +117,10 @@ namespace DoAnWebBanDoChoi.Controllers
         // Trong HomeController.cs, sửa Action Search
 
         // Thay vì return View("Index", model);
-        
+
+
+
+
         [Route("san-pham/{slug}-{id}")]
         public IActionResult Detail(string slug, int id, int? page)
         {
@@ -128,18 +136,34 @@ namespace DoAnWebBanDoChoi.Controllers
             {
                 return RedirectToAction("Detail", new { slug = sanPham.Slug, id = sanPham.MaSp });
             }
-       
+
+            
+            var queryBinhLuan = _context.BinhLuans
+        .Where(bl => bl.MaSp == id);
+
+            
+            double diemTB = 0.0;
+            if (queryBinhLuan.Any()) 
+            {
+                
+                diemTB = queryBinhLuan.Average(bl => (double)bl.Diem);
+            }
+            else
+            {
+                diemTB = 5.0; 
+            }
+
+            
             int pageSize = 3;
-            //int pageNumber = page ?? 1;
             int pageNumber = Math.Max(page ?? 1, 1);
-            var binhLuan = _context.BinhLuans
+
+            var binhLuanPhanTrang = queryBinhLuan
                 .Include(bl => bl.MaNdNavigation)
                 .Include(bl => bl.MaSpNavigation)
-                .Where(bl => bl.MaSp == id )
                 .OrderByDescending(bl => bl.NgayTao)
-                .ToPagedList(pageNumber, pageSize);
+                .ToPagedList(pageNumber, pageSize); 
 
-            // Lấy sản phẩm liên quan (cùng danh mục, khác sản phẩm hiện tại)
+            
             var sanPhamLienQuan = _context.SanPhams
                 .Where(sp => sp.MaDm == sanPham.MaDm && sp.MaSp != sanPham.MaSp && sp.TrangThai == 1)
                 .OrderByDescending(sp => sp.NgayTao) // mới nhất
@@ -148,15 +172,14 @@ namespace DoAnWebBanDoChoi.Controllers
 
             var model = new ChiTietSanPhamVM
             {
-                
                 SanPham = sanPham,
-                BinhLuans = binhLuan,
-                SanPhamLienQuan = sanPhamLienQuan
+                BinhLuans = binhLuanPhanTrang, // BinhLuan đã được phân trang đúng
+                SanPhamLienQuan = sanPhamLienQuan,
+                DiemSaoTrungBinh = diemTB // Gán điểm đã tính
             };
 
             return View(model);
         }
-
         // Trong HomeController.cs
 
         // Thêm một thuộc tính cho ViewModel để lưu Tên Danh mục/Từ khóa
@@ -337,9 +360,12 @@ namespace DoAnWebBanDoChoi.Controllers
             // 2. GỌI HÀM SỬ DỤNG SERVICE
             // 🚩 XÓA BỘ LỌC CHÍNH (loai) NẾU CÓ BỘ LỌC PHỤ SELECTEDCATEGORIES 🚩
             int? loaiToFilter = loai;
-            if (selectedCategories != null && selectedCategories.Any())
+            if ((brands != null && brands.Any()) ||
+                (ages != null && ages.Any()) ||
+                (selectedCategories != null && selectedCategories.Any()))
             {
-                // Nếu người dùng đã chọn danh mục từ bộ lọc phụ (checkbox), thì bỏ qua loai chính.
+                // Nếu người dùng áp dụng BẤT KỲ bộ lọc phụ nào, ta ưu tiên bộ lọc đó 
+                // và bỏ qua bộ lọc danh mục chính từ URL.
                 loaiToFilter = null;
             }
 

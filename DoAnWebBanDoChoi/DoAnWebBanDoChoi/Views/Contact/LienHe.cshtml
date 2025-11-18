@@ -7,14 +7,14 @@
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10">
-            <!-- Card chính, đơn giản hơn -->
+            
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-primary text-white text-center">
                     <h1 class="h4 mb-0">Gửi Ý Kiến & Liên Hệ</h1>
                 </div>
                 <div class="card-body p-4 p-md-5">
 
-                    <!-- Message Alert (Hiển thị nếu gửi thành công) -->
+                    <!-- Message Alert  -->
                     @if (TempData["SuccessMessage"] != null)
                     {
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -24,33 +24,33 @@
                         </div>
                     }
 
-                    <!-- 1. THÔNG TIN CỬA HÀNG (Sử dụng list-group) -->
-                    <h2 class="h5 mb-3 text-primary"><i class="fas fa-info-circle me-2"></i> Thông tin liên hệ Shop</h2>
-                    <ul class="list-group list-group-flush mb-4 border rounded">
-                        <li class="list-group-item">
-                            <i class="fas fa-phone-alt me-2 text-danger"></i> Hotline: 0703337106
-                        </li>
-                        <li class="list-group-item">
-                            <i class="fas fa-envelope me-2 text-info"></i> Email: cskh@phuclong.com
-                        </li>
-                        <li class="list-group-item">
-                            <i class="fas fa-map-marker-alt me-2 text-success"></i> Địa chỉ: 65 Huỳnh Thúc Kháng, P.Bến Thành, TP.HCM.
-                        </li>
-                    </ul>
+        <hr />
 
-                    <!-- 2. FORM GỬI Ý KIẾN -->
+        <ul class="nav nav-tabs" id="phanHoiTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="chua-xem-tab" data-bs-toggle="tab" data-bs-target="#chua-xem" type="button" role="tab" aria-controls="chua-xem" aria-selected="true">
+                    Chưa Xem (@chuaXem.Count)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="da-xem-tab" data-bs-toggle="tab" data-bs-target="#da-xem" type="button" role="tab" aria-controls="da-xem" aria-selected="false">
+                    Đã Xem (@daXem.Count)
+                </button>
+            </li>
+        </ul>
+
+                   
                     <form asp-controller="Contact" asp-action="LienHe" method="post" class="needs-validation" novalidate>
 
-                        @Html.AntiForgeryToken() <!-- Đã thêm lại Anti-forgery Token -->
+                        @Html.AntiForgeryToken() 
                         <!-- HỌ VÀ TÊN -->
                         <div class="mb-3">
                             <label asp-for="HoTen" class="form-label">@Html.DisplayNameFor(model => model.HoTen) <span class="text-danger">*</span></label>
                             <input asp-for="HoTen" type="text" class="form-control" placeholder="Nhập họ và tên của bạn">
-                            <!-- Hiển thị lỗi validation -->
                             <span asp-validation-for="HoTen" class="text-danger small"></span>
                         </div>
 
-                        <!-- EMAIL & SỐ ĐIỆN THOẠI (Dùng grid của Bootstrap cho 2 cột) -->
+                        <!-- EMAIL & SỐ ĐIỆN THOẠI & TIÊU ĐỀ -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label asp-for="Email" class="form-label">@Html.DisplayNameFor(model => model.Email) <span class="text-danger">*</span></label>
@@ -62,6 +62,12 @@
                                 <label asp-for="SoDienThoai" class="form-label">@Html.DisplayNameFor(model => model.SoDienThoai) <span class="text-danger">*</span></label>
                                 <input asp-for="SoDienThoai" type="tel" class="form-control" placeholder="Nhập số điện thoại">
                                 <span asp-validation-for="SoDienThoai" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TieuDe" class="form-label">@Html.DisplayNameFor(model => model.TieuDe) <span class="text-danger">*</span></label>
+                                <input asp-for="TieuDe" type="tel" class="form-control" placeholder="Nhập tiêu đề">
+                                <span asp-validation-for="TieuDe" class="text-danger small"></span>
                             </div>
                         </div>
 

@@ -98,7 +98,7 @@
                                             }
                                             else
                                             {
-                                                <a href="javascript:;" onclick="xacNhanDangNhapYeuThich()">
+                                                <a href="javascript:;" onclick="xacNhanDangNhap()">
                                                     <i class="fa fa-heart"></i>
                                                 </a>
                                             }
@@ -173,8 +173,8 @@
             });
         });
         //sản phẩm yêu thích
-            function xacNhanDangNhapYeuThich() {
-            if (confirm("Bạn cần đăng nhập để yêu thích sản phẩm. Bạn có muốn đăng nhập ngay không?")) {
+            function xacNhanDangNhap() {
+            if (confirm("Bạn cần đăng nhập. Bạn có muốn đăng nhập ngay không?")) {
                 window.location.href = '/Account/Login';
             }
         }

@@ -22,14 +22,34 @@
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
                     <h3>@Model.SanPham.TenSanPham</h3>
+                   
+                    @* ✨ Hiển thị số sao  *@
                     <div class="product__details__rating">
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star"></i>
-                        <i class="fa fa-star-half-o"></i>
-                        <span>(18 reviews)</span>
+                        @{
+                            double diemTB = Model.DiemSaoTrungBinh;
+                            int soSaoDay = (int)Math.Floor(diemTB);
+                            bool coNuaSao = (diemTB - soSaoDay) >= 0.5;
+                            int soSaoTrong = 5 - soSaoDay - (coNuaSao ? 1 : 0);
+
+                            for (int i = 0; i < soSaoDay; i++)
+                            {
+                                <i class="fa fa-star"></i>
+                            }
+                            if (coNuaSao)
+                            {
+                                <i class="fa fa-star-half-o"></i>
+                            }
+
+                            for (int i = 0; i < soSaoTrong; i++)
+                            {
+                                <i class="fa fa-star-o" style="color: #ccc;"></i>
+                            }
+                            string reviewText = Model.BinhLuans.TotalItemCount == 0 ? "Chưa có đánh giá" : $"({Model.BinhLuans.TotalItemCount} Đánh giá)";
+                            <span class="ml-2">@diemTB.ToString("0.0") / 5</span>
+                            <span>@reviewText</span>
+                        }
                     </div>
+                    @* Kết thúc phần Hiển thị số sao *@
                     <div class="product__details__price">@Model.SanPham.DonGia.ToString("N0") đ</div>
                     @* <pre> @Model.SanPham.MoTa</pre> *@
                        
@@ -47,15 +67,16 @@
  
                     @if (daDangNhap)
                     {
-                        <button onclick="themChiTietGio(@Model.SanPham.MaSp)" class="primary-btn">ADD TO CART</button>
+                        <button onclick="themChiTietGio(@Model.SanPham.MaSp)" class="primary-btn">Thêm vào giỏ hàng</button>
                     }
                     else
                     {
 
-                        <button onclick="xacNhanDangNhap()" class="primary-btn">ADD TO CART</button>
+                        <button onclick="xacNhanDangNhap()" class="primary-btn">Thêm vào giỏ hàng</button>
 
                     } 
-                    <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                
+
                     <ul>
                         <li><b>Thương hiệu</b> <span>@Model.SanPham.MaThNavigation.TenThuongHieu</span></li>
 
@@ -72,10 +93,15 @@
                     </ul>
                 </div>
             </div>
+
+            <div style="white-space: pre-wrap; font-size: 1.2em;">
+                <h3>Mô tả:</h3>  @Model.SanPham.MoTa
+            </div>
+
             <div class="product-details-container">
                 <h2 class="product-details-heading">Chi Tiết Sản Phẩm</h2>
 
-                <table class="table table-bordered product-details-table">
+                <table class="table table-bordered product-details-table" style="font-size: 1.2em;">
                     <tbody>
                         <tr>
                             <td class="detail-label fw-bold" style="width: 200px;">Tên sản phẩm</td>
@@ -105,12 +131,10 @@
                     </tbody>
                 </table>
             </div>
-            <div style="white-space: pre-wrap;">
-                <span class="fw-bold">Mô tả:</span> @Model.SanPham.MoTa
-            </div>
+            
             <div class="col-lg-12">
                 <div class="bg-light p-3 rounded mb-4 mt-4">
-                    <h5 class="fw-bold text-dark text-center">— Bình luận —</h5>
+                    <h5 class="fw-bold text-dark text-center">— Đánh giá sản phẩm —</h5>
                     <!-- Bình luận 1 -->
                     @foreach (var bl in Model.BinhLuans)
                     {
@@ -209,7 +233,7 @@
                                     }
                                     else
                                     {
-                                        <a href="javascript:;" onclick="xacNhanDangNhapYeuThich()">
+                                        <a href="javascript:;" onclick="xacNhanDangNhap()">
                                             <i class="fa fa-heart"></i>
                                         </a>
                                     }

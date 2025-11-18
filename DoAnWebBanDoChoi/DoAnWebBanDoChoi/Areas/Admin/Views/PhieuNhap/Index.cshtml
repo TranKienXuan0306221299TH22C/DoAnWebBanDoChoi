@@ -47,7 +47,7 @@
                         <td>
                             <a class="btn btn-sm btn-info" asp-action="ChiTiet" asp-route-id="@item.MaPn">Chi tiết</a>
 
-
+                            
                             @if (item.TrangThai == 0 && (item.ChiTietPhieuNhaps == null || !item.ChiTietPhieuNhaps.Any()))
                             {
                                 <form asp-action="Delete"

@@ -139,11 +139,13 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<ChinhSach>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("ChinhSach");
+            entity.HasKey(e => e.MaCs);
 
-            entity.Property(e => e.MaCs).HasColumnName("MaCS");
+            entity.ToTable("ChinhSach");
+
+            entity.Property(e => e.MaCs)
+                .ValueGeneratedNever()
+                .HasColumnName("MaCS");
             entity.Property(e => e.TieuDe).HasMaxLength(50);
         });
 
@@ -248,6 +250,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.HoTen).HasMaxLength(100);
             entity.Property(e => e.SoDienThoai).HasMaxLength(15);
             entity.Property(e => e.ThoiGianGui).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.TieuDe).HasMaxLength(100);
             entity.Property(e => e.TrangThai).HasDefaultValue(false);
         });
 

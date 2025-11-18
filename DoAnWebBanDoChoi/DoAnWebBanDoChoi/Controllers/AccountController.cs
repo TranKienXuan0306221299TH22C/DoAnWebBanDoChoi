@@ -62,6 +62,7 @@ namespace DoAnWebBanDoChoi.Controllers
         }
 
         // POST: /Account/Login
+        // POST: /Account/Login
         [HttpPost]
         public IActionResult Login(LoginVM model)
         {
@@ -69,15 +70,24 @@ namespace DoAnWebBanDoChoi.Controllers
             {
                 var hashedPassword = HashHelper.HashPassword(model.MatKhau);
 
+                // BƯỚC 1: Tìm người dùng chỉ dựa trên Tên/Email và Mật khẩu (KHÔNG kiểm tra HieuLuc ngay)
                 var user = _context.NguoiDungs
                     .FirstOrDefault(x =>
                         (x.TenDangNhap == model.TenDangNhap || x.Email == model.TenDangNhap)
-                        && x.MatKhau == hashedPassword
-                        && x.HieuLuc);
+                        && x.MatKhau == hashedPassword);
 
                 if (user != null)
                 {
-                    HttpContext.Session.Set("MaNd", user.MaNd);             
+                    // BƯỚC 2: KIỂM TRA TRẠNG THÁI KHÓA (HieuLuc)
+                    if (user.HieuLuc == false)
+                    {
+                        // Tài khoản bị khóa, hiển thị thông báo CỤ THỂ
+                        ModelState.AddModelError("", "Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ bộ phận hỗ trợ.");
+                        return View(model);
+                    }
+
+                    // Nếu HieuLuc == true: ĐĂNG NHẬP THÀNH CÔNG
+                    HttpContext.Session.Set("MaNd", user.MaNd);
                     HttpContext.Session.SetString("DangNhap", "true");
                     HttpContext.Session.SetString("VaiTro", user.VaiTro);
                     HttpContext.Session.SetString("HoTen", user.TenDangNhap);
@@ -92,13 +102,12 @@ namespace DoAnWebBanDoChoi.Controllers
                     }
                 }
 
-                // Nếu không có user → báo lỗi
+                // Nếu không tìm thấy user ở BƯỚC 1 (Sai tên đăng nhập/email hoặc mật khẩu) → báo lỗi chung
                 ModelState.AddModelError("", "Sai tên đăng nhập hoặc mật khẩu.");
             }
 
             return View(model);
         }
-
 
         public IActionResult Logout()
         {

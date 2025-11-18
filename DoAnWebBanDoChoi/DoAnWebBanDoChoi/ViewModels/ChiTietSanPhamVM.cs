@@ -9,5 +9,6 @@ namespace DoAnWebBanDoChoi.ViewModels
         
         public IPagedList<BinhLuan> BinhLuans { get; set; }
         public List<SanPham> SanPhamLienQuan { get; set; }
+        public double DiemSaoTrungBinh { get; set; }
     }
 }
