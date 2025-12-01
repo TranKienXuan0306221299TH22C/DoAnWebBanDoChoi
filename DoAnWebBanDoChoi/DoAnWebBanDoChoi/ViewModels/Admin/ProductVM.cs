@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DoAnWebBanDoChoi.ViewModels
+namespace DoAnWebBanDoChoi.ViewModels.Admin
 {
     public class ProductVM
     {
@@ -26,6 +26,7 @@ namespace DoAnWebBanDoChoi.ViewModels
         public string? TrongLuong { get; set; }
         [Display(Name = "Giá bán")]
         [Required(ErrorMessage = "Vui lòng nhập giá bán")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Giá bán phải lớn hơn 0.")]
         public decimal DonGia { get; set; }
 
         [Display(Name = "Ảnh sản phẩm")]

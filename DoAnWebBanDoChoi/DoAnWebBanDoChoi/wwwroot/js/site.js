@@ -30,14 +30,42 @@ function submitThemGio(maSp) {
         },
         success: function (res) {
             if (res.success) {
-                capNhatSoLuongGioHang(); // ✅ Gọi lại để cập nhật
-                alert('Đã thêm vào giỏ hàng!');
+                // ✅ THÀNH CÔNG: Dùng SweetAlert2 với cấu hình Tự Biến Mất
+                capNhatSoLuongGioHang(); // Gọi lại để cập nhật số lượng
+
+                const Toast = Swal.mixin({
+                    toast: true, // Hiển thị dưới dạng toast (thông báo nhỏ)
+                    position: 'top-end', // Vị trí ở góc trên bên phải
+                    showConfirmButton: false, // Ẩn nút OK
+                    timer: 3000, // Tự động đóng sau 3 giây (3000ms)
+                    timerProgressBar: true, // Hiển thị thanh tiến trình
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
+
+                Toast.fire({
+                    icon: 'success', // Biểu tượng thành công (tick xanh)
+                    title: 'Đã thêm sản phẩm vào giỏ hàng!' // Nội dung thông báo
+                });
+
             } else {
-                alert('Lỗi: ' + res.message);
+                // ❌ LỖI LOGIC: Dùng SweetAlert2 dạng alert thông thường
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Thêm thất bại',
+                    text: 'Lỗi: ' + res.message,
+                });
             }
         },
         error: function () {
-            alert('Có lỗi xảy ra khi thêm sản phẩm!');
+            // 🛑 LỖI HỆ THỐNG/AJAX: Dùng SweetAlert2 dạng alert thông thường
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi hệ thống',
+                text: 'Có lỗi xảy ra khi gửi yêu cầu thêm sản phẩm.',
+            });
         }
     });
 }

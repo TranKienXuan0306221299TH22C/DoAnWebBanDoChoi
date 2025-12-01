@@ -17,7 +17,7 @@ namespace DoAnWebBanDoChoi.Controllers
         public HomeController(AppDbContext context, IFilterService filterService)
         {
             _context = context;
-            _filterService = filterService; // Gán
+            _filterService = filterService; 
         }
         [Route("/404")]
         public IActionResult Loi()
@@ -25,63 +25,7 @@ namespace DoAnWebBanDoChoi.Controllers
             return View();
         }
 
-        //public IActionResult Index(int? loai, string? sort, int page = 1)
-        //{
-        //    var query = _context.SanPhams
-        //        .Include(sp => sp.MaDmNavigation)
-        //        .Where(sp => !loai.HasValue || sp.MaDm == loai.Value);
-        //        //.OrderByDescending(sp => sp.MaSp);
-        //    switch (sort)
-        //    {
-        //        case "new":
-        //            query = query.OrderByDescending(sp => sp.NgayTao);
-        //            break;
-
-        //        case "price-asc":
-        //            query = query.OrderBy(sp => sp.DonGia);
-        //            break;
-
-        //        case "price-desc":
-        //            query = query.OrderByDescending(sp => sp.DonGia);
-        //            break;
-
-        //        case "hot":
-        //            // Giả sử bán chạy dựa vào số lượng bán (phải tính từ ChiTietDonHang nếu có)
-        //            query = query.OrderByDescending(sp => sp.ChiTietDonHangs.Count);
-        //            break;
-        //        case "favorite":
-        //            query = query
-        //                .Where(sp => sp.SanPhamYeuThiches.Any()) // chỉ lấy sản phẩm có yêu thích
-        //                .OrderByDescending(sp => sp.SanPhamYeuThiches.Count); // sắp theo số lượt
-        //            break;
-        //        case "all":
-        //            // không sắp xếp gì cả — cứ lấy mặc định từ CSDL
-        //            break;
-        //        default:
-        //            query = query.OrderBy(sp => sp.MaSp);  // Mặc định
-        //            break;
-        //    }
-        //    int pageSize = 6;
-        //    var danhSach = query.ToPagedList(page, pageSize);
-
-        //    var sanPhamMoi = _context.SanPhams
-        //        .OrderByDescending(sp => sp.NgayTao)
-        //        .Take(6)
-        //        .ToList();
-
-        //    var model = new TrangChuVM
-        //    {
-        //        DanhSachSanPham = danhSach,
-        //        SanPhamMoi = sanPhamMoi
-        //    };
-
-        //    return View(model);
-        //}
-        // Trong HomeController.cs
-
-        // 1. Chỉ giữ lại logic cơ bản cho Trang Chủ
-        // Loai bỏ tham số 'loai' và 'sort'
-        // Trong HomeController.cs
+        
         public IActionResult Index(int page = 1) // Chỉ cần tham số phân trang 'page'
         {
             // Lấy danh sách sản phẩm MỚI nhất (dùng cho Carousel, giữ nguyên)
@@ -114,11 +58,7 @@ namespace DoAnWebBanDoChoi.Controllers
 
             return View(model);
         }
-        // Trong HomeController.cs, sửa Action Search
-
-        // Thay vì return View("Index", model);
-
-
+  
 
 
         [Route("san-pham/{slug}-{id}")]
@@ -180,146 +120,67 @@ namespace DoAnWebBanDoChoi.Controllers
 
             return View(model);
         }
-        // Trong HomeController.cs
-
-        // Thêm một thuộc tính cho ViewModel để lưu Tên Danh mục/Từ khóa
-        // Trong HomeController.cs
-
-        // Tùy chọn: Sử dụng routing thân thiện hơn (vd: /danh-muc/2)
-
-        //public IActionResult Category(int? loai, string? sort, int page = 1)
-        //{
-        //    // 1. Khởi tạo biến query ngay từ đầu
-        //    // Bắt đầu bằng cách lấy tất cả sản phẩm
-        //    IQueryable<SanPham> query = _context.SanPhams
-        //                                .Include(sp => sp.MaDmNavigation)
-        //                                .Where(sp => sp.TrangThai == 1); // Chỉ lấy sản phẩm đang hoạt động
-
-        //    // 2. Logic Lọc theo Danh mục (loai)
-        //    string tieuDe = "Tất cả sản phẩm";
-        //    if (loai.HasValue)
-        //    {
-        //        var dm = _context.DanhMucs.SingleOrDefault(d => d.MaDm == loai.Value);
-        //        if (dm != null)
-        //        {
-        //            tieuDe = dm.TenDanhMuc;
-        //        }
-
-        //        // Thêm điều kiện lọc vào query nếu có 'loai'
-        //        query = query.Where(sp => sp.MaDm == loai.Value);
-        //    }
-
-        //    // Lưu lại thông tin để dùng trong View (tiêu đề, phân trang)
-        //    ViewData["CurrentSort"] = sort;
-        //    ViewData["loai"] = loai;
-
-        //    // 3. Logic Sắp xếp (sort)
-        //    switch (sort)
-        //    {
-        //        case "new":
-        //            query = query.OrderByDescending(sp => sp.NgayTao);
-        //            break;
-        //        case "price-asc":
-        //            query = query.OrderBy(sp => sp.DonGia);
-        //            break;
-        //        case "price-desc":
-        //            query = query.OrderByDescending(sp => sp.DonGia);
-        //            break;
-        //        case "hot":
-        //            // Nếu bạn có cột bán chạy (SoldCount) trong DB, dùng nó
-        //            // Nếu không, có thể sắp xếp theo lượt mua hàng hoặc giữ nguyên
-        //            query = query.OrderByDescending(sp => sp.ChiTietDonHangs.Count());
-        //            break;
-        //        default:
-        //            query = query.OrderByDescending(sp => sp.MaSp); // Mặc định
-        //            break;
-        //    }
-
-        //    // 4. Áp dụng Phân Trang và tạo Model
-        //    int pageSize = 6;
-        //    // Bây giờ 'query' đã được khai báo và gán giá trị, nên .ToPagedList() sẽ hoạt động
-        //    var danhSach = query.ToPagedList(page, pageSize);
-
-        //    var model = new TrangChuVM
-        //    {
-        //        DanhSachSanPham = danhSach,
-        //        Keyword = tieuDe // Dùng Keyword để hiển thị Tiêu đề cho trang Danh mục
-        //    };
-
-        //    // 5. Trả về View Search (View chung)
-        //    return View("Search", model);
-        //}
-        // Trong HomeController.cs
-
-        //public IActionResult Search(string keyword, int page = 1, int pageSize = 8)
-        //{
-        //    if (string.IsNullOrWhiteSpace(keyword))
-        //    {
-        //        // Chuyển hướng về trang Category (nếu không có từ khóa thì coi như xem tất cả)
-        //        return RedirectToAction("Category");
-        //    }
-
-        //    // Logic tìm kiếm (giữ nguyên)
-        //    var keywordUnsign = StringHelper.ToUnsign(keyword).ToLower();
-        //    var keywordSigned = keyword.ToLower();
-
-        //    var query = _context.SanPhams
-        //        .Where(sp => sp.TrangThai == 1)
-        //        .AsEnumerable()
-        //        .Where(sp =>
-        //            sp.TenSanPham.ToLower().Contains(keywordSigned) ||
-        //            StringHelper.ToUnsign(sp.TenSanPham).ToLower().Contains(keywordUnsign)
-        //        )
-        //        .OrderByDescending(sp => sp.MaSp);
-
-        //    var danhSach = query.ToPagedList(page, pageSize);
-
-        //    // Tạo ViewModel đơn giản
-        //    var model = new DanhSachSanPhamVM // Dùng lại ViewModel này
-        //    {
-        //        DanhSachSanPham = danhSach,
-        //        Keyword = keyword // Thêm Keyword để hiển thị trên View
-        //    };
-
-        //    // 🚩 ĐIỂM QUAN TRỌNG: Trả về View "Search" (View mới bạn sẽ tạo)
-        //    // Không dùng View("Index", model) nữa
-        //    return View("Search", model);
-        //}
-        // Trong HomeController.cs
+       
         public IActionResult Search(
-    string keyword,
-    int page = 1,
-    int pageSize = 8,
-    string? sort = null,
-    [FromQuery] List<int>? brands = null,
-    [FromQuery] List<string>? ages = null,
-    [FromQuery] List<int>? selectedCategories = null) // Nhận tham số
+            string keyword,
+            int page = 1,
+            int pageSize = 8, // Đã đặt lại về 8
+            string? sort = null,
+            [FromQuery] List<int>? brands = null,
+            [FromQuery] List<string>? ages = null,
+            [FromQuery] List<int>? selectedCategories = null)
         {
-            if (string.IsNullOrWhiteSpace(keyword))
+            if (string.IsNullOrWhiteSpace(keyword) &&
+                (brands == null || !brands.Any()) &&
+                (ages == null || !ages.Any()) &&
+                (selectedCategories == null || !selectedCategories.Any()))
             {
+                // Nếu không có cả keyword và bộ lọc, chuyển về trang Category
                 return RedirectToAction("Category");
             }
 
             IQueryable<SanPham> baseQuery = _context.SanPhams
-                                             .Include(sp => sp.MaDmNavigation)
-                                             .Include(sp => sp.MaThNavigation)
-                                             .Where(sp => sp.TrangThai == 1);
+                                                    .Include(sp => sp.MaDmNavigation)
+                                                    .Include(sp => sp.MaThNavigation)
+                                                    .Where(sp => sp.TrangThai == 1);
 
-            var query = _filterService.GetFilteredProducts(baseQuery, null, keyword, brands, ages, selectedCategories, sort);
+            // 1. Áp dụng LỌC THEO TỪ KHÓA (keyword) NGAY TRONG CONTROLLER
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                var keywordUnsign = StringHelper.ToUnsign(keyword).ToLower();
+                var keywordSigned = keyword.ToLower();
 
+                // Load TẤT CẢ sản phẩm đủ điều kiện (Trạng thái = 1) vào bộ nhớ
+                var allProducts = baseQuery.ToList();
+
+                // Áp dụng lọc từ khóa trên bộ nhớ
+                baseQuery = allProducts.Where(sp =>
+                                    (sp.TenSanPham != null && sp.TenSanPham.ToLower().Contains(keywordSigned)) ||
+                                    (sp.TenSanPham != null && StringHelper.ToUnsign(sp.TenSanPham).ToLower().Contains(keywordUnsign))
+                                ).AsQueryable(); // Trả lại thành IQueryable
+            }
+
+            // 2. Chuyển kết quả baseQuery đã lọc theo Từ khóa cho Service
+            // Service chỉ áp dụng Brand, Age, Category đa chọn và Sort (loai = null)
+            var query = _filterService.GetFilteredProducts(
+                baseQuery,
+                null, // loaiToFilter LUÔN LUÔN là null khi đã có keyword (không giới hạn phạm vi search)
+                brands,
+                ages,
+                selectedCategories,
+                sort
+            );
+
+           
             var danhSach = query.ToPagedList(page, pageSize);
 
-            var danhSachDoTuoiDocNhat = _context.SanPhams
-                                                .Select(sp => sp.DoTuoiPhuHop)
-                                                .Where(dt => !string.IsNullOrEmpty(dt))
-                                                .Distinct()
-                                                .ToList();
-
+            // 3. Lấy dữ liệu cho các tùy chọn bộ lọc (Giữ nguyên)
+            var danhSachDoTuoiDocNhat = _context.SanPhams.Select(sp => sp.DoTuoiPhuHop).Where(dt => !string.IsNullOrEmpty(dt)).Distinct().ToList();
             var danhSachThuongHieu = _context.ThuongHieus.ToList();
             var danhSachDanhMuc = _context.DanhMucs.ToList();
 
 
-            string tieuDe = $"Kết quả tìm kiếm cho: {keyword}";
+            string tieuDe = string.IsNullOrEmpty(keyword) ? "Tất cả sản phẩm" : $"Kết quả tìm kiếm cho: {keyword}";
 
             var model = new DanhSachSanPhamVM
             {
@@ -327,128 +188,82 @@ namespace DoAnWebBanDoChoi.Controllers
                 Keyword = tieuDe,
                 DanhSachThuongHieu = danhSachThuongHieu,
                 DanhSachDanhMuc = danhSachDanhMuc,
-                DanhSachDoTuoi = danhSachDoTuoiDocNhat, // SỬ DỤNG ĐÚNG TÊN THUỘC TÍNH BẠN ĐÃ CUNG CẤP
+                DanhSachDoTuoi = danhSachDoTuoiDocNhat,
 
                 SelectedBrands = brands,
                 SelectedAges = ages,
-                SelectedCategories = selectedCategories // 🚩 ĐÃ THÊM THAM SỐ VÀO MODEL 🚩
+                SelectedCategories = selectedCategories
             };
 
             ViewData["CurrentSort"] = sort;
 
             return View("Search", model);
         }
-
-        // -----------------------------------------------------------------------
-        // --- ACTION CATEGORY (ĐÃ SỬA TÊN THUỘC TÍNH) ---
-        // -----------------------------------------------------------------------
+       
         [Route("danh-muc/{loai:int?}")]
         public IActionResult Category(
             int? loai,
             string? sort,
             int page = 1,
+            int pageSize = 8, // Đã đặt lại về 8
             List<int>? brands = null,
             List<string>? ages = null,
             [FromQuery] List<int>? selectedCategories = null)
         {
-            // 1. Khởi tạo Query cơ bản
+            // 1. Khởi tạo Query cơ bản (Không lọc theo loai ở đây nữa)
             IQueryable<SanPham> baseQuery = _context.SanPhams
-                                             .Include(sp => sp.MaDmNavigation)
-                                             .Include(sp => sp.MaThNavigation)
-                                             .Where(sp => sp.TrangThai == 1);
+                                                    .Include(sp => sp.MaDmNavigation)
+                                                    .Include(sp => sp.MaThNavigation)
+                                                    .Where(sp => sp.TrangThai == 1);
 
             // 2. GỌI HÀM SỬ DỤNG SERVICE
-            // 🚩 XÓA BỘ LỌC CHÍNH (loai) NẾU CÓ BỘ LỌC PHỤ SELECTEDCATEGORIES 🚩
+            // loaiToFilter = loai (Chỉ để Service biết loai nào là loai chính nếu không có bộ lọc phụ)
             int? loaiToFilter = loai;
-            if ((brands != null && brands.Any()) ||
-                (ages != null && ages.Any()) ||
-                (selectedCategories != null && selectedCategories.Any()))
-            {
-                // Nếu người dùng áp dụng BẤT KỲ bộ lọc phụ nào, ta ưu tiên bộ lọc đó 
-                // và bỏ qua bộ lọc danh mục chính từ URL.
-                loaiToFilter = null;
-            }
 
+            // 🚩 ĐÃ SỬA: Lỗi CS1501 được khắc phục 🚩
+            var query = _filterService.GetFilteredProducts(
+                baseQuery,
+                loaiToFilter, // Truyền loai chính vào để Service quyết định lọc hay không
+                brands,
+                ages,
+                selectedCategories,
+                sort
+            );
 
-            var query = _filterService.GetFilteredProducts(baseQuery, loaiToFilter, null, brands, ages, selectedCategories, sort);
-            //
-            // 3. Áp dụng Phân Trang
-            int pageSize = 6;
             var danhSach = query.ToPagedList(page, pageSize);
 
-            // 4. Lấy dữ liệu cho các tùy chọn bộ lọc
-            var danhSachDoTuoiDocNhat = _context.SanPhams
-                                                .Select(sp => sp.DoTuoiPhuHop)
-                                                .Where(dt => !string.IsNullOrEmpty(dt))
-                                                .Distinct()
-                                                .ToList();
-
+            // 3. Lấy dữ liệu cho các tùy chọn bộ lọc (Giữ nguyên)
+            var danhSachDoTuoiDocNhat = _context.SanPhams.Select(sp => sp.DoTuoiPhuHop).Where(dt => !string.IsNullOrEmpty(dt)).Distinct().ToList();
             var danhSachThuongHieu = _context.ThuongHieus.ToList();
             var danhSachDanhMuc = _context.DanhMucs.ToList();
 
-            // 5. Xác định Tiêu đề
+            // 4. Xác định Tiêu đề (Giữ nguyên)
             string tieuDe = "Tất cả sản phẩm";
             if (loai.HasValue)
             {
                 var dm = _context.DanhMucs.SingleOrDefault(d => d.MaDm == loai.Value);
                 if (dm != null)
                 {
-                    tieuDe = dm.TenDanhMuc; // SỬ DỤNG ĐÚNG TÊN THUỘC TÍNH BẠN ĐÃ CUNG CẤP
+                    tieuDe = dm.TenDanhMuc;
                 }
             }
 
-            // 6. KHAI BÁO VÀ TẠO MODEL
             var model = new DanhSachSanPhamVM
             {
                 DanhSachSanPham = danhSach,
-                Keyword = tieuDe,
-
+                Keyword = tieuDe, 
                 DanhSachThuongHieu = danhSachThuongHieu,
                 DanhSachDanhMuc = danhSachDanhMuc,
-                DanhSachDoTuoi = danhSachDoTuoiDocNhat, // SỬ DỤNG ĐÚNG TÊN THUỘC TÍNH BẠN ĐÃ CUNG CẤP
-
+                DanhSachDoTuoi = danhSachDoTuoiDocNhat,
                 SelectedBrands = brands,
                 SelectedAges = ages,
-                SelectedCategories = selectedCategories // ĐÃ THÊM THAM SỐ VÀO MODEL
+                SelectedCategories = selectedCategories
             };
 
             ViewData["CurrentSort"] = sort;
             ViewData["loai"] = loai;
 
             return View("Search", model);
-        }
-        public IActionResult Search2(string keyword, int page = 1, int pageSize = 8)
-        {
-            if (string.IsNullOrWhiteSpace(keyword))
-            {
-                return RedirectToAction("Index");
-            }
-
-            var keywordUnsign = StringHelper.ToUnsign(keyword).ToLower();
-            var keywordSigned = keyword.ToLower();
-
-            var query = _context.SanPhams
-                .Where(sp => sp.TrangThai == 1)
-                .AsEnumerable()
-                .Where(sp =>
-                    sp.TenSanPham.ToLower().Contains(keywordSigned) ||
-                    StringHelper.ToUnsign(sp.TenSanPham).ToLower().Contains(keywordUnsign)
-                )
-                .OrderByDescending(sp => sp.MaSp);
-
-            var danhSach = query.ToPagedList(page, pageSize);
-
-            var sanPhamMoi = _context.SanPhams
-                .OrderByDescending(sp => sp.NgayTao)
-                .Take(6)
-                .ToList();
-
-            var model = new TrangChuVM
-            {
-                DanhSachSanPham = danhSach,
-                SanPhamMoi = sanPhamMoi
-            };
-            return View("Index", model);
         }
     }
 }

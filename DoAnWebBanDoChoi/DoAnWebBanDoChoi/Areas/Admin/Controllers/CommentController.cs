@@ -1,7 +1,7 @@
 ﻿using DoAnWebBanDoChoi.Filters;
 using DoAnWebBanDoChoi.Helpers;
 using DoAnWebBanDoChoi.Models;
-using DoAnWebBanDoChoi.ViewModels;
+using DoAnWebBanDoChoi.ViewModels.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

@@ -13,7 +13,7 @@
                     <div class="header__top__left">
                         <ul>
                             <li><i class="fa fa-envelope"></i> hello@toyland.com</li>
-                            <li>Free Shipp cho đơn hàng lớn hơn 200 ngàn</li>
+                            <li>Free Shipp cho đơn hàng lớn hơn 300 ngàn</li>
                         </ul>
                     </div>
                 </div>
@@ -94,16 +94,16 @@
                 <div class="header__cart">
                     <ul>
                         <li>
-                            <a href="javascript:void(0);" onclick="xacNhanDangNhap();">
+                            <a href="javascript:void(0);" onclick="kiemTraDangNhapYeuThich();">
                                 <i class="fa fa-heart"></i>
                                 <span id="soLuongYeuThich" class="badge badge-danger">0</span>
                             </a>
                         </li>
                         <li>
-                            <a href="javascript:void(0);" onclick="xacNhanDangNhap();">
-                            <i class="fa fa-shopping-bag"></i>  <span id="gioHangSoLuong" class="badge badge-danger">0</span>
+                            <a href="javascript:void(0);" onclick="kiemTraDangNhap();">
+                                <i class="fa fa-shopping-bag"></i>  <span id="gioHangSoLuong" class="badge badge-danger">0</span>
                             </a>
-                            </li>
+                        </li>
                     </ul>
                     <div class="header__cart__price">
 
@@ -126,23 +126,45 @@
                 </div>
             </div>
             <div class="col-lg-9">
-                <div class="hero__search">
-                    <div class="hero__search__form">
-                        @* <form action="/Home/Search" method="get">
-                            <input type="text" name="keyword" placeholder="Bạn muốn tìm gì?" value="@Context.Request.Query["keyword"]">
-                            <button type="submit" class="site-btn">TÌM KIẾM</button>
-                        </form> *@
-                        <form id="searchHeaderForm" asp-controller="Home" asp-action="Search" method="get">
-                            <input type="text" name="keyword" placeholder="Bạn muốn tìm gì?" value="@Context.Request.Query["keyword"]">
-                            <button type="submit" class="site-btn">TÌM KIẾM</button>
-                        </form>
-                    </div>
+                
+                <div class="hero__search__form">
+                    <form id="searchHeaderForm" asp-controller="Home" asp-action="Search" method="get">
+                        <input type="text" name="keyword" placeholder="Bạn muốn tìm gì?" value="@Context.Request.Query["keyword"]">
+                        <button type="submit" class="site-btn">TÌM KIẾM</button>
+                    </form>
                 </div>
-         
             </div>
         </div>
     </div>
 </section>
 <!-- Hero Section End -->
+<script>
+    function kiemTraDangNhap() {
+        fetch('/Cart/KiemTraDangNhap')
+            .then(res => res.json())
+            .then(data => {
+                if (data.daDangNhap) {
+                    // Nếu đã đăng nhập thì chuyển tới giỏ hàng
+                    window.location.href = '/Cart/ChiTietGioHang';
+                } else {
+                    // Nếu chưa → thông báo xác nhận
+                    if (confirm("Bạn cần đăng nhập để xem giỏ hàng. Bạn có muốn đăng nhập ngay không?")) {
+                        window.location.href = '/Account/Login';
+                    }
+                }
+            });
+    }
+        function kiemTraDangNhapYeuThich() {
+        $.get('/Cart/KiemTraDangNhap', function (res) {
+            if (res.daDangNhap) {
+                window.location.href = '/Favorite/DanhSachYeuThich';
+            } else {
+                if (confirm("Bạn cần đăng nhập để xem sản phẩm yêu thích. Bạn có muốn đăng nhập ngay không?")) {
+                    window.location.href = '/Account/Login';
+                }
+            }
+        });
+    }
+</script>
 
 

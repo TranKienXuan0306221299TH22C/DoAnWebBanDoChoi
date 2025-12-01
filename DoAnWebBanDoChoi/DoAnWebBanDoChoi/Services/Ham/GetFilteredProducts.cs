@@ -12,7 +12,7 @@ namespace DoAnWebBanDoChoi.Services.Ham // Namespace của bạn
         IQueryable<SanPham> GetFilteredProducts(
             IQueryable<SanPham> query,
             int? loai,
-            string? keyword,
+            
             List<int>? brands,
             List<string>? ages,
             List<int>? selectedCategories,
@@ -20,56 +20,45 @@ namespace DoAnWebBanDoChoi.Services.Ham // Namespace của bạn
     }
     public class FilterService : IFilterService
     {
-        // 🚩 Phương thức GetFilteredProducts PHẢI NẰM TRONG CLASS NÀY 🚩
         public IQueryable<SanPham> GetFilteredProducts(
             IQueryable<SanPham> query,
             int? loai,
-            string? keyword,
+            // ĐÃ BỎ: string? keyword,
             List<int>? brands,
             List<string>? ages,
             List<int>? selectedCategories,
             string? sort)
         {
-            // 1. Lọc theo DANH MỤC (loai) - Chỉ áp dụng nếu có loai
-            if (loai.HasValue)
+            // 1. Lọc theo DANH MỤC (loai) - CHỈ LỌC NẾU KHÔNG CÓ BỘ LỌC PHỤ
+            if (loai.HasValue &&
+                (brands == null || !brands.Any()) &&
+                (ages == null || !ages.Any()) &&
+                (selectedCategories == null || !selectedCategories.Any()))
             {
                 query = query.Where(sp => sp.MaDm == loai.Value);
             }
 
-            // 2. Lọc theo TỪ KHÓA (keyword) - Chỉ áp dụng nếu có keyword
-            if (!string.IsNullOrEmpty(keyword))
-            {
-                var keywordUnsign = StringHelper.ToUnsign(keyword).ToLower();
-                var keywordSigned = keyword.ToLower();
+            // ❌ ĐÃ XÓA TOÀN BỘ LOGIC LỌC THEO TỪ KHÓA ❌
 
-                // 🚩 THỰC HIỆN LỌC TRÊN CLIENT (Sử dụng ToList() an toàn hơn khi có hàm không dấu) 🚩
-                var list = query.ToList();
-
-                // Áp dụng lọc trên bộ nhớ (client-side)
-                query = list.Where(sp =>
-                             // Lọc theo ký tự có dấu
-                             (sp.TenSanPham != null && sp.TenSanPham.ToLower().Contains(keywordSigned)) ||
-                             // Lọc theo ký tự không dấu
-                             (sp.TenSanPham != null && StringHelper.ToUnsign(sp.TenSanPham).ToLower().Contains(keywordUnsign))
-                         ).AsQueryable(); // Chuyển lại thành IQueryable
-            }
-
-            // 3. Lọc theo THƯƠNG HIỆU (brands)
+            // 2. Lọc theo THƯƠNG HIỆU (brands)
             if (brands != null && brands.Any())
             {
                 query = query.Where(sp => brands.Contains(sp.MaTh));
             }
 
-            // 4. Lọc theo ĐỘ TUỔI (ages)
+            // 3. Lọc theo ĐỘ TUỔI (ages)
             if (ages != null && ages.Any())
             {
                 query = query.Where(sp => sp.DoTuoiPhuHop != null && ages.Contains(sp.DoTuoiPhuHop));
             }
+
+            // 4. Lọc theo DANH MỤC đa chọn (selectedCategories)
             if (selectedCategories != null && selectedCategories.Any())
             {
                 query = query.Where(sp => selectedCategories.Contains(sp.MaDm));
             }
-            // 5. Logic Sắp xếp (sort)
+
+            // 5. Logic Sắp xếp (sort) - GIỮ NGUYÊN
             switch (sort)
             {
                 case "new":

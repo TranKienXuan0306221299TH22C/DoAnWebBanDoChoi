@@ -89,7 +89,7 @@ namespace DoAnWebBanDoChoi.Controllers
             decimal phiShip = _context.PhiVanChuyens
                 .FirstOrDefault(p => p.TenTinh == model.TinhThanh && p.TenHuyen == model.QuanHuyen)?.PhiShip ?? 20000;
 
-            if (tongTien > 400_000)
+            if (tongTien > 300_000)
                 phiShip = 0;
 
             decimal tongCuoi = tongTien + phiShip;
@@ -179,7 +179,7 @@ namespace DoAnWebBanDoChoi.Controllers
             decimal phiShip = _context.PhiVanChuyens
                 .FirstOrDefault(p => p.TenTinh == tinh && p.TenHuyen == huyen)?.PhiShip ?? 20000;
 
-            if (tongTien > 400000)
+            if (tongTien > 300000)
                 phiShip = 0;
 
             return Json(new { phiShip });

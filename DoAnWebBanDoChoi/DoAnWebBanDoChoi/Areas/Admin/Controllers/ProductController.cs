@@ -1,9 +1,10 @@
 ﻿using DoAnWebBanDoChoi.Filters;
 using DoAnWebBanDoChoi.Helpers;
 using DoAnWebBanDoChoi.Models;
-using DoAnWebBanDoChoi.ViewModels;
+using DoAnWebBanDoChoi.ViewModels.Admin;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList.Extensions;
 
 namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
 {
@@ -19,13 +20,16 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
         }
 
    
-        public IActionResult SanPham(string? search, int? maDm)
+        public IActionResult SanPham(string? search, int? maDm, int? page)
         {
+            int pageNumber = page ?? 1; 
+            int pageSize = 5;
             var query = _context.SanPhams
                 .Include(sp => sp.MaDmNavigation)
                 .Include(sp => sp.MaThNavigation)
                 .Include(sp => sp.MaNccNavigation)
                 .AsQueryable();
+                
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -39,13 +43,15 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             {
                 query = query.Where(sp => sp.MaDm == maDm.Value);
             }
+            var sanPhamPagedList = query.ToPagedList(pageNumber, pageSize);
 
             ViewBag.DanhMucs = _context.DanhMucs.ToList();
             ViewBag.CurrentSearch = search ?? "";
             ViewBag.CurrentDanhMuc = maDm;
+            ViewBag.CurrentPage = pageNumber;
+            
 
-            var sanPhamList = query.ToList();
-            return View(sanPhamList);
+            return View(sanPhamPagedList);
         }
 
 
@@ -223,18 +229,6 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
                 newStatus = sp.TrangThai
             });
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }

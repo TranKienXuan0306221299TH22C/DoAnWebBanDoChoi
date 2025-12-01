@@ -1,4 +1,4 @@
-﻿namespace DoAnWebBanDoChoi.ViewModels
+﻿namespace DoAnWebBanDoChoi.ViewModels.Admin
 {
     public class BinhLuanPhanHoiVM
     {

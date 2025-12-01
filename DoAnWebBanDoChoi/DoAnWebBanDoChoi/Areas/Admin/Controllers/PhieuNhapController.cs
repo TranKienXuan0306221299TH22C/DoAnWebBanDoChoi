@@ -220,32 +220,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             TempData["Success"] = $"🗑️ Đã xóa thành công phiếu nhập **Mã PN: {pn.MaPn}**.";
             return RedirectToAction("Index");
         }
-        public IActionResult Delete(int id) // Đổi tên từ DeleteConfirmed sang Delete
-        {
-            var pn = _context.PhieuNhaps
-                .Include(p => p.ChiTietPhieuNhaps)
-                .FirstOrDefault(p => p.MaPn == id);
 
-            if (pn == null)
-            {
-                TempData["Error"] = "❌ Không tìm thấy phiếu nhập cần xóa.";
-                return RedirectToAction("Index");
-            }
-
-            // Tái kiểm tra điều kiện trước khi xóa
-            if (pn.TrangThai != 0 || (pn.ChiTietPhieuNhaps != null && pn.ChiTietPhieuNhaps.Any()))
-            {
-                // Đây là kiểm tra logic cốt lõi bạn muốn
-                TempData["Error"] = "❌ Chỉ có thể xóa phiếu nhập **Chưa hoàn thành** và **chưa có sản phẩm**.";
-                return RedirectToAction("Index");
-            }
-
-            _context.PhieuNhaps.Remove(pn);
-            _context.SaveChanges();
-
-            TempData["Success"] = $"🗑️ Đã xóa thành công phiếu nhập **Mã PN: {pn.MaPn}**.";
-            return RedirectToAction("Index");
-        }
 
     }
 }
