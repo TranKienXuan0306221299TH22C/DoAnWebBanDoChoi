@@ -1,4 +1,4 @@
-.css_select_div {
+﻿.css_select_div {
     text-align: center;
     margin-top: 15px;
 }
@@ -13,4 +13,32 @@
 }
 /*contact */
 
+/* --- Fix lỗi hiển thị bảng CKEditor 5 --- */
+
+/* Đảm bảo bảng full width và có viền bao ngoài */
+.ck-content table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #dee2e6; /* Màu viền xám giống Bootstrap */
+    margin-bottom: 1rem;
+}
+
+    /* Kẻ viền cho từng ô (td) và tiêu đề (th) */
+    .ck-content table td,
+    .ck-content table th {
+        border: 1px solid #dee2e6 !important; /* !important để đè CSS của template */
+        padding: 0.75rem; /* Khoảng cách chữ và viền */
+        vertical-align: top;
+    }
+
+    /* (Tùy chọn) Tô màu nền cho dòng tiêu đề nếu có */
+    .ck-content table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+/* Xử lý thẻ figure mà CKEditor 5 tự sinh ra bao quanh bảng */
+.ck-content .table {
+    margin-bottom: 1em;
+}
 

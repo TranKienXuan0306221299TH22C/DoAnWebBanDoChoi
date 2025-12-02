@@ -1,0 +1,38 @@
+﻿@model DoAnWebBanDoChoi.Models.CauHinh
+
+@{
+    ViewData["Title"] = "Thông tin chung website";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+        <h4 class="fw-bold text-primary mb-4">Cấu hình Website</h4>
+        <td class="text-center">
+            <a asp-action="Edit" class="btn btn-warning btn-sm">
+                <i class="fa fa-edit me-1"></i> Sửa
+            </a>
+        </td>
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 20%;">Tên thông tin</th>
+                    <th>Giá trị hiện tại</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="fw-bold">Tên Website</td>
+                    <td>@Model.Ten</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Địa chỉ</td>
+                    <td>@Model.DiaChi</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Số điện thoại</td>
+                    <td>@Model.DienThoai</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

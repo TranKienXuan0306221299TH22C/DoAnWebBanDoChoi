@@ -1,0 +1,43 @@
+﻿@model DoAnWebBanDoChoi.Models.CauHinh
+
+@{
+    ViewData["Title"] = "Chỉnh sửa cấu hình";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold text-warning">Cập nhật thông tin</h4>
+            <a asp-action="Index" class="btn btn-secondary btn-sm">
+                <i class="fa fa-arrow-left me-1"></i> Quay lại danh sách
+            </a>
+        </div>
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label asp-for="Ten" class="form-label fw-bold">Tên Website</label>
+                        <input asp-for="Ten" class="form-control" />
+                        <span asp-validation-for="Ten" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="DienThoai" class="form-label fw-bold">Số điện thoại</label>
+                        <input asp-for="DienThoai" class="form-control" />
+                        <span asp-validation-for="DienThoai" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="DiaChi" class="form-label fw-bold">Địa chỉ</label>
+                        <input asp-for="DiaChi" class="form-control" />
+                        <span asp-validation-for="DiaChi" class="text-danger"></span>
+                    </div>
+                </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fa fa-save me-1"></i> Lưu thay đổi
+                </button>
+            </div
+        </div>
+        </form>
+    </div>
+</div>

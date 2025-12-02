@@ -1,0 +1,15 @@
+﻿@model IEnumerable<DoAnWebBanDoChoi.Models.ChinhSach>
+
+<ul>
+    @if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            <li>
+                <a asp-controller="ChinhSach" asp-action="ChiTiet" asp-route-id="@item.MaCs">
+                    @item.TieuDe
+                </a>
+            </li>
+        }
+    }
+</ul>

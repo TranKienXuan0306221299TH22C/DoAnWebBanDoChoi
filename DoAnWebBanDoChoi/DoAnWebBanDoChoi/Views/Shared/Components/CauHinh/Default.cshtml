@@ -1,0 +1,19 @@
+﻿@model IEnumerable<DoAnWebBanDoChoi.Models.CauHinh>
+
+<ul>
+    @if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            <li>
+               @item.Ten
+            </li>
+             <li>
+           Địa Chỉ: @item.DiaChi
+            </li>
+             <li>
+           Số điện thoại: @item.DienThoai
+            </li>
+        }
+    }
+</ul>

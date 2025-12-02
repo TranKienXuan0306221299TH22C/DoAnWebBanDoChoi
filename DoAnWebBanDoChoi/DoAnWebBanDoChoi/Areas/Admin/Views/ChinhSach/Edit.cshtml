@@ -1,0 +1,49 @@
+﻿@model DoAnWebBanDoChoi.Models.ChinhSach
+
+@{
+    ViewData["Title"] = "Cập nhật chính sách";
+}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-white rounded shadow p-4 border">
+        <h4 class="fw-bold text-warning mb-4">Cập nhật chính sách</h4>
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="MaCs" /> <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="TieuDe" class="form-label fw-bold">Tiêu đề chính sách</label>
+                <input asp-for="TieuDe" class="form-control" />
+                <span asp-validation-for="TieuDe" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NoiDung" class="form-label fw-bold">Nội dung chi tiết</label>
+                <textarea asp-for="NoiDung" id="editor" class="form-control"></textarea>
+                <span asp-validation-for="NoiDung" class="text-danger"></span>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-check me-1"></i> Cập nhật
+                </button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">
+                    <i class="fa fa-arrow-left me-1"></i> Quay lại
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.2.0/classic/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

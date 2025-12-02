@@ -76,13 +76,10 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<CauHinh>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("CauHinh");
-
+            entity.HasKey(e => e.Id);
+            entity.ToTable("CauHinh");
             entity.Property(e => e.DiaChi).HasMaxLength(300);
             entity.Property(e => e.DienThoai).HasMaxLength(20);
-            entity.Property(e => e.Logo).HasMaxLength(255);
             entity.Property(e => e.Ten).HasMaxLength(150);
         });
 
@@ -138,7 +135,7 @@ public partial class AppDbContext : DbContext
             entity.ToTable("ChinhSach");
 
             entity.Property(e => e.MaCs)
-                .ValueGeneratedNever()
+                .UseIdentityColumn()
                 .HasColumnName("MaCS");
             entity.Property(e => e.TieuDe).HasMaxLength(50);
         });

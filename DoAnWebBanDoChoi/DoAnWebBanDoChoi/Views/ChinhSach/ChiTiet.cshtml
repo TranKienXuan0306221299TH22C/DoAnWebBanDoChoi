@@ -1,0 +1,33 @@
+﻿@model DoAnWebBanDoChoi.Models.ChinhSach
+
+@{
+    ViewData["Title"] = Model.TieuDe;
+}
+
+<section style="background-image: none !important; background-color: #ff69b4; padding: 80px 0; text-align: center;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="blog__details__hero__text">
+                    <h2>@Model.TieuDe</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="blog-details spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="blog__details__text">
+                    <div class="blog__details__text">
+                        <div class="ck-content">
+                            @Html.Raw(Model.NoiDung)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
