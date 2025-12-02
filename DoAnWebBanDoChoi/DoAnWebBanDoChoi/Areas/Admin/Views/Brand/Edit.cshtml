@@ -11,7 +11,7 @@
         <form asp-action="Edit" method="post">
             <input type="hidden" asp-for="MaTh" />
             <div class="mb-3">
-                <label asp-for="TenThuongHieu" class="form-label fw-semibold"></label>
+                <label for="TenThuongHieu" class="form-label fw-semibold">Tên thương hiệu</label>
                 <input asp-for="TenThuongHieu" class="form-control" />
                 <span asp-validation-for="TenThuongHieu" class="text-danger"></span>
             </div>

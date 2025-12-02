@@ -11,7 +11,7 @@
         <form asp-action="Edit" method="post">
             <input type="hidden" asp-for="MaDm" />
             <div class="mb-3">
-                <label asp-for="TenDanhMuc" class="form-label fw-semibold"></label>
+                <label for="TenDanhMuc" class="form-label fw-semibold">Tên danh mục</label>
                 <input asp-for="TenDanhMuc" class="form-control" />
                 <span asp-validation-for="TenDanhMuc" class="text-danger"></span>
             </div>
