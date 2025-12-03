@@ -26,7 +26,7 @@ namespace DoAnWebBanDoChoi.Controllers
             var maNd = HttpContext.Session.Get<int>("MaNd");
             if (maNd == 0)
                 return RedirectToAction("Login", "Account");
-
+            var nguoiDung = _context.NguoiDungs.Find(maNd);
             var gioHang = _context.GioHangs
                 .Where(g => g.MaNd == maNd)
                 .Include(g => g.MaSpNavigation)
@@ -41,6 +41,9 @@ namespace DoAnWebBanDoChoi.Controllers
             var tongTien = gioHang.Sum(x => x.TongTien);
             var viewModel = new ThanhToanVM
             {
+                HoTen = nguoiDung?.HoTenHienThi, 
+                DienThoai = nguoiDung?.DienThoai,
+                DiaChi = nguoiDung?.DiaChi,
                 DanhSachSanPham = gioHang,
                 TongTien = tongTien,
                 TongTienSauPhiShip = tongTien

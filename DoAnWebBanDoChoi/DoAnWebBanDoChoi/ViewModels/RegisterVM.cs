@@ -10,8 +10,8 @@ namespace DoAnWebBanDoChoi.ViewModels
         [RegularExpression(@"^\S+$", ErrorMessage = "Tên đăng nhập không được chứa dấu cách")]
         public string TenDangNhap { get; set; }
 
-        [Required(ErrorMessage = "Vui lòng nhập email")]
-        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Email không hợp lệ")]
+        [Required(ErrorMessage = "Vui lòng nhập Email.")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
         public string Email { get; set; }
 
 
