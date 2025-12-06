@@ -65,12 +65,6 @@ namespace DoAnWebBanDoChoi.Controllers
                 // Xác định thư mục upload ảnh đại diện: [Thư mục gốc]/wwwroot/img
                 string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/profile");
 
-                // Tạo thư mục nếu nó chưa tồn tại (tốt nhất nên thêm)
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-
                 // Tạo tên file duy nhất
                 fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.HinhAnhFile.FileName);
                 string filePath = Path.Combine(uploadsFolder, fileName);
@@ -112,9 +106,10 @@ namespace DoAnWebBanDoChoi.Controllers
         public IActionResult HuyDonHang(int id)
         {
             var maNd = HttpContext.Session.Get<int>("MaNd");
-  
 
+            // 1. Phải INCLUDE ChiTietDonHangs để lấy danh sách sản phẩm
             var donHang = _context.DonHangs
+                .Include(d => d.ChiTietDonHangs)
                 .FirstOrDefault(d => d.MaDh == id && d.MaNd == maNd);
 
             if (donHang == null)
@@ -123,17 +118,37 @@ namespace DoAnWebBanDoChoi.Controllers
                 return RedirectToAction("Index");
             }
 
-                donHang.TrangThai = 5; // Đã hủy
-                donHang.NgaySua = DateTime.Now;
-                _context.SaveChanges();
-                TempData["Success"] = "Hủy đơn hàng thành công!";
-        
+            // Kiểm tra trạng thái hợp lệ trước khi hủy 
+            if (donHang.TrangThai == 5 || donHang.TrangThai == 4)
+            {
+                TempData["Error"] = "Đơn hàng không thể hủy ở trạng thái này.";
+                return RedirectToAction("DonHang");
+            }
+
+            // 2. LẶP QUA TẤT CẢ SẢN PHẨM TRONG ĐƠN HÀNG VÀ HOÀN NHẬP TỒN KHO
+            foreach (var chiTiet in donHang.ChiTietDonHangs)
+            {
+                var sp = _context.SanPhams.FirstOrDefault(s => s.MaSp == chiTiet.MaSp);
+
+                if (sp != null)
+                {
+                    // CỘNG số lượng đã đặt hàng (ct.SoLuong) trở lại vào tồn kho (sp.SoLuong)
+                    sp.SoLuong += chiTiet.SoLuong;
+                }
+            }
+
+            // 3. Cập nhật trạng thái và lưu thay đổi
+            donHang.TrangThai = 5; // Đã hủy
+            donHang.NgaySua = DateTime.Now;
+
+            _context.SaveChanges(); 
+
+            TempData["Success"] = "Hủy đơn hàng và hoàn nhập tồn kho thành công!";
 
             return RedirectToAction("DonHang");
         }
 
 
-      
         public IActionResult Edit()
         {
             var maNd = HttpContext.Session.Get<int>("MaNd");
@@ -170,23 +185,7 @@ namespace DoAnWebBanDoChoi.Controllers
             TempData["Success"] = "Cập nhật thông tin thành công!";
             return RedirectToAction("Index");
         }
-        //public IActionResult ChiTietDonHang(int id)
-        //{
-        //    var maNd = HttpContext.Session.Get<int>("MaNd");
 
-        //    var donHang = _context.DonHangs
-        //        .Include(d => d.ChiTietDonHangs)
-        //        .ThenInclude(ct => ct.MaSpNavigation)
-        //        .FirstOrDefault(d => d.MaDh == id && d.MaNd == maNd);
-
-        //    if (donHang == null)
-        //    {
-        //        TempData["Error"] = "Không tìm thấy đơn hàng.";
-        //        return RedirectToAction("DonHang");
-        //    }
-
-        //    return View(donHang);
-        //}
         public IActionResult ChiTietDonHang(int id)
         {
             var maNd = HttpContext.Session.Get<int>("MaNd");

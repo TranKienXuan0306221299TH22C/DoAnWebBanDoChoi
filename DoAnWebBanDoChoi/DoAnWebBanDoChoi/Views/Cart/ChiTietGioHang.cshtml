@@ -67,7 +67,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="shoping__cart__btns d-flex justify-content-between align-items-center mb-3">
-                    <a href="#" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
+                    <a asp-controller="Home" asp-action="Index" class="primary-btn cart-btn">Tiếp tục mua hàng</a>
 
                     <button onclick="xoaHetGioHang()" class="btn btn-danger">🗑 Xóa toàn bộ giỏ hàng</button>
                 </div>
@@ -75,11 +75,7 @@
             <div class="col-lg-6">
                 <div class="shoping__continue">
                     <div class="shoping__discount">
-                @*         <h5>Discount Codes</h5>
-                        <form action="#">
-                            <input type="text" placeholder="Enter your coupon code">
-                            <button type="submit" class="site-btn">APPLY COUPON</button>
-                        </form> *@
+             
                     </div>
                 </div>
             </div>

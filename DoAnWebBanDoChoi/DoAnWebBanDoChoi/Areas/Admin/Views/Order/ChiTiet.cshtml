@@ -7,7 +7,9 @@
 <div class="container">
     <h3 class="mb-3">Chi tiết đơn hàng <span class="text-primary">#@Model.MaDh</span></h3>
     <p><strong>Ngày đặt:</strong> @Model.NgayTao.ToString("dd/MM/yyyy")</p>
+    <p><strong>Ngày hoàn thành:</strong> @Model.NgaySua?.ToString("dd/MM/yyyy")</p>
     <p><strong>Trạng thái:</strong> @(((TrangThaiDonHang)Model.TrangThai).GetDisplayName())</p>
+    <p><strong>Địa chỉ:</strong> @Model.DiaChi</p>
     <table class="table table-bordered text-center align-middle">
         <thead class="table-light">
             <tr>
@@ -47,6 +49,6 @@
         </tbody>
     </table>
     <div class="d-grid gap-2 d-md-flex justify-content-end mt-4 mb-5">
-        <a asp-action="DanhSach" class="btn btn-secondary">Quay lại</a>
+        <a asp-controller="Order" asp-action="DaGiao" class="btn btn-secondary">Quay lại</a>
     </div>
 </div>

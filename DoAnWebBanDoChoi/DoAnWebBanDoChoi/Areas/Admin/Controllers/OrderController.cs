@@ -69,26 +69,70 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             return View(donHang);
         }
 
+        //[HttpPost]
+        //public IActionResult HuyDon(int id)
+        //{
+        //    var don = _context.DonHangs.FirstOrDefault(d => d.MaDh == id);
+        //    if (don == null) return NotFound();
+
+        //    // Chỉ huỷ nếu đang ở 3 trạng thái đầu
+        //    if (don.TrangThai == (int)TrangThaiDonHang.ChoXacNhan ||
+        //        don.TrangThai == (int)TrangThaiDonHang.DaXacNhan ||
+        //        don.TrangThai == (int)TrangThaiDonHang.DangGiao)
+        //    {
+        //        don.TrangThai = (int)TrangThaiDonHang.DaHuy;
+        //        don.NgaySua = DateTime.Now;
+        //        _context.SaveChanges();
+        //    }
+
+        //    // Trở về trang trước
+        //    return Redirect(Request.Headers["Referer"].ToString());
+        //}
         [HttpPost]
         public IActionResult HuyDon(int id)
         {
-            var don = _context.DonHangs.FirstOrDefault(d => d.MaDh == id);
+            // 1. Nạp đơn hàng và Chi Tiết Đơn Hàng liên quan
+            var don = _context.DonHangs
+                .Include(d => d.ChiTietDonHangs) // 👈 Quan trọng: Bắt buộc phải có
+                .FirstOrDefault(d => d.MaDh == id);
+
             if (don == null) return NotFound();
 
-            // Chỉ huỷ nếu đang ở 3 trạng thái đầu
+            // 2. Chỉ huỷ nếu đang ở 3 trạng thái đầu
+            // Đảm bảo không hủy các đơn đã Hoàn thành (DaGiao) hoặc đã Hủy trước đó (DaHuy)
             if (don.TrangThai == (int)TrangThaiDonHang.ChoXacNhan ||
                 don.TrangThai == (int)TrangThaiDonHang.DaXacNhan ||
                 don.TrangThai == (int)TrangThaiDonHang.DangGiao)
             {
+                // 3. HOÀN NHẬP TỒN KHO
+                foreach (var chiTiet in don.ChiTietDonHangs)
+                {
+                    var sp = _context.SanPhams.FirstOrDefault(s => s.MaSp == chiTiet.MaSp);
+
+                    if (sp != null)
+                    {
+                        // Cộng số lượng đã đặt hàng trở lại vào tồn kho
+                        sp.SoLuong += chiTiet.SoLuong;
+                    }
+                }
+
+                // 4. Cập nhật trạng thái đơn hàng
                 don.TrangThai = (int)TrangThaiDonHang.DaHuy;
                 don.NgaySua = DateTime.Now;
+
+                // 5. Lưu tất cả thay đổi (cả DonHang và SanPhams)
                 _context.SaveChanges();
+
+                TempData["Success"] = $"Đã hủy thành công đơn hàng Mã DH: {id} và hoàn nhập tồn kho.";
+            }
+            else
+            {
+                TempData["Error"] = $"Không thể hủy đơn hàng Mã DH: {id} vì đang ở trạng thái hiện tại.";
             }
 
-            // Trở về trang trước
+            // Trở về trang trước (Đây là cách xử lý tốt cho Admin)
             return Redirect(Request.Headers["Referer"].ToString());
         }
-
         [HttpPost]
         public IActionResult CapNhatTrangThai(int id, TrangThaiDonHang trangThaiMoi)
         {

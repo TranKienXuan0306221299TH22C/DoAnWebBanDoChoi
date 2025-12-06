@@ -55,14 +55,11 @@ namespace DoAnWebBanDoChoi.Controllers
             return View(model);
         }
 
-        // GET: /Account/Login
         public IActionResult Login()
         {
             return View();
         }
 
-        // POST: /Account/Login
-        // POST: /Account/Login
         [HttpPost]
         public IActionResult Login(LoginVM model)
         {
@@ -102,7 +99,7 @@ namespace DoAnWebBanDoChoi.Controllers
                     }
                 }
 
-                // Nếu không tìm thấy user ở BƯỚC 1 (Sai tên đăng nhập/email hoặc mật khẩu) → báo lỗi chung
+              
                 ModelState.AddModelError("", "Sai tên đăng nhập hoặc mật khẩu.");
             }
 

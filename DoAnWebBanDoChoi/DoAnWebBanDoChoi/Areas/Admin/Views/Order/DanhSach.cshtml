@@ -9,9 +9,9 @@
 <div class="container-fluid pt-4 px-4">
     <div class="bg-white rounded shadow p-4 border">
         <h3 class="text-primary">@ViewData["Title"]</h3>
-
-        <table class="table table-bordered table-striped">
-            <thead class="table-light text-center text-nowrap">
+        <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle ">
+            <thead class="table-primary text-center sticky-top text-nowrap" style="top: 0; z-index: 1;">
                 <tr>
                     <th>Mã đơn</th>
                     <th>Khách hàng</th>
@@ -29,9 +29,9 @@
                 {
                     <tr>
                         <td >@item.MaDh</td>
-                        <td >@item.HoTen</td>
-                        <td >@item.DienThoai</td>
-                        <td>@item.DiaChiDayDu</td>
+                        <td class="text-nowrap">@item.HoTen</td>
+                        <td class="text-nowrap">@item.DienThoai</td>
+                        <td class="text-nowrap">@item.DiaChiDayDu</td> 
                         <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
                         <td>@item.TongTien.ToString("N0") ₫</td>
                         <td><span class="badge bg-info">@item.TrangThaiHienThi</span></td>
@@ -78,5 +78,6 @@
                 }
             </tbody>
         </table>
+        </div>
     </div>
 </div>
