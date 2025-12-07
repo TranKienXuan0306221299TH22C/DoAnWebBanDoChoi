@@ -54,7 +54,13 @@ namespace DoAnWebBanDoChoi.Controllers
 
             var maNd = HttpContext.Session.Get<int>("MaNd");
             var nguoiDung = await _context.NguoiDungs.FindAsync(maNd);
+            var allowedMimeTypes = new[] { "image/jpeg", "image/png", "image/gif" };
 
+            if (!allowedMimeTypes.Contains(model.HinhAnhFile.ContentType.ToLowerInvariant()))
+            {
+                TempData["Error"] = "File không phải là định dạng ảnh hợp lệ (chỉ chấp nhận JPEG, PNG, GIF).";
+                return RedirectToAction("Index");
+            }
             if (nguoiDung == null)
                 return NotFound();
 

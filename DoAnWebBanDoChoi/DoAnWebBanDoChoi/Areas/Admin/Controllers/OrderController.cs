@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using DoAnWebBanDoChoi.Models;
-using DoAnWebBanDoChoi.Enums;
+﻿using DoAnWebBanDoChoi.Enums;
 using DoAnWebBanDoChoi.Filters;
+using DoAnWebBanDoChoi.Models;
 using DoAnWebBanDoChoi.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
+using X.PagedList.Extensions;
 
 namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
 {
@@ -12,45 +14,75 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
     public class OrderController : Controller
     {
         private readonly AppDbContext _context;
-
+        private const int PageSize = 5;
         public OrderController(AppDbContext context)
         {
             _context = context;
         }
 
-        public IActionResult ChoXacNhan()
+
+        public IActionResult ChoXacNhan(int? page)
         {
-            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.ChoXacNhan);
+            int pageNumber = page ?? 1;
+            // Gọi hàm helper mới có tham số pageNumber và PageSize
+            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.ChoXacNhan, pageNumber, PageSize);
             ViewBag.TieuDe = "Đơn hàng chờ xác nhận";
             return View("DanhSach", list);
         }
 
-        public IActionResult DaXacNhan()
+        public IActionResult DaXacNhan(int? page)
         {
-            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.DaXacNhan);
+            int pageNumber = page ?? 1;
+            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.DaXacNhan, pageNumber, PageSize);
             ViewBag.TieuDe = "Đơn hàng đã xác nhận";
             return View("DanhSach", list);
         }
 
-        public IActionResult DangGiao()
+        public IActionResult DangGiao(int? page)
         {
-            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.DangGiao);
+            int pageNumber = page ?? 1;
+            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.DangGiao, pageNumber, PageSize);
             ViewBag.TieuDe = "Đơn hàng đang giao";
             return View("DanhSach", list);
         }
 
-        public IActionResult DaGiao()
+        public IActionResult DaGiao(int? page)
         {
-            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.DaGiao);
+            int pageNumber = page ?? 1;
+            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.DaGiao, pageNumber, PageSize);
             ViewBag.TieuDe = "Đơn hàng hoàn thành";
             return View("DanhSach", list);
         }
 
-        public IActionResult DaHuy()
+        public IActionResult DaHuy(int? page)
         {
-            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.DaHuy);
+            int pageNumber = page ?? 1;
+            var list = GetDonHangTheoTrangThai(TrangThaiDonHang.DaHuy, pageNumber, PageSize);
             ViewBag.TieuDe = "Đơn hàng đã huỷ";
             return View("DanhSach", list);
+        }
+
+   
+        private IPagedList<DonHangVM> GetDonHangTheoTrangThai(TrangThaiDonHang trangThai, int pageNumber, int pageSize)
+        {
+            // 1. Tạo Queryable (chưa thực thi)
+            var donHangsQuery = _context.DonHangs
+                .Where(d => d.TrangThai == (int)trangThai)
+                .OrderByDescending(d => d.NgayTao)
+                .Select(d => new DonHangVM
+                {
+                    MaDh = d.MaDh,
+                    HoTen = d.HoTen,
+                    DienThoai = d.DienThoai,
+                    DiaChiDayDu = $"{d.DiaChi}, {d.PhuongXa}, {d.QuanHuyen}, {d.TinhThanh}",
+                    NgayTao = d.NgayTao,
+                    TongTien = d.TongTien,
+                    PhuongThucThanhToan = d.PhuongThucThanhToan,
+                    TrangThai = (TrangThaiDonHang)d.TrangThai
+                });
+
+            // 2. Thực thi query và áp dụng phân trang (ToPagedList)
+            return donHangsQuery.ToPagedList(pageNumber, pageSize);
         }
         public IActionResult ChiTiet(int id)
         {
@@ -69,25 +101,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             return View(donHang);
         }
 
-        //[HttpPost]
-        //public IActionResult HuyDon(int id)
-        //{
-        //    var don = _context.DonHangs.FirstOrDefault(d => d.MaDh == id);
-        //    if (don == null) return NotFound();
-
-        //    // Chỉ huỷ nếu đang ở 3 trạng thái đầu
-        //    if (don.TrangThai == (int)TrangThaiDonHang.ChoXacNhan ||
-        //        don.TrangThai == (int)TrangThaiDonHang.DaXacNhan ||
-        //        don.TrangThai == (int)TrangThaiDonHang.DangGiao)
-        //    {
-        //        don.TrangThai = (int)TrangThaiDonHang.DaHuy;
-        //        don.NgaySua = DateTime.Now;
-        //        _context.SaveChanges();
-        //    }
-
-        //    // Trở về trang trước
-        //    return Redirect(Request.Headers["Referer"].ToString());
-        //}
+ 
         [HttpPost]
         public IActionResult HuyDon(int id)
         {
@@ -146,23 +160,6 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             return Redirect(Request.Headers["Referer"].ToString());
         }
 
-        private List<DonHangVM> GetDonHangTheoTrangThai(TrangThaiDonHang trangThai)
-        {
-            return _context.DonHangs
-                .Where(d => d.TrangThai == (int)trangThai)
-                .OrderByDescending(d => d.NgayTao)
-                .Select(d => new DonHangVM
-                {
-                    MaDh = d.MaDh,
-                    HoTen = d.HoTen,
-                    DienThoai = d.DienThoai,
-                    DiaChiDayDu = $"{d.DiaChi}, {d.PhuongXa}, {d.QuanHuyen}, {d.TinhThanh}",
-                    NgayTao = d.NgayTao,
-                    TongTien = d.TongTien,
-                    PhuongThucThanhToan = d.PhuongThucThanhToan,
-                    TrangThai = (TrangThaiDonHang)d.TrangThai
-                })
-                .ToList();
-        }
+
     }
 }

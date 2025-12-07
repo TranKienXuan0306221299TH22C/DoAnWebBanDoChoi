@@ -186,15 +186,10 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             TempData["Success"] = "✔️ Xác nhận phiếu nhập thành công.";
             return RedirectToAction("ChiTiet", new { id });
         }
-        // Trong PhieuNhapController.cs
-
-        // Xóa bỏ Action này:
-        // public IActionResult Delete(int id) { ... } 
-
-        // Giữ lại và sửa Action POST này:
+       
         [HttpPost]
         
-        public IActionResult Delete(int id) // Đổi tên từ DeleteConfirmed sang Delete
+        public IActionResult Delete(int id) 
         {
             var pn = _context.PhieuNhaps
                 .Include(p => p.ChiTietPhieuNhaps)

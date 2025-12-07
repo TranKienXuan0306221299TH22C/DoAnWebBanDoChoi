@@ -163,15 +163,29 @@
                 <div class="product__pagination">
                     <div class="text-center mt-4">
                         @Html.PagedListPager(Model.DanhSachSanPham,
-                                 page => Url.Action("Index", new { page, sort = Context.Request.Query["sort"], loai = Context.Request.Query["loai"] }),
-                                 new PagedListRenderOptions
-                        {
-                            UlElementClasses = new[] { "pagination", "justify-content-center" },
-                            LiElementClasses = new[] { "page-item" },
-                            PageClasses = new[] { "page-link" },
-                            ActiveLiElementClass = "active"
-                        }
-                                 )
+                        page => Url.Action("Index", new { page, sort = Context.Request.Query["sort"], loai = Context.Request.Query["loai"] }),
+                                                new PagedListRenderOptions
+                                                {
+                                                  // Cấu hình các lớp CSS đã có (Giữ nguyên)
+                                                    UlElementClasses = new[] { "pagination", "justify-content-center" },
+                                                    LiElementClasses = new[] { "page-item" },
+                                                    PageClasses = new[] { "page-link" },
+                                                    ActiveLiElementClass = "active",
+
+                                                    // 1. Tùy chọn hiển thị (Show all links)
+                                                    DisplayLinkToFirstPage = PagedListDisplayMode.Always, // Hiển thị nút << Trang đầu
+                                                    DisplayLinkToLastPage = PagedListDisplayMode.Always,  // Hiển thị nút Trang cuối >>
+                                                    DisplayLinkToPreviousPage = PagedListDisplayMode.Always, // Hiển thị nút Trước
+                                                    DisplayLinkToNextPage = PagedListDisplayMode.Always,     // Hiển thị nút Sau
+
+                                                    
+                                                    LinkToFirstPageFormat = "<< Trang đầu",
+                                                    LinkToLastPageFormat = "Trang cuối >>",
+                                                    LinkToPreviousPageFormat = "Trước",
+                                                    LinkToNextPageFormat = "Sau",
+                                                    MaximumPageNumbersToDisplay = 5
+                                                }
+                                                )
                     </div>
                 </div>
             </div>

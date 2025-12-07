@@ -198,37 +198,57 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
         [HttpPost]
         public JsonResult ToggleStatusAjax(int id)
         {
+            // 1. Tìm sản phẩm
             var sp = _context.SanPhams.Find(id);
             if (sp == null)
                 return Json(new { success = false, message = "Sản phẩm không tồn tại!" });
 
-            if (sp.TrangThai == 0) // Đang ngừng bán → muốn chuyển sang hoạt động
+            // 2. Xử lý logic chuyển từ Ngừng Bán (0) sang Hoạt Động (1)
+            if (sp.TrangThai == 0)
             {
+                // 2a. Kiểm tra điều kiện cần thiết để mở bán (SL, Giá Gốc, Giá Bán > 0)
                 if (sp.GiaGoc <= 0 || sp.DonGia <= 0 || sp.SoLuong <= 0)
                 {
                     return Json(new
                     {
                         success = false,
-                        message = "Không thể mở bán! Vui lòng kiểm tra giá nhập, giá bán và số lượng."
+                        message = "❌ Không thể mở bán! Vui lòng kiểm tra: Giá nhập, Giá bán, và Số lượng tồn kho (phải > 0)."
                     });
                 }
 
-                sp.TrangThai = 1; // Bật trạng thái
+                // 2b. (Logic BỔ SUNG): Kiểm tra Giá bán phải lớn hơn Giá gốc (tránh bán lỗ)
+                if (sp.DonGia < sp.GiaGoc)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "⚠️ Cảnh báo! Giá bán đang thấp hơn Giá gốc. Vui lòng điều chỉnh giá bán cao hơn."
+                    });
+                }
+
+                // Nếu tất cả điều kiện thỏa mãn, cho phép mở bán
+                sp.TrangThai = 1;
             }
+            // 3. Xử lý logic chuyển từ Hoạt Động (1) sang Ngừng Bán (0)
             else
             {
-                sp.TrangThai = 0; // Ngưng bán thì lúc nào cũng cho phép
+                // Cho phép ngừng bán bất cứ lúc nào
+                sp.TrangThai = 0;
             }
 
+            // 4. Lưu thay đổi và trả về kết quả
             sp.NgaySua = DateTime.Now;
             _context.SaveChanges();
+
+            // Chuẩn bị thông báo trả về
+            string successMessage = (sp.TrangThai == 1) ? "✔️ Đã mở bán sản phẩm thành công." : "⏸️ Đã ngừng bán sản phẩm.";
 
             return Json(new
             {
                 success = true,
-                newStatus = sp.TrangThai
+                newStatus = sp.TrangThai,
+                message = successMessage // Trả về thông báo thành công mới
             });
         }
-
     }
 }

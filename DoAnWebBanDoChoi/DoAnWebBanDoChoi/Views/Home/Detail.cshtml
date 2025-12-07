@@ -182,14 +182,28 @@
                 </div>
                 <div class="text-center">
                     @Html.PagedListPager(Model.BinhLuans, page => Url.Action("Detail", new { slug = Model.SanPham.Slug, id = Model.SanPham.MaSp, page }),
-                             new PagedListRenderOptions
+                    new PagedListRenderOptions
                     {
+                      
                         DisplayLinkToFirstPage = PagedListDisplayMode.Always,
                         DisplayLinkToLastPage = PagedListDisplayMode.Always,
                         DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
                         DisplayLinkToNextPage = PagedListDisplayMode.Always,
-                        MaximumPageNumbersToDisplay = 3,
-                        UlElementClasses = new[] { "pagination", "justify-content-center", "mt-3" }
+                        MaximumPageNumbersToDisplay = 5, 
+
+                        
+                        UlElementClasses = new[] { "pagination", "justify-content-center", "mt-3" }, 
+                        LiElementClasses = new[] { "page-item" },
+                        PageClasses = new[] { "page-link" }, 
+
+                        
+                        ActiveLiElementClass = "active", 
+
+
+                        LinkToFirstPageFormat = "<< Trang đầu",
+                        LinkToLastPageFormat = "Trang cuối >>",
+                        LinkToPreviousPageFormat = "Trước",
+                        LinkToNextPageFormat = "Sau"
                     })
                 </div>
 

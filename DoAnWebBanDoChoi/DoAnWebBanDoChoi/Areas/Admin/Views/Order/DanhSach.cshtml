@@ -1,4 +1,7 @@
-﻿@model List<DoAnWebBanDoChoi.ViewModels.DonHangVM>
+﻿@* @model List<DoAnWebBanDoChoi.ViewModels.DonHangVM> *@
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model IPagedList<DoAnWebBanDoChoi.ViewModels.DonHangVM>
 @using DoAnWebBanDoChoi.Helpers;
 @using DoAnWebBanDoChoi.Enums
 
@@ -78,6 +81,30 @@
                 }
             </tbody>
         </table>
+        </div>
+        <div class="d-flex justify-content-center pt-3">
+            @Html.PagedListPager(Model, page => Url.Action(
+            ViewContext.RouteData.Values["action"].ToString(), // Lấy tên Action hiện tại (ChoXacNhan, DaXacNhan...)
+                        new { page }),
+                        new PagedListRenderOptions
+                        {
+                          // Cấu hình Bootstrap 5 cho phân trang
+                            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                            MaximumPageNumbersToDisplay = 5,
+                            UlElementClasses = new[] { "pagination", "justify-content-center" },
+                            LiElementClasses = new[] { "page-item" },
+                            PageClasses = new[] { "page-link" },
+                            ActiveLiElementClass = "active",
+                            
+                            LinkToFirstPageFormat = "<< Trang đầu",
+                            LinkToLastPageFormat = "Trang cuối >>",
+                            LinkToPreviousPageFormat = "Trước",
+                            LinkToNextPageFormat = "Sau"
+                        }
+                        )
         </div>
     </div>
 </div>
