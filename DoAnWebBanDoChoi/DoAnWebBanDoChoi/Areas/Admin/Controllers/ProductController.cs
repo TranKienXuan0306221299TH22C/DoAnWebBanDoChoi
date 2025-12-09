@@ -105,6 +105,9 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
                     MaNcc = model.MaNcc.Value,
                     Slug = SlugHelper.GenerateSlug(model.TenSanPham),
                     NgayTao = DateTime.Now,
+                    GiaGoc = 0,
+                    DonGia = 0,
+                    SoLuong = 0,
                     TrangThai = 0
                 };
 
@@ -172,7 +175,7 @@ namespace DoAnWebBanDoChoi.Areas.Admin.Controllers
             sp.MaDm = model.MaDm.Value;
             sp.MaTh = model.MaTh.Value;
             sp.MaNcc = model.MaNcc.Value;
-            sp.DonGia = model.DonGia; 
+            sp.DonGia = model.DonGia ?? 0;
             sp.NgaySua = DateTime.Now;
 
             // Cập nhật ảnh nếu có

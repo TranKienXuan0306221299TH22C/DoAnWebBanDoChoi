@@ -25,9 +25,14 @@ namespace DoAnWebBanDoChoi.ViewModels.Admin
         [Display(Name = "Trọng lượng")]
         public string? TrongLuong { get; set; }
         [Display(Name = "Giá bán")]
-        [Required(ErrorMessage = "Vui lòng nhập giá bán")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Giá bán phải lớn hơn 0.")]
-        public decimal DonGia { get; set; }
+        public decimal? DonGia { get; set; } // Dùng decimal?
+
+        // 🎯 BỔ SUNG: Thêm GiaGoc và SoLuong (nếu có trong ProductVM)
+        [Display(Name = "Giá gốc")]
+        public decimal? GiaGoc { get; set; } // Phải dùng decimal?
+
+        [Display(Name = "Số lượng")]
+        public int? SoLuong { get; set; }
 
         [Display(Name = "Ảnh sản phẩm")]
         public IFormFile? HinhAnhFile { get; set; }

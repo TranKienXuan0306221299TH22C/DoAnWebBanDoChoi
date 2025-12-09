@@ -171,18 +171,13 @@
                                                     LiElementClasses = new[] { "page-item" },
                                                     PageClasses = new[] { "page-link" },
                                                     ActiveLiElementClass = "active",
-
-                                                    // 1. Tùy chọn hiển thị (Show all links)
-                                                    DisplayLinkToFirstPage = PagedListDisplayMode.Always, // Hiển thị nút << Trang đầu
-                                                    DisplayLinkToLastPage = PagedListDisplayMode.Always,  // Hiển thị nút Trang cuối >>
                                                     DisplayLinkToPreviousPage = PagedListDisplayMode.Always, // Hiển thị nút Trước
                                                     DisplayLinkToNextPage = PagedListDisplayMode.Always,     // Hiển thị nút Sau
 
                                                     
-                                                    LinkToFirstPageFormat = "<< Trang đầu",
-                                                    LinkToLastPageFormat = "Trang cuối >>",
-                                                    LinkToPreviousPageFormat = "Trước",
-                                                    LinkToNextPageFormat = "Sau",
+
+                                                    LinkToPreviousPageFormat = "<<",
+                                                    LinkToNextPageFormat = ">>",
                                                     MaximumPageNumbersToDisplay = 5
                                                 }
                                                 )
